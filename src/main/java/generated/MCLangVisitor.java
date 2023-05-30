@@ -30,6 +30,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPowerExpression(MCLangParser.PowerExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code stringExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringExpression(MCLangParser.StringExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code addExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -72,6 +79,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMultiplyExpression(MCLangParser.MultiplyExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code floorDivideExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloorDivideExpression(MCLangParser.FloorDivideExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code booleanExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -91,4 +105,16 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVariableAssignment(MCLangParser.VariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#ifStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStatement(MCLangParser.IfStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#body}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBody(MCLangParser.BodyContext ctx);
 }

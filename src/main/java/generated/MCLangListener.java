@@ -40,6 +40,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitPowerExpression(MCLangParser.PowerExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code stringExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringExpression(MCLangParser.StringExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stringExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringExpression(MCLangParser.StringExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code addExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -112,6 +124,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitMultiplyExpression(MCLangParser.MultiplyExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code floorDivideExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterFloorDivideExpression(MCLangParser.FloorDivideExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code floorDivideExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitFloorDivideExpression(MCLangParser.FloorDivideExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code booleanExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -145,4 +169,24 @@ public interface MCLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVariableAssignment(MCLangParser.VariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#ifStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfStatement(MCLangParser.IfStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#ifStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfStatement(MCLangParser.IfStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#body}.
+	 * @param ctx the parse tree
+	 */
+	void enterBody(MCLangParser.BodyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#body}.
+	 * @param ctx the parse tree
+	 */
+	void exitBody(MCLangParser.BodyContext ctx);
 }
