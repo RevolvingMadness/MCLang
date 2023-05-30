@@ -1,5 +1,6 @@
 package com.revolvingmadness.mclang;
 
+import com.revolvingmadness.mclang.types.Type;
 import generated.MCLangLexer;
 import generated.MCLangParser;
 import org.antlr.v4.runtime.CharStream;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MCLangInterpreter {
-    public Map<String, Object> variables;
+    public Map<String, Type> variables;
 
     public void run(String code) {
         this.variables = new HashMap<>();
@@ -22,5 +23,9 @@ public class MCLangInterpreter {
         MCLangVisitor visitor = new MCLangVisitor();
         visitor.visit(programContext);
         this.variables = visitor.variables;
+    }
+
+    public static void throwBinOpException(String type, Object left, Object right) {
+        throw new RuntimeException("Cannot apply operator '" + type + "' to types '" + left.getClass().getName() + "' and '" + right.getClass().getName() + "'");
     }
 }
