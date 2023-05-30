@@ -310,6 +310,18 @@ public class MCLangTests {
     }
 
     @Test
+    @DisplayName("While Loops")
+    public void whileLoops() {
+        interpreter.run("""
+                i = 0;
+                while (i < 5) {
+                    i = i + 1;
+                }
+                """);
+        Assertions.assertEquals(new IntegerType(5), interpreter.variables.get("i"));
+    }
+
+    @Test
     @DisplayName("Both Numbers")
     public void bothNumbers() {
         Assertions.assertTrue(NumberType.bothNumbers(new IntegerType(0), new IntegerType(0)));

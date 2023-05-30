@@ -11,7 +11,7 @@ public class NumberType extends Type {
         this.value = value;
     }
 
-    public static boolean bothNumbers(Object left, Object right) {
+    public static boolean bothNumbers(Type left, Type right) {
         return left instanceof NumberType && right instanceof NumberType;
     }
 

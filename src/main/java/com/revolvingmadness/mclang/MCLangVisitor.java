@@ -12,8 +12,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     Map<String, Type> variables = new HashMap<>();
 
     @Override
-    public NumberType visitNumberExpression(MCLangParser.NumberExpressionContext ctx) {
-        return NumberType.parseNumber(ctx.NUMBER().getText());
+    public NumberType visitNumberExpression(MCLangParser.NumberExpressionContext context) {
+        return NumberType.parseNumber(context.NUMBER().getText());
     }
 
     @Override
@@ -44,8 +44,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitExponentiationExpression(MCLangParser.ExponentiationExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException("**", left, right);
@@ -57,9 +57,9 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitMultiplyExpression(MCLangParser.MultiplyExpressionContext ctx) {
-        Object left = visit(ctx.expr(0));
-        Object right = visit(ctx.expr(1));
+    public Type visitMultiplyExpression(MCLangParser.MultiplyExpressionContext context) {
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (StringType.canMultiply(left, right))
             return StringType.multiply(left, right);
@@ -72,8 +72,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitDivideExpression(MCLangParser.DivideExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException("/", left, right);
@@ -83,8 +83,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitFloorDivideExpression(MCLangParser.FloorDivideExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException("//", left, right);
@@ -94,8 +94,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitModuloExpression(MCLangParser.ModuloExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException("%", left, right);
@@ -109,9 +109,9 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitAddExpression(MCLangParser.AddExpressionContext ctx) {
-        Object left = visit(ctx.expr(0));
-        Object right = visit(ctx.expr(1));
+    public Type visitAddExpression(MCLangParser.AddExpressionContext context) {
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (left instanceof StringType && right instanceof StringType)
             return ((StringType) left).concat((StringType) right);
@@ -123,9 +123,9 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitSubtractExpression(MCLangParser.SubtractExpressionContext ctx) {
-        Object left = visit(ctx.expr(0));
-        Object right = visit(ctx.expr(1));
+    public Type visitSubtractExpression(MCLangParser.SubtractExpressionContext context) {
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException("-", left, right);
@@ -135,8 +135,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitLessThanExpression(MCLangParser.LessThanExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException("<", left, right);
@@ -146,8 +146,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitLessThanOrEqualToExpression(MCLangParser.LessThanOrEqualToExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException("<=", left, right);
@@ -157,19 +157,19 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitGreaterThanExpression(MCLangParser.GreaterThanExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException(">", left, right);
 
-        return BooleanType.valueOf(((NumberType) left).value.doubleValue() > ((NumberType) right).value.doubleValue());
+        return new BooleanType(((NumberType) left).value.doubleValue() > ((NumberType) right).value.doubleValue());
     }
 
     @Override
     public Type visitGreaterThanOrEqualToExpression(MCLangParser.GreaterThanOrEqualToExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException(">=", left, right);
@@ -179,8 +179,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitNotEqualToExpression(MCLangParser.NotEqualToExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException("!=", left, right);
@@ -190,8 +190,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitEqualToExpression(MCLangParser.EqualToExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         if (!NumberType.bothNumbers(left, right))
             MCLangInterpreter.throwBinOpException("==", left, right);
@@ -201,47 +201,47 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitBitwiseAndExpression(MCLangParser.BitwiseAndExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         return NumberType.bitwiseAnd((IntegerType) left, (IntegerType) right);
     }
 
     @Override
     public Type visitBooleanAndExpression(MCLangParser.BooleanAndExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         return BooleanType.booleanAnd(BooleanType.valueOf(left), BooleanType.valueOf(right));
     }
 
     @Override
     public Type visitBitwiseXorExpression(MCLangParser.BitwiseXorExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         return BooleanType.bitwiseXor(BooleanType.valueOf(left), BooleanType.valueOf(right));
     }
 
     @Override
     public Type visitBitwiseOrExpression(MCLangParser.BitwiseOrExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         return BooleanType.bitwiseOr(BooleanType.valueOf(left), BooleanType.valueOf(right));
     }
 
     @Override
     public Type visitBooleanOrExpression(MCLangParser.BooleanOrExpressionContext context) {
-        Object left = visit(context.expr(0));
-        Object right = visit(context.expr(1));
+        Type left = visit(context.expr(0));
+        Type right = visit(context.expr(1));
 
         return BooleanType.booleanOr(BooleanType.valueOf(left), BooleanType.valueOf(right));
     }
 
     @Override
     public Type visitBooleanNotExpression(MCLangParser.BooleanNotExpressionContext context) {
-        Object input = visit(context.expr());
+        Type input = visit(context.expr());
 
         return BooleanType.booleanNot(BooleanType.valueOf(input));
     }
@@ -267,7 +267,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitIfStatement(MCLangParser.IfStatementContext context) {
         BooleanType cond = BooleanType.valueOf(visit(context.expr()));
-        if (cond.booleanValue)
+        if (cond.value)
             visit(context.body(0));
         else
             visit(context.body(1));
@@ -276,8 +276,19 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitBody(MCLangParser.BodyContext ctx) {
-        ctx.statement().forEach(this::visitStatement);
+    public Type visitWhileStatement(MCLangParser.WhileStatementContext context) {
+        while (BooleanType.valueOf(visit(context.expr())).value) {
+            visitBody(context.body());
+        }
+
+        return null;
+    }
+
+    @Override
+    public Type visitBody(MCLangParser.BodyContext context) {
+        for (MCLangParser.StatementContext context1 : context.statement()) {
+            visitStatement(context1);
+        }
         return null;
     }
 }

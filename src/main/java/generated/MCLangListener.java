@@ -348,6 +348,16 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitIfStatement(MCLangParser.IfStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MCLangParser#whileStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileStatement(MCLangParser.WhileStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#whileStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileStatement(MCLangParser.WhileStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MCLangParser#body}.
 	 * @param ctx the parse tree
 	 */

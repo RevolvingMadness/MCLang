@@ -5,6 +5,7 @@ program: statement*;
 statement
     : variableAssignment ';'
     | ifStatement ';'?
+    | whileStatement ';'?
     ;
 
 expr
@@ -39,7 +40,9 @@ variableAssignment
     : IDENTIFIER '=' expr
     ;
 
-ifStatement: 'if (' expr ')' body ('else ' body)?;
+ifStatement: 'if' '(' expr ')' body ('else' body)?;
+
+whileStatement: 'while' '(' expr ')' body;
 
 body: '{' statement* '}';
 

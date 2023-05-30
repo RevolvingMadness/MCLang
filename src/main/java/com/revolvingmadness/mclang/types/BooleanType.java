@@ -3,22 +3,17 @@ package com.revolvingmadness.mclang.types;
 import java.util.Objects;
 
 public class BooleanType extends Type {
-    public int intValue;
-    public boolean booleanValue;
+    public boolean value;
 
-    public BooleanType(boolean booleanValue) {
-        this.booleanValue = booleanValue;
-        this.intValue = booleanValue ? 1 : 0;
+    public BooleanType(boolean value) {
+        this.value = value;
     }
 
     public static BooleanType getBoolean(String input) {
         return new BooleanType(Objects.equals(input, "true"));
     }
 
-    public static BooleanType valueOf(Object input) {
-        if (input instanceof Boolean)
-            return new BooleanType((Boolean) input);
-
+    public static BooleanType valueOf(Type input) {
         if (input instanceof BooleanType)
             return (BooleanType) input;
 
@@ -35,27 +30,23 @@ public class BooleanType extends Type {
     }
 
     public static BooleanType booleanOr(BooleanType left, BooleanType right) {
-        return new BooleanType(left.booleanValue || right.booleanValue);
-    }
-
-    public static BooleanType equalTo(BooleanType left, BooleanType right) {
-        return new BooleanType(left.booleanValue == right.booleanValue);
+        return new BooleanType(left.value || right.value);
     }
 
     public static BooleanType bitwiseOr(BooleanType left, BooleanType right) {
-        return new BooleanType(left.booleanValue | right.booleanValue);
+        return new BooleanType(left.value | right.value);
     }
 
     public static BooleanType bitwiseXor(BooleanType left, BooleanType right) {
-        return new BooleanType(left.booleanValue ^ right.booleanValue);
+        return new BooleanType(left.value ^ right.value);
     }
 
     public static BooleanType booleanAnd(BooleanType left, BooleanType right) {
-        return new BooleanType(left.booleanValue && right.booleanValue);
+        return new BooleanType(left.value && right.value);
     }
 
     public static BooleanType booleanNot(BooleanType input) {
-        return new BooleanType(!input.booleanValue);
+        return new BooleanType(!input.value);
     }
 
     @Override
@@ -64,11 +55,11 @@ public class BooleanType extends Type {
             return true;
         if (!(other instanceof BooleanType) || other == null)
             return false;
-        return booleanValue == ((BooleanType) other).booleanValue;
+        return value == ((BooleanType) other).value;
     }
 
     @Override
     public String toString() {
-        return Boolean.toString(this.booleanValue);
+        return Boolean.toString(this.value);
     }
 }

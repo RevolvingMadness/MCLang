@@ -210,6 +210,12 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIfStatement(MCLangParser.IfStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MCLangParser#whileStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileStatement(MCLangParser.WhileStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MCLangParser#body}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

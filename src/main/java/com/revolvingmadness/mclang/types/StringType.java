@@ -11,7 +11,7 @@ public class StringType extends Type {
     }
 
     public static boolean canMultiply(Object left, Object right) {
-        return (left instanceof String && right instanceof Integer) || (right instanceof String && left instanceof Integer);
+        return (left instanceof String && right instanceof Integer) || (left instanceof Integer && right instanceof String);
     }
 
     public static StringType multiply(Object left, Object right) {
