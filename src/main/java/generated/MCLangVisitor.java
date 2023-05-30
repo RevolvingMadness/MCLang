@@ -198,11 +198,82 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBooleanAndExpression(MCLangParser.BooleanAndExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MCLangParser#variableAssignment}.
+	 * Visit a parse tree produced by the {@code regularVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableAssignment(MCLangParser.VariableAssignmentContext ctx);
+	T visitRegularVariableAssignment(MCLangParser.RegularVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exponentiationVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExponentiationVariableAssignment(MCLangParser.ExponentiationVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code multiplyVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultiplyVariableAssignment(MCLangParser.MultiplyVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code divideVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDivideVariableAssignment(MCLangParser.DivideVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code floorDivideVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloorDivideVariableAssignment(MCLangParser.FloorDivideVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code moduloVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitModuloVariableAssignment(MCLangParser.ModuloVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code addVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddVariableAssignment(MCLangParser.AddVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code subtractVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code bitwiseAndVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBitwiseAndVariableAssignment(MCLangParser.BitwiseAndVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code bitwiseXorVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBitwiseXorVariableAssignment(MCLangParser.BitwiseXorVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code bitwiseOrVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBitwiseOrVariableAssignment(MCLangParser.BitwiseOrVariableAssignmentContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MCLangParser#ifStatement}.
 	 * @param ctx the parse tree

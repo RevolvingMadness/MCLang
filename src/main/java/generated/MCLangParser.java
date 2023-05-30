@@ -20,8 +20,10 @@ public class MCLangParser extends Parser {
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
-		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, STRING=30, NUMBER=31, 
-		INT=32, FLOAT=33, BOOLEAN=34, IDENTIFIER=35, WS=36;
+		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
+		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
+		T__38=39, STRING=40, NUMBER=41, INT=42, FLOAT=43, BOOLEAN=44, IDENTIFIER=45, 
+		WS=46;
 	public static final int
 		RULE_program = 0, RULE_statement = 1, RULE_expr = 2, RULE_variableAssignment = 3, 
 		RULE_ifStatement = 4, RULE_whileStatement = 5, RULE_body = 6;
@@ -36,9 +38,10 @@ public class MCLangParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, "';'", "'('", "')'", "'**'", "'*'", "'/'", "'//'", "'%'", "'+'", 
-			"'-'", "'<'", "'<='", "'>'", "'>='", "'!='", "'=='", "'&'", "'&&'", "'^'", 
-			"'|'", "'||'", "'!'", "':='", "'='", "'if'", "'else'", "'while'", "'{'", 
-			"'}'"
+			"'-'", "'<'", "'<='", "'>'", "'>='", "'!='", "'=='", "'&'", "'^'", "'|'", 
+			"'&&'", "'||'", "'!'", "':='", "'='", "'**='", "'*='", "'/='", "'//='", 
+			"'%='", "'+='", "'-='", "'&='", "'^='", "'|='", "'if'", "'else'", "'while'", 
+			"'{'", "'}'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -46,8 +49,9 @@ public class MCLangParser extends Parser {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, "STRING", "NUMBER", "INT", "FLOAT", 
-			"BOOLEAN", "IDENTIFIER", "WS"
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, "STRING", "NUMBER", "INT", "FLOAT", "BOOLEAN", 
+			"IDENTIFIER", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -138,7 +142,7 @@ public class MCLangParser extends Parser {
 			setState(17);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 34527510528L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 35356170780672L) != 0)) {
 				{
 				{
 				setState(14);
@@ -209,7 +213,7 @@ public class MCLangParser extends Parser {
 				match(T__0);
 				}
 				break;
-			case T__24:
+			case T__34:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(23);
@@ -226,7 +230,7 @@ public class MCLangParser extends Parser {
 
 				}
 				break;
-			case T__26:
+			case T__36:
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(27);
@@ -1093,7 +1097,7 @@ public class MCLangParser extends Parser {
 						break;
 					case 15:
 						{
-						_localctx = new BooleanAndExpressionContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new BitwiseXorExpressionContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(91);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
@@ -1105,7 +1109,7 @@ public class MCLangParser extends Parser {
 						break;
 					case 16:
 						{
-						_localctx = new BitwiseXorExpressionContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new BitwiseOrExpressionContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(94);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
@@ -1117,7 +1121,7 @@ public class MCLangParser extends Parser {
 						break;
 					case 17:
 						{
-						_localctx = new BitwiseOrExpressionContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new BooleanAndExpressionContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(97);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
@@ -1161,25 +1165,244 @@ public class MCLangParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class VariableAssignmentContext extends ParserRuleContext {
-		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
-		}
 		public VariableAssignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variableAssignment; }
+	 
+		public VariableAssignmentContext() { }
+		public void copyFrom(VariableAssignmentContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class DivideVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public DivideVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterVariableAssignment(this);
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterDivideVariableAssignment(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitVariableAssignment(this);
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitDivideVariableAssignment(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitVariableAssignment(this);
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitDivideVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class AddVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public AddVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterAddVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitAddVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitAddVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class MultiplyVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public MultiplyVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterMultiplyVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitMultiplyVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitMultiplyVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class BitwiseAndVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public BitwiseAndVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterBitwiseAndVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitBitwiseAndVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitBitwiseAndVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class FloorDivideVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public FloorDivideVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterFloorDivideVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitFloorDivideVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitFloorDivideVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class BitwiseOrVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public BitwiseOrVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterBitwiseOrVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitBitwiseOrVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitBitwiseOrVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class ModuloVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public ModuloVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterModuloVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitModuloVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitModuloVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class RegularVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public RegularVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterRegularVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitRegularVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitRegularVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class SubtractVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public SubtractVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterSubtractVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitSubtractVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitSubtractVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class BitwiseXorVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public BitwiseXorVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterBitwiseXorVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitBitwiseXorVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitBitwiseXorVariableAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class ExponentiationVariableAssignmentContext extends VariableAssignmentContext {
+		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public ExponentiationVariableAssignmentContext(VariableAssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).enterExponentiationVariableAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MCLangListener ) ((MCLangListener)listener).exitExponentiationVariableAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof MCLangVisitor ) return ((MCLangVisitor<? extends T>)visitor).visitExponentiationVariableAssignment(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1188,14 +1411,141 @@ public class MCLangParser extends Parser {
 		VariableAssignmentContext _localctx = new VariableAssignmentContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_variableAssignment);
 		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(108);
-			match(IDENTIFIER);
-			setState(109);
-			match(T__23);
-			setState(110);
-			expr(0);
+			setState(141);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
+			case 1:
+				_localctx = new RegularVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(108);
+				match(IDENTIFIER);
+				setState(109);
+				match(T__23);
+				setState(110);
+				expr(0);
+				}
+				break;
+			case 2:
+				_localctx = new ExponentiationVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(111);
+				match(IDENTIFIER);
+				setState(112);
+				match(T__24);
+				setState(113);
+				expr(0);
+				}
+				break;
+			case 3:
+				_localctx = new MultiplyVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(114);
+				match(IDENTIFIER);
+				setState(115);
+				match(T__25);
+				setState(116);
+				expr(0);
+				}
+				break;
+			case 4:
+				_localctx = new DivideVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(117);
+				match(IDENTIFIER);
+				setState(118);
+				match(T__26);
+				setState(119);
+				expr(0);
+				}
+				break;
+			case 5:
+				_localctx = new FloorDivideVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 5);
+				{
+				setState(120);
+				match(IDENTIFIER);
+				setState(121);
+				match(T__27);
+				setState(122);
+				expr(0);
+				}
+				break;
+			case 6:
+				_localctx = new ModuloVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 6);
+				{
+				setState(123);
+				match(IDENTIFIER);
+				setState(124);
+				match(T__28);
+				setState(125);
+				expr(0);
+				}
+				break;
+			case 7:
+				_localctx = new AddVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 7);
+				{
+				setState(126);
+				match(IDENTIFIER);
+				setState(127);
+				match(T__29);
+				setState(128);
+				expr(0);
+				}
+				break;
+			case 8:
+				_localctx = new SubtractVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 8);
+				{
+				setState(129);
+				match(IDENTIFIER);
+				setState(130);
+				match(T__30);
+				setState(131);
+				expr(0);
+				}
+				break;
+			case 9:
+				_localctx = new BitwiseAndVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 9);
+				{
+				setState(132);
+				match(IDENTIFIER);
+				setState(133);
+				match(T__31);
+				setState(134);
+				expr(0);
+				}
+				break;
+			case 10:
+				_localctx = new BitwiseXorVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 10);
+				{
+				setState(135);
+				match(IDENTIFIER);
+				setState(136);
+				match(T__32);
+				setState(137);
+				expr(0);
+				}
+				break;
+			case 11:
+				_localctx = new BitwiseOrVariableAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 11);
+				{
+				setState(138);
+				match(IDENTIFIER);
+				setState(139);
+				match(T__33);
+				setState(140);
+				expr(0);
+				}
+				break;
 			}
 		}
 		catch (RecognitionException re) {
@@ -1246,24 +1596,24 @@ public class MCLangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(112);
-			match(T__24);
-			setState(113);
+			setState(143);
+			match(T__34);
+			setState(144);
 			match(T__1);
-			setState(114);
+			setState(145);
 			expr(0);
-			setState(115);
+			setState(146);
 			match(T__2);
-			setState(116);
+			setState(147);
 			body();
-			setState(119);
+			setState(150);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__25) {
+			if (_la==T__35) {
 				{
-				setState(117);
-				match(T__25);
-				setState(118);
+				setState(148);
+				match(T__35);
+				setState(149);
 				body();
 				}
 			}
@@ -1314,15 +1664,15 @@ public class MCLangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(121);
-			match(T__26);
-			setState(122);
+			setState(152);
+			match(T__36);
+			setState(153);
 			match(T__1);
-			setState(123);
+			setState(154);
 			expr(0);
-			setState(124);
+			setState(155);
 			match(T__2);
-			setState(125);
+			setState(156);
 			body();
 			}
 		}
@@ -1371,24 +1721,24 @@ public class MCLangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(127);
-			match(T__27);
-			setState(131);
+			setState(158);
+			match(T__37);
+			setState(162);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 34527510528L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 35356170780672L) != 0)) {
 				{
 				{
-				setState(128);
+				setState(159);
 				statement();
 				}
 				}
-				setState(133);
+				setState(164);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(134);
-			match(T__28);
+			setState(165);
+			match(T__38);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1452,7 +1802,7 @@ public class MCLangParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001$\u0089\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001.\u00a8\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0001\u0000\u0005\u0000\u0010"+
 		"\b\u0000\n\u0000\f\u0000\u0013\t\u0000\u0001\u0001\u0001\u0001\u0001\u0001"+
@@ -1470,74 +1820,98 @@ public class MCLangParser extends Parser {
 		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
 		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
 		"\u0001\u0002\u0001\u0002\u0005\u0002h\b\u0002\n\u0002\f\u0002k\t\u0002"+
-		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0004\u0001\u0004"+
-		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0003\u0004"+
-		"x\b\u0004\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005"+
-		"\u0001\u0005\u0001\u0006\u0001\u0006\u0005\u0006\u0082\b\u0006\n\u0006"+
-		"\f\u0006\u0085\t\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0000\u0001"+
-		"\u0004\u0007\u0000\u0002\u0004\u0006\b\n\f\u0000\u0000\u00a0\u0000\u0011"+
-		"\u0001\u0000\u0000\u0000\u0002\u001f\u0001\u0000\u0000\u0000\u0004/\u0001"+
-		"\u0000\u0000\u0000\u0006l\u0001\u0000\u0000\u0000\bp\u0001\u0000\u0000"+
-		"\u0000\ny\u0001\u0000\u0000\u0000\f\u007f\u0001\u0000\u0000\u0000\u000e"+
-		"\u0010\u0003\u0002\u0001\u0000\u000f\u000e\u0001\u0000\u0000\u0000\u0010"+
-		"\u0013\u0001\u0000\u0000\u0000\u0011\u000f\u0001\u0000\u0000\u0000\u0011"+
-		"\u0012\u0001\u0000\u0000\u0000\u0012\u0001\u0001\u0000\u0000\u0000\u0013"+
-		"\u0011\u0001\u0000\u0000\u0000\u0014\u0015\u0003\u0006\u0003\u0000\u0015"+
-		"\u0016\u0005\u0001\u0000\u0000\u0016 \u0001\u0000\u0000\u0000\u0017\u0019"+
-		"\u0003\b\u0004\u0000\u0018\u001a\u0005\u0001\u0000\u0000\u0019\u0018\u0001"+
-		"\u0000\u0000\u0000\u0019\u001a\u0001\u0000\u0000\u0000\u001a \u0001\u0000"+
-		"\u0000\u0000\u001b\u001d\u0003\n\u0005\u0000\u001c\u001e\u0005\u0001\u0000"+
-		"\u0000\u001d\u001c\u0001\u0000\u0000\u0000\u001d\u001e\u0001\u0000\u0000"+
-		"\u0000\u001e \u0001\u0000\u0000\u0000\u001f\u0014\u0001\u0000\u0000\u0000"+
-		"\u001f\u0017\u0001\u0000\u0000\u0000\u001f\u001b\u0001\u0000\u0000\u0000"+
-		" \u0003\u0001\u0000\u0000\u0000!\"\u0006\u0002\uffff\uffff\u0000\"0\u0005"+
-		"\u001f\u0000\u0000#0\u0005\u001e\u0000\u0000$0\u0005\"\u0000\u0000%0\u0005"+
-		"#\u0000\u0000&\'\u0005\u0002\u0000\u0000\'(\u0003\u0004\u0002\u0000()"+
-		"\u0005\u0003\u0000\u0000)0\u0001\u0000\u0000\u0000*+\u0005\u0016\u0000"+
-		"\u0000+0\u0003\u0004\u0002\u0002,-\u0005#\u0000\u0000-.\u0005\u0017\u0000"+
-		"\u0000.0\u0003\u0004\u0002\u0001/!\u0001\u0000\u0000\u0000/#\u0001\u0000"+
-		"\u0000\u0000/$\u0001\u0000\u0000\u0000/%\u0001\u0000\u0000\u0000/&\u0001"+
-		"\u0000\u0000\u0000/*\u0001\u0000\u0000\u0000/,\u0001\u0000\u0000\u0000"+
-		"0i\u0001\u0000\u0000\u000012\n\u0014\u0000\u000023\u0005\u0004\u0000\u0000"+
-		"3h\u0003\u0004\u0002\u001545\n\u0013\u0000\u000056\u0005\u0005\u0000\u0000"+
-		"6h\u0003\u0004\u0002\u001478\n\u0012\u0000\u000089\u0005\u0006\u0000\u0000"+
-		"9h\u0003\u0004\u0002\u0013:;\n\u0011\u0000\u0000;<\u0005\u0007\u0000\u0000"+
-		"<h\u0003\u0004\u0002\u0012=>\n\u0010\u0000\u0000>?\u0005\b\u0000\u0000"+
-		"?h\u0003\u0004\u0002\u0011@A\n\u000f\u0000\u0000AB\u0005\t\u0000\u0000"+
-		"Bh\u0003\u0004\u0002\u0010CD\n\u000e\u0000\u0000DE\u0005\n\u0000\u0000"+
-		"Eh\u0003\u0004\u0002\u000fFG\n\r\u0000\u0000GH\u0005\u000b\u0000\u0000"+
-		"Hh\u0003\u0004\u0002\u000eIJ\n\f\u0000\u0000JK\u0005\f\u0000\u0000Kh\u0003"+
-		"\u0004\u0002\rLM\n\u000b\u0000\u0000MN\u0005\r\u0000\u0000Nh\u0003\u0004"+
-		"\u0002\fOP\n\n\u0000\u0000PQ\u0005\u000e\u0000\u0000Qh\u0003\u0004\u0002"+
-		"\u000bRS\n\t\u0000\u0000ST\u0005\u000f\u0000\u0000Th\u0003\u0004\u0002"+
-		"\nUV\n\b\u0000\u0000VW\u0005\u0010\u0000\u0000Wh\u0003\u0004\u0002\tX"+
-		"Y\n\u0007\u0000\u0000YZ\u0005\u0011\u0000\u0000Zh\u0003\u0004\u0002\b"+
-		"[\\\n\u0006\u0000\u0000\\]\u0005\u0012\u0000\u0000]h\u0003\u0004\u0002"+
-		"\u0007^_\n\u0005\u0000\u0000_`\u0005\u0013\u0000\u0000`h\u0003\u0004\u0002"+
-		"\u0006ab\n\u0004\u0000\u0000bc\u0005\u0014\u0000\u0000ch\u0003\u0004\u0002"+
-		"\u0005de\n\u0003\u0000\u0000ef\u0005\u0015\u0000\u0000fh\u0003\u0004\u0002"+
-		"\u0004g1\u0001\u0000\u0000\u0000g4\u0001\u0000\u0000\u0000g7\u0001\u0000"+
-		"\u0000\u0000g:\u0001\u0000\u0000\u0000g=\u0001\u0000\u0000\u0000g@\u0001"+
-		"\u0000\u0000\u0000gC\u0001\u0000\u0000\u0000gF\u0001\u0000\u0000\u0000"+
-		"gI\u0001\u0000\u0000\u0000gL\u0001\u0000\u0000\u0000gO\u0001\u0000\u0000"+
-		"\u0000gR\u0001\u0000\u0000\u0000gU\u0001\u0000\u0000\u0000gX\u0001\u0000"+
-		"\u0000\u0000g[\u0001\u0000\u0000\u0000g^\u0001\u0000\u0000\u0000ga\u0001"+
-		"\u0000\u0000\u0000gd\u0001\u0000\u0000\u0000hk\u0001\u0000\u0000\u0000"+
-		"ig\u0001\u0000\u0000\u0000ij\u0001\u0000\u0000\u0000j\u0005\u0001\u0000"+
-		"\u0000\u0000ki\u0001\u0000\u0000\u0000lm\u0005#\u0000\u0000mn\u0005\u0018"+
-		"\u0000\u0000no\u0003\u0004\u0002\u0000o\u0007\u0001\u0000\u0000\u0000"+
-		"pq\u0005\u0019\u0000\u0000qr\u0005\u0002\u0000\u0000rs\u0003\u0004\u0002"+
-		"\u0000st\u0005\u0003\u0000\u0000tw\u0003\f\u0006\u0000uv\u0005\u001a\u0000"+
-		"\u0000vx\u0003\f\u0006\u0000wu\u0001\u0000\u0000\u0000wx\u0001\u0000\u0000"+
-		"\u0000x\t\u0001\u0000\u0000\u0000yz\u0005\u001b\u0000\u0000z{\u0005\u0002"+
-		"\u0000\u0000{|\u0003\u0004\u0002\u0000|}\u0005\u0003\u0000\u0000}~\u0003"+
-		"\f\u0006\u0000~\u000b\u0001\u0000\u0000\u0000\u007f\u0083\u0005\u001c"+
-		"\u0000\u0000\u0080\u0082\u0003\u0002\u0001\u0000\u0081\u0080\u0001\u0000"+
-		"\u0000\u0000\u0082\u0085\u0001\u0000\u0000\u0000\u0083\u0081\u0001\u0000"+
-		"\u0000\u0000\u0083\u0084\u0001\u0000\u0000\u0000\u0084\u0086\u0001\u0000"+
-		"\u0000\u0000\u0085\u0083\u0001\u0000\u0000\u0000\u0086\u0087\u0005\u001d"+
-		"\u0000\u0000\u0087\r\u0001\u0000\u0000\u0000\t\u0011\u0019\u001d\u001f"+
-		"/giw\u0083";
+		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
+		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
+		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
+		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
+		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
+		"\u0001\u0003\u0001\u0003\u0001\u0003\u0003\u0003\u008e\b\u0003\u0001\u0004"+
+		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004"+
+		"\u0003\u0004\u0097\b\u0004\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005"+
+		"\u0001\u0005\u0001\u0005\u0001\u0006\u0001\u0006\u0005\u0006\u00a1\b\u0006"+
+		"\n\u0006\f\u0006\u00a4\t\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0000"+
+		"\u0001\u0004\u0007\u0000\u0002\u0004\u0006\b\n\f\u0000\u0000\u00c9\u0000"+
+		"\u0011\u0001\u0000\u0000\u0000\u0002\u001f\u0001\u0000\u0000\u0000\u0004"+
+		"/\u0001\u0000\u0000\u0000\u0006\u008d\u0001\u0000\u0000\u0000\b\u008f"+
+		"\u0001\u0000\u0000\u0000\n\u0098\u0001\u0000\u0000\u0000\f\u009e\u0001"+
+		"\u0000\u0000\u0000\u000e\u0010\u0003\u0002\u0001\u0000\u000f\u000e\u0001"+
+		"\u0000\u0000\u0000\u0010\u0013\u0001\u0000\u0000\u0000\u0011\u000f\u0001"+
+		"\u0000\u0000\u0000\u0011\u0012\u0001\u0000\u0000\u0000\u0012\u0001\u0001"+
+		"\u0000\u0000\u0000\u0013\u0011\u0001\u0000\u0000\u0000\u0014\u0015\u0003"+
+		"\u0006\u0003\u0000\u0015\u0016\u0005\u0001\u0000\u0000\u0016 \u0001\u0000"+
+		"\u0000\u0000\u0017\u0019\u0003\b\u0004\u0000\u0018\u001a\u0005\u0001\u0000"+
+		"\u0000\u0019\u0018\u0001\u0000\u0000\u0000\u0019\u001a\u0001\u0000\u0000"+
+		"\u0000\u001a \u0001\u0000\u0000\u0000\u001b\u001d\u0003\n\u0005\u0000"+
+		"\u001c\u001e\u0005\u0001\u0000\u0000\u001d\u001c\u0001\u0000\u0000\u0000"+
+		"\u001d\u001e\u0001\u0000\u0000\u0000\u001e \u0001\u0000\u0000\u0000\u001f"+
+		"\u0014\u0001\u0000\u0000\u0000\u001f\u0017\u0001\u0000\u0000\u0000\u001f"+
+		"\u001b\u0001\u0000\u0000\u0000 \u0003\u0001\u0000\u0000\u0000!\"\u0006"+
+		"\u0002\uffff\uffff\u0000\"0\u0005)\u0000\u0000#0\u0005(\u0000\u0000$0"+
+		"\u0005,\u0000\u0000%0\u0005-\u0000\u0000&\'\u0005\u0002\u0000\u0000\'"+
+		"(\u0003\u0004\u0002\u0000()\u0005\u0003\u0000\u0000)0\u0001\u0000\u0000"+
+		"\u0000*+\u0005\u0016\u0000\u0000+0\u0003\u0004\u0002\u0002,-\u0005-\u0000"+
+		"\u0000-.\u0005\u0017\u0000\u0000.0\u0003\u0004\u0002\u0001/!\u0001\u0000"+
+		"\u0000\u0000/#\u0001\u0000\u0000\u0000/$\u0001\u0000\u0000\u0000/%\u0001"+
+		"\u0000\u0000\u0000/&\u0001\u0000\u0000\u0000/*\u0001\u0000\u0000\u0000"+
+		"/,\u0001\u0000\u0000\u00000i\u0001\u0000\u0000\u000012\n\u0014\u0000\u0000"+
+		"23\u0005\u0004\u0000\u00003h\u0003\u0004\u0002\u001545\n\u0013\u0000\u0000"+
+		"56\u0005\u0005\u0000\u00006h\u0003\u0004\u0002\u001478\n\u0012\u0000\u0000"+
+		"89\u0005\u0006\u0000\u00009h\u0003\u0004\u0002\u0013:;\n\u0011\u0000\u0000"+
+		";<\u0005\u0007\u0000\u0000<h\u0003\u0004\u0002\u0012=>\n\u0010\u0000\u0000"+
+		">?\u0005\b\u0000\u0000?h\u0003\u0004\u0002\u0011@A\n\u000f\u0000\u0000"+
+		"AB\u0005\t\u0000\u0000Bh\u0003\u0004\u0002\u0010CD\n\u000e\u0000\u0000"+
+		"DE\u0005\n\u0000\u0000Eh\u0003\u0004\u0002\u000fFG\n\r\u0000\u0000GH\u0005"+
+		"\u000b\u0000\u0000Hh\u0003\u0004\u0002\u000eIJ\n\f\u0000\u0000JK\u0005"+
+		"\f\u0000\u0000Kh\u0003\u0004\u0002\rLM\n\u000b\u0000\u0000MN\u0005\r\u0000"+
+		"\u0000Nh\u0003\u0004\u0002\fOP\n\n\u0000\u0000PQ\u0005\u000e\u0000\u0000"+
+		"Qh\u0003\u0004\u0002\u000bRS\n\t\u0000\u0000ST\u0005\u000f\u0000\u0000"+
+		"Th\u0003\u0004\u0002\nUV\n\b\u0000\u0000VW\u0005\u0010\u0000\u0000Wh\u0003"+
+		"\u0004\u0002\tXY\n\u0007\u0000\u0000YZ\u0005\u0011\u0000\u0000Zh\u0003"+
+		"\u0004\u0002\b[\\\n\u0006\u0000\u0000\\]\u0005\u0012\u0000\u0000]h\u0003"+
+		"\u0004\u0002\u0007^_\n\u0005\u0000\u0000_`\u0005\u0013\u0000\u0000`h\u0003"+
+		"\u0004\u0002\u0006ab\n\u0004\u0000\u0000bc\u0005\u0014\u0000\u0000ch\u0003"+
+		"\u0004\u0002\u0005de\n\u0003\u0000\u0000ef\u0005\u0015\u0000\u0000fh\u0003"+
+		"\u0004\u0002\u0004g1\u0001\u0000\u0000\u0000g4\u0001\u0000\u0000\u0000"+
+		"g7\u0001\u0000\u0000\u0000g:\u0001\u0000\u0000\u0000g=\u0001\u0000\u0000"+
+		"\u0000g@\u0001\u0000\u0000\u0000gC\u0001\u0000\u0000\u0000gF\u0001\u0000"+
+		"\u0000\u0000gI\u0001\u0000\u0000\u0000gL\u0001\u0000\u0000\u0000gO\u0001"+
+		"\u0000\u0000\u0000gR\u0001\u0000\u0000\u0000gU\u0001\u0000\u0000\u0000"+
+		"gX\u0001\u0000\u0000\u0000g[\u0001\u0000\u0000\u0000g^\u0001\u0000\u0000"+
+		"\u0000ga\u0001\u0000\u0000\u0000gd\u0001\u0000\u0000\u0000hk\u0001\u0000"+
+		"\u0000\u0000ig\u0001\u0000\u0000\u0000ij\u0001\u0000\u0000\u0000j\u0005"+
+		"\u0001\u0000\u0000\u0000ki\u0001\u0000\u0000\u0000lm\u0005-\u0000\u0000"+
+		"mn\u0005\u0018\u0000\u0000n\u008e\u0003\u0004\u0002\u0000op\u0005-\u0000"+
+		"\u0000pq\u0005\u0019\u0000\u0000q\u008e\u0003\u0004\u0002\u0000rs\u0005"+
+		"-\u0000\u0000st\u0005\u001a\u0000\u0000t\u008e\u0003\u0004\u0002\u0000"+
+		"uv\u0005-\u0000\u0000vw\u0005\u001b\u0000\u0000w\u008e\u0003\u0004\u0002"+
+		"\u0000xy\u0005-\u0000\u0000yz\u0005\u001c\u0000\u0000z\u008e\u0003\u0004"+
+		"\u0002\u0000{|\u0005-\u0000\u0000|}\u0005\u001d\u0000\u0000}\u008e\u0003"+
+		"\u0004\u0002\u0000~\u007f\u0005-\u0000\u0000\u007f\u0080\u0005\u001e\u0000"+
+		"\u0000\u0080\u008e\u0003\u0004\u0002\u0000\u0081\u0082\u0005-\u0000\u0000"+
+		"\u0082\u0083\u0005\u001f\u0000\u0000\u0083\u008e\u0003\u0004\u0002\u0000"+
+		"\u0084\u0085\u0005-\u0000\u0000\u0085\u0086\u0005 \u0000\u0000\u0086\u008e"+
+		"\u0003\u0004\u0002\u0000\u0087\u0088\u0005-\u0000\u0000\u0088\u0089\u0005"+
+		"!\u0000\u0000\u0089\u008e\u0003\u0004\u0002\u0000\u008a\u008b\u0005-\u0000"+
+		"\u0000\u008b\u008c\u0005\"\u0000\u0000\u008c\u008e\u0003\u0004\u0002\u0000"+
+		"\u008dl\u0001\u0000\u0000\u0000\u008do\u0001\u0000\u0000\u0000\u008dr"+
+		"\u0001\u0000\u0000\u0000\u008du\u0001\u0000\u0000\u0000\u008dx\u0001\u0000"+
+		"\u0000\u0000\u008d{\u0001\u0000\u0000\u0000\u008d~\u0001\u0000\u0000\u0000"+
+		"\u008d\u0081\u0001\u0000\u0000\u0000\u008d\u0084\u0001\u0000\u0000\u0000"+
+		"\u008d\u0087\u0001\u0000\u0000\u0000\u008d\u008a\u0001\u0000\u0000\u0000"+
+		"\u008e\u0007\u0001\u0000\u0000\u0000\u008f\u0090\u0005#\u0000\u0000\u0090"+
+		"\u0091\u0005\u0002\u0000\u0000\u0091\u0092\u0003\u0004\u0002\u0000\u0092"+
+		"\u0093\u0005\u0003\u0000\u0000\u0093\u0096\u0003\f\u0006\u0000\u0094\u0095"+
+		"\u0005$\u0000\u0000\u0095\u0097\u0003\f\u0006\u0000\u0096\u0094\u0001"+
+		"\u0000\u0000\u0000\u0096\u0097\u0001\u0000\u0000\u0000\u0097\t\u0001\u0000"+
+		"\u0000\u0000\u0098\u0099\u0005%\u0000\u0000\u0099\u009a\u0005\u0002\u0000"+
+		"\u0000\u009a\u009b\u0003\u0004\u0002\u0000\u009b\u009c\u0005\u0003\u0000"+
+		"\u0000\u009c\u009d\u0003\f\u0006\u0000\u009d\u000b\u0001\u0000\u0000\u0000"+
+		"\u009e\u00a2\u0005&\u0000\u0000\u009f\u00a1\u0003\u0002\u0001\u0000\u00a0"+
+		"\u009f\u0001\u0000\u0000\u0000\u00a1\u00a4\u0001\u0000\u0000\u0000\u00a2"+
+		"\u00a0\u0001\u0000\u0000\u0000\u00a2\u00a3\u0001\u0000\u0000\u0000\u00a3"+
+		"\u00a5\u0001\u0000\u0000\u0000\u00a4\u00a2\u0001\u0000\u0000\u0000\u00a5"+
+		"\u00a6\u0005\'\u0000\u0000\u00a6\r\u0001\u0000\u0000\u0000\n\u0011\u0019"+
+		"\u001d\u001f/gi\u008d\u0096\u00a2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

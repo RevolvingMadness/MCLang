@@ -12,21 +12,20 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     Map<String, Type> variables = new HashMap<>();
 
     @Override
-    public NumberType visitNumberExpression(MCLangParser.NumberExpressionContext context) {
+    public Type visitNumberExpression(MCLangParser.NumberExpressionContext context) {
         return NumberType.parseNumber(context.NUMBER().getText());
     }
 
     @Override
-    public StringType visitStringExpression(MCLangParser.StringExpressionContext context) {
+    public Type visitStringExpression(MCLangParser.StringExpressionContext context) {
         String wholeString = context.STRING().getText();
         return new StringType(wholeString.substring(1, wholeString.length() - 1));
     }
 
     @Override
-    public BooleanType visitBooleanExpression(MCLangParser.BooleanExpressionContext context) {
+    public Type visitBooleanExpression(MCLangParser.BooleanExpressionContext context) {
         return BooleanType.getBoolean(context.BOOLEAN().getText());
     }
-
 
     @Override
     public Type visitIdentifierExpression(MCLangParser.IdentifierExpressionContext context) {
@@ -47,13 +46,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("**", left, right);
-
-        double result = Math.pow(((NumberType) left).value.doubleValue(), ((NumberType) right).value.doubleValue());
-        if (left instanceof FloatType || right instanceof FloatType)
-            return new FloatType(result);
-        return new IntegerType(result);
+        return NumberType.exponentiate((NumberType) left, (NumberType) right);
     }
 
     @Override
@@ -63,9 +56,6 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
         if (StringType.canMultiply(left, right))
             return StringType.multiply(left, right);
-
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("*", left, right);
 
         return NumberType.multiply((NumberType) left, (NumberType) right);
     }
@@ -86,10 +76,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("//", left, right);
-
-        return new IntegerType(Math.floorDiv(((NumberType) left).value.longValue(), ((NumberType) right).value.longValue()));
+        return NumberType.floorDivide((NumberType) left, (NumberType) right);
     }
 
     @Override
@@ -97,15 +84,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("%", left, right);
-
-        long result = Math.floorMod(((NumberType) left).value.longValue(), ((NumberType) right).value.longValue());
-
-        if (NumberType.isFloatAndInteger((NumberType) left, (NumberType) right))
-            return new FloatType(result);
-
-        return new IntegerType(result);
+        return NumberType.modulo((NumberType) left, (NumberType) right);
     }
 
     @Override
@@ -138,10 +117,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("<", left, right);
-
-        return new BooleanType(((NumberType) left).value.doubleValue() < ((NumberType) right).value.doubleValue());
+        return BooleanType.lessThan((NumberType) left, (NumberType) right);
     }
 
     @Override
@@ -149,10 +125,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("<=", left, right);
+        return BooleanType.lessThanOrEqualTo((NumberType) left, (NumberType) right);
 
-        return new BooleanType(((NumberType) left).value.doubleValue() <= ((NumberType) right).value.doubleValue());
     }
 
     @Override
@@ -160,10 +134,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException(">", left, right);
+        return BooleanType.greaterThan((NumberType) left, (NumberType) right);
 
-        return new BooleanType(((NumberType) left).value.doubleValue() > ((NumberType) right).value.doubleValue());
     }
 
     @Override
@@ -171,10 +143,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException(">=", left, right);
+        return BooleanType.greaterThanOrEqualTo((NumberType) left, (NumberType) right);
 
-        return new BooleanType(((NumberType) left).value.doubleValue() >= ((NumberType) right).value.doubleValue());
     }
 
     @Override
@@ -182,10 +152,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("!=", left, right);
-
-        return new BooleanType(((NumberType) left).value.doubleValue() != ((NumberType) right).value.doubleValue());
+        return BooleanType.notEqualTo((NumberType) left, (NumberType) right);
     }
 
     @Override
@@ -193,10 +160,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("==", left, right);
-
-        return NumberType.equalTo((NumberType) left, (NumberType) right);
+        return BooleanType.equalTo((NumberType) left, (NumberType) right);
     }
 
     @Override
@@ -220,7 +184,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.bitwiseXor(BooleanType.valueOf(left), BooleanType.valueOf(right));
+        return NumberType.bitwiseXor((NumberType) left, (NumberType) right);
     }
 
     @Override
@@ -228,7 +192,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.bitwiseOr(BooleanType.valueOf(left), BooleanType.valueOf(right));
+        return NumberType.bitwiseOr((NumberType) left, (NumberType) right);
     }
 
     @Override
@@ -256,10 +220,120 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitVariableAssignment(MCLangParser.VariableAssignmentContext context) {
+    public Type visitRegularVariableAssignment(MCLangParser.RegularVariableAssignmentContext context) {
         String name = context.IDENTIFIER().getText();
         Type value = visit(context.expr());
         variables.put(name, value);
+
+        return null;
+    }
+
+    @Override
+    public Type visitExponentiationVariableAssignment(MCLangParser.ExponentiationVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.exponentiate((NumberType) oldValue, (NumberType) newValue));
+
+        return null;
+    }
+
+    @Override
+    public Type visitMultiplyVariableAssignment(MCLangParser.MultiplyVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.multiply((NumberType) oldValue, (NumberType) newValue));
+
+        return null;
+    }
+
+    @Override
+    public Type visitDivideVariableAssignment(MCLangParser.DivideVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.divide((NumberType) oldValue, (NumberType) newValue));
+
+        return null;
+    }
+
+    @Override
+    public Type visitFloorDivideVariableAssignment(MCLangParser.FloorDivideVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.floorDivide((NumberType) oldValue, (NumberType) newValue));
+
+        return null;
+    }
+
+    @Override
+    public Type visitModuloVariableAssignment(MCLangParser.ModuloVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.modulo((NumberType) oldValue, (NumberType) newValue));
+
+        return null;
+    }
+
+    @Override
+    public Type visitAddVariableAssignment(MCLangParser.AddVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.add((NumberType) oldValue, (NumberType) newValue));
+
+        return null;
+    }
+
+    @Override
+    public Type visitSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.subtract((NumberType) oldValue, (NumberType) newValue));
+
+        return null;
+    }
+
+    @Override
+    public Type visitBitwiseAndVariableAssignment(MCLangParser.BitwiseAndVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.bitwiseAnd((NumberType) oldValue, (NumberType) newValue));
+
+        return null;
+    }
+
+    @Override
+    public Type visitBitwiseXorVariableAssignment(MCLangParser.BitwiseXorVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.bitwiseXor((NumberType) oldValue, (NumberType) newValue));
+
+        return null;
+    }
+
+    @Override
+    public Type visitBitwiseOrVariableAssignment(MCLangParser.BitwiseOrVariableAssignmentContext context) {
+        String name = context.IDENTIFIER().getText();
+        Type oldValue = variables.get(name);
+        Type newValue = visit(context.expr());
+
+        variables.put(name, NumberType.bitwiseOr((NumberType) oldValue, (NumberType) newValue));
 
         return null;
     }

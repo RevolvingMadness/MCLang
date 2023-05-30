@@ -328,15 +328,137 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitBooleanAndExpression(MCLangParser.BooleanAndExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MCLangParser#variableAssignment}.
+	 * Enter a parse tree produced by the {@code regularVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableAssignment(MCLangParser.VariableAssignmentContext ctx);
+	void enterRegularVariableAssignment(MCLangParser.RegularVariableAssignmentContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MCLangParser#variableAssignment}.
+	 * Exit a parse tree produced by the {@code regularVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableAssignment(MCLangParser.VariableAssignmentContext ctx);
+	void exitRegularVariableAssignment(MCLangParser.RegularVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exponentiationVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterExponentiationVariableAssignment(MCLangParser.ExponentiationVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exponentiationVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitExponentiationVariableAssignment(MCLangParser.ExponentiationVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code multiplyVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiplyVariableAssignment(MCLangParser.MultiplyVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code multiplyVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiplyVariableAssignment(MCLangParser.MultiplyVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code divideVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterDivideVariableAssignment(MCLangParser.DivideVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code divideVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitDivideVariableAssignment(MCLangParser.DivideVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code floorDivideVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterFloorDivideVariableAssignment(MCLangParser.FloorDivideVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code floorDivideVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitFloorDivideVariableAssignment(MCLangParser.FloorDivideVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code moduloVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterModuloVariableAssignment(MCLangParser.ModuloVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code moduloVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitModuloVariableAssignment(MCLangParser.ModuloVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code addVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterAddVariableAssignment(MCLangParser.AddVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code addVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitAddVariableAssignment(MCLangParser.AddVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code subtractVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code subtractVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code bitwiseAndVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterBitwiseAndVariableAssignment(MCLangParser.BitwiseAndVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code bitwiseAndVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitBitwiseAndVariableAssignment(MCLangParser.BitwiseAndVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code bitwiseXorVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterBitwiseXorVariableAssignment(MCLangParser.BitwiseXorVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code bitwiseXorVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitBitwiseXorVariableAssignment(MCLangParser.BitwiseXorVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code bitwiseOrVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterBitwiseOrVariableAssignment(MCLangParser.BitwiseOrVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code bitwiseOrVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitBitwiseOrVariableAssignment(MCLangParser.BitwiseOrVariableAssignmentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MCLangParser#ifStatement}.
 	 * @param ctx the parse tree

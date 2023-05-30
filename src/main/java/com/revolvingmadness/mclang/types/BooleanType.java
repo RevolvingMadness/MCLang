@@ -1,5 +1,7 @@
 package com.revolvingmadness.mclang.types;
 
+import com.revolvingmadness.mclang.MCLangInterpreter;
+
 import java.util.Objects;
 
 public class BooleanType extends Type {
@@ -29,16 +31,50 @@ public class BooleanType extends Type {
         throw new RuntimeException("Invalid boolean type '" + input.getClass().getName() + "'");
     }
 
+    public static BooleanType lessThan(NumberType left, NumberType right) {
+        if (!NumberType.bothNumbers(left, right))
+            MCLangInterpreter.throwBinOpException("<", left, right);
+
+        return new BooleanType(left.value.floatValue() < right.value.floatValue());
+    }
+
+    public static BooleanType lessThanOrEqualTo(NumberType left, NumberType right) {
+        if (!NumberType.bothNumbers(left, right))
+            MCLangInterpreter.throwBinOpException("<=", left, right);
+
+        return new BooleanType(left.value.floatValue() <= right.value.floatValue());
+    }
+
+    public static BooleanType greaterThan(NumberType left, NumberType right) {
+        if (!NumberType.bothNumbers(left, right))
+            MCLangInterpreter.throwBinOpException(">", left, right);
+
+        return new BooleanType(left.value.floatValue() > right.value.floatValue());
+    }
+
+    public static BooleanType greaterThanOrEqualTo(NumberType left, NumberType right) {
+        if (!NumberType.bothNumbers(left, right))
+            MCLangInterpreter.throwBinOpException(">=", left, right);
+
+        return new BooleanType(left.value.floatValue() >= right.value.floatValue());
+    }
+
+    public static BooleanType notEqualTo(NumberType left, NumberType right) {
+        if (!NumberType.bothNumbers(left, right))
+            MCLangInterpreter.throwBinOpException("!=", left, right);
+
+        return new BooleanType(left.value.floatValue() != right.value.floatValue());
+    }
+
+    public static BooleanType equalTo(NumberType left, NumberType right) {
+        if (!NumberType.bothNumbers(left, right))
+            MCLangInterpreter.throwBinOpException("==", left, right);
+
+        return new BooleanType(left.value.floatValue() == right.value.floatValue());
+    }
+
     public static BooleanType booleanOr(BooleanType left, BooleanType right) {
         return new BooleanType(left.value || right.value);
-    }
-
-    public static BooleanType bitwiseOr(BooleanType left, BooleanType right) {
-        return new BooleanType(left.value | right.value);
-    }
-
-    public static BooleanType bitwiseXor(BooleanType left, BooleanType right) {
-        return new BooleanType(left.value ^ right.value);
     }
 
     public static BooleanType booleanAnd(BooleanType left, BooleanType right) {

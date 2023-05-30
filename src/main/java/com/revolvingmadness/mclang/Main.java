@@ -4,16 +4,9 @@ public class Main {
     public static void main(String[] args) {
         MCLangInterpreter interpreter = new MCLangInterpreter();
         interpreter.run("""
-                result = 0;
-                i = 0;
-                j = 0;
-                while (i < 5) {
-                    while (j < 5) {
-                        result = result + 1;
-                        j = j + 1;
-                    }
-                    j = 0;
-                    i = i + 1;
+                x = 0;
+                while (x < 5000) {
+                    x += 1 + x;
                 }
                 """);
         System.out.println(interpreter.variables);
