@@ -45,7 +45,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Object> {
     }
 
     @Override
-    public Number visitPowerExpression(MCLangParser.PowerExpressionContext context) {
+    public Number visitExponentiationExpression(MCLangParser.ExponentiationExpressionContext context) {
         Object left = visit(context.expr(0));
         Object right = visit(context.expr(1));
 
@@ -104,6 +104,22 @@ public class MCLangVisitor extends MCLangBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitModuloExpression(MCLangParser.ModuloExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("modulo", left, right);
+
+        long result = Math.floorMod(((Number) left).longValue(), ((Number) right).longValue());
+
+        if (isFloatAndInteger(left, right))
+            return (float) result;
+
+        return (int) result;
+    }
+
+    @Override
     public Object visitAddExpression(MCLangParser.AddExpressionContext ctx) {
         Object left = visit(ctx.expr(0));
         Object right = visit(ctx.expr(1));
@@ -134,6 +150,155 @@ public class MCLangVisitor extends MCLangBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitLessThanExpression(MCLangParser.LessThanExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("less than", left, right);
+
+        return ((Number) left).doubleValue() < ((Number) right).doubleValue() ? 1 : 0;
+    }
+
+    @Override
+    public Object visitLessThanOrEqualToExpression(MCLangParser.LessThanOrEqualToExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("less than or equal to", left, right);
+
+        return ((Number) left).doubleValue() <= ((Number) right).doubleValue() ? 1 : 0;
+    }
+
+    @Override
+    public Object visitGreaterThanExpression(MCLangParser.GreaterThanExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("greater than", left, right);
+
+        return ((Number) left).doubleValue() > ((Number) right).doubleValue() ? 1 : 0;
+    }
+
+    @Override
+    public Object visitGreaterThanOrEqualToExpression(MCLangParser.GreaterThanOrEqualToExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("greater than or equal to", left, right);
+
+        return ((Number) left).doubleValue() >= ((Number) right).doubleValue() ? 1 : 0;
+    }
+
+    @Override
+    public Object visitNotEqualToExpression(MCLangParser.NotEqualToExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("not equal to", left, right);
+
+        return ((Number) left).doubleValue() != ((Number) right).doubleValue() ? 1 : 0;
+    }
+
+    @Override
+    public Object visitEqualToExpression(MCLangParser.EqualToExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("equal to", left, right);
+
+        return ((Number) left).doubleValue() == ((Number) right).doubleValue() ? 1 : 0;
+    }
+
+    @Override
+    public Object visitBitwiseAndExpression(MCLangParser.BitwiseAndExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("bitwise and", left, right);
+
+        if (!(left instanceof Integer) && !(right instanceof Integer))
+            throw new RuntimeException("Cannot apply 'bitwise and' to non-integers");
+
+        return ((Number) left).intValue() & ((Number) right).intValue();
+    }
+
+    @Override
+    public Object visitBooleanAndExpression(MCLangParser.BooleanAndExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("bitwise and", left, right);
+
+        return (toBoolean(((Number) left).intValue()) && toBoolean(((Number) right).intValue())) ? 1 : 0;
+    }
+
+    @Override
+    public Object visitBitwiseXorExpression(MCLangParser.BitwiseXorExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("bitwise xor", left, right);
+
+        if (!(left instanceof Integer) && !(right instanceof Integer))
+            throw new RuntimeException("Cannot apply 'bitwise xor' to non-integers");
+
+        return ((Number) left).intValue() ^ ((Number) right).intValue();
+    }
+
+    @Override
+    public Object visitBitwiseOrExpression(MCLangParser.BitwiseOrExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("bitwise or", left, right);
+
+        if (!(left instanceof Integer) && !(right instanceof Integer))
+            throw new RuntimeException("Cannot apply 'bitwise or' to non-integers");
+
+        return ((Number) left).intValue() | ((Number) right).intValue();
+    }
+
+    @Override
+    public Object visitBooleanOrExpression(MCLangParser.BooleanOrExpressionContext context) {
+        Object left = visit(context.expr(0));
+        Object right = visit(context.expr(1));
+
+        if (!bothNumbers(left, right))
+            throwBinOpException("bitwise and", left, right);
+
+        return (toBoolean(((Number) left).intValue()) || toBoolean(((Number) right).intValue())) ? 1 : 0;
+    }
+
+    @Override
+    public Object visitBooleanNotExpression(MCLangParser.BooleanNotExpressionContext context) {
+        Object input = visit(context.expr());
+
+        if (!(input instanceof Integer))
+            throw new RuntimeException("Cannot 'boolean not' type '" + input.getClass().getName() + "'");
+
+        return !(toBoolean(((Number) input).intValue())) ? 1 : 0;
+    }
+
+    @Override
+    public Object visitAssignmentExpression(MCLangParser.AssignmentExpressionContext context) {
+        String name = context.IDENTIFIER().getText();
+        Object value = visit(context.expr());
+        variables.put(name, value);
+
+        return value;
+    }
+
+    @Override
     public Void visitVariableAssignment(MCLangParser.VariableAssignmentContext context) {
         String name = context.IDENTIFIER().getText();
         Object value = visit(context.expr());
@@ -144,7 +309,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Object> {
 
     @Override
     public Object visitIfStatement(MCLangParser.IfStatementContext context) {
-        boolean cond = checkCondition(visit(context.expr()));
+        boolean cond = toBoolean(visit(context.expr()));
         if (cond)
             visit(context.body(0));
         else
@@ -159,20 +324,20 @@ public class MCLangVisitor extends MCLangBaseVisitor<Object> {
         return null;
     }
 
-    public boolean checkCondition(Object cond) {
-        if (cond instanceof Boolean)
-            return (boolean) cond;
+    public boolean toBoolean(Object input) {
+        if (input instanceof Boolean)
+            return (boolean) input;
 
-        if (cond instanceof String)
-            return cond != "";
+        if (input instanceof String)
+            return input != "";
 
-        if (cond instanceof Number)
-            return ((Number) cond).floatValue() != (float) 0.0;
+        if (input instanceof Number)
+            return ((Number) input).floatValue() != (float) 0.0;
 
-        throw new RuntimeException("Invalid condition type '" + cond.getClass().getName() + "'");
+        throw new RuntimeException("Invalid input type '" + input.getClass().getName() + "'");
     }
 
     public void throwBinOpException(String type, Object left, Object right) {
-        throw new RuntimeException("Cannot " + type + " types '" + left.getClass().getName() + "' and '" + right.getClass().getName() + "'");
+        throw new RuntimeException("Cannot '" + type + "' types '" + left.getClass().getName() + "' and '" + right.getClass().getName() + "'");
     }
 }

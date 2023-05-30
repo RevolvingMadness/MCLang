@@ -53,10 +53,10 @@ public class MCLangTests {
 
     @Test
     @DisplayName("Exponentiation")
-    public void exponents() {
-        interpreter.run("a = 2 ^ 2;");
+    public void exponentiation() {
+        interpreter.run("a = 2 ** 2;");
         Assertions.assertEquals(4, interpreter.variables.get("a"));
-        interpreter.run("a = 2 ^ 2.1;");
+        interpreter.run("a = 2 ** 2.1;");
         Assertions.assertEquals((float) 4.2870936, interpreter.variables.get("a"));
     }
 
@@ -71,6 +71,145 @@ public class MCLangTests {
     @DisplayName("Floor Division")
     public void floorDivision() {
         interpreter.run("a = 1 // 3;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Modulo")
+    public void modulo() {
+        interpreter.run("a = 1 % 3;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Less Than")
+    public void lessThan() {
+        interpreter.run("a = 1 < 2;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 2 < 1;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Less Than Or Equal To")
+    public void lessThanOrEqualTo() {
+        interpreter.run("a = 1 <= 2;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 <= 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 2 <= 1;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Greater Than")
+    public void greaterThan() {
+        interpreter.run("a = 2 > 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 > 2;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Greater Than Or Equal To")
+    public void greaterThanOrEqualTo() {
+        interpreter.run("a = 2 >= 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 >= 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 >= 2;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Not Equal To")
+    public void notEqualTo() {
+        interpreter.run("a = 1 != 2;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 != 1;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Equal To")
+    public void equalTo() {
+        interpreter.run("a = 1 == 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 == 2;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Bitwise And")
+    public void bitwiseAnd() {
+        interpreter.run("a = 1 & 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 & 2;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Boolean And")
+    public void booleanAnd() {
+        interpreter.run("a = 1 && 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 && 0;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Boolean Or")
+    public void booleanOr() {
+        interpreter.run("a = 0 || 0;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+        interpreter.run("a = 1 || 0;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 0 || 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 || 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Boolean Not")
+    public void booleanNot() {
+        interpreter.run("a = !1;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+        interpreter.run("a = !0;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Assignment")
+    public void assignment() {
+        interpreter.run("a = b := 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        Assertions.assertEquals(1, interpreter.variables.get("b"));
+    }
+
+    @Test
+    @DisplayName("Bitwise Or")
+    public void bitwiseOr() {
+        interpreter.run("a = 0 | 0;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+        interpreter.run("a = 0 | 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 | 0;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 | 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Bitwise Xor")
+    public void bitwiseXor() {
+        interpreter.run("a = 0 ^ 0;");
+        Assertions.assertEquals(0, interpreter.variables.get("a"));
+        interpreter.run("a = 0 ^ 1;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 ^ 0;");
+        Assertions.assertEquals(1, interpreter.variables.get("a"));
+        interpreter.run("a = 1 ^ 1;");
         Assertions.assertEquals(0, interpreter.variables.get("a"));
     }
 
