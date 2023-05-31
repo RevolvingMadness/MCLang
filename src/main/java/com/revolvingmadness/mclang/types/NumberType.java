@@ -2,8 +2,6 @@ package com.revolvingmadness.mclang.types;
 
 import com.revolvingmadness.mclang.MCLangInterpreter;
 
-import java.util.Objects;
-
 public class NumberType extends Type {
     public Number value;
 

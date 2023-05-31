@@ -79,6 +79,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLessThanOrEqualToExpression(MCLangParser.LessThanOrEqualToExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code nullExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNullExpression(MCLangParser.NullExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code bitwiseAndExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -92,6 +99,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitLessThanExpression(MCLangParser.LessThanExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code listExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitListExpression(MCLangParser.ListExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code booleanNotExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
@@ -134,6 +148,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBooleanExpression(MCLangParser.BooleanExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code dictExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDictExpression(MCLangParser.DictExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code divideExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
@@ -292,4 +313,16 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBody(MCLangParser.BodyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#list}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitList(MCLangParser.ListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#dict}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDict(MCLangParser.DictContext ctx);
 }

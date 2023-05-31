@@ -137,6 +137,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNullExpression(MCLangParser.NullExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNullExpression(MCLangParser.NullExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBitwiseAndExpression(MCLangParser.BitwiseAndExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -156,6 +168,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLessThanExpression(MCLangParser.LessThanExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterListExpression(MCLangParser.ListExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitListExpression(MCLangParser.ListExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -228,6 +252,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBooleanExpression(MCLangParser.BooleanExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDictExpression(MCLangParser.DictExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDictExpression(MCLangParser.DictExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -504,6 +540,30 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBody(MCLangParser.BodyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterList(MCLangParser.ListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitList(MCLangParser.ListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDict(MCLangParser.DictContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDict(MCLangParser.DictContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

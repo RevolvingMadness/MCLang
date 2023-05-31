@@ -1,8 +1,6 @@
 package com.revolvingmadness.mclang.types;
 
 
-import java.util.Objects;
-
 public class StringType extends Type {
     public String value;
 
@@ -21,24 +19,15 @@ public class StringType extends Type {
             return new StringType(((String) right).repeat((Integer) left));
 
         if (!(right instanceof Integer) && left instanceof String)
-            throw new RuntimeException("Cannot multiply string with type '" + right.getClass().getName() + "'.");
+            throw new RuntimeException("Cannot multiply string with type '" + right.getClass().getSimpleName() + "'.");
         if (!(left instanceof Integer) && right instanceof String)
-            throw new RuntimeException("Cannot multiply string with type '" + left.getClass().getName() + "'.");
+            throw new RuntimeException("Cannot multiply string with type '" + left.getClass().getSimpleName() + "'.");
 
         return null;
     }
 
     public StringType concat(StringType right) {
         return new StringType(this.value + right.value);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this)
-            return true;
-        if (!(other instanceof StringType) || other == null)
-            return false;
-        return Objects.equals(value, ((StringType) other).value);
     }
 
     @Override

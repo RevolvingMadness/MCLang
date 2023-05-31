@@ -5,7 +5,7 @@ import com.revolvingmadness.mclang.MCLangInterpreter;
 import java.util.Objects;
 
 public class BooleanType extends Type {
-    public boolean value;
+    public Boolean value;
 
     public BooleanType(boolean value) {
         this.value = value;
@@ -28,7 +28,7 @@ public class BooleanType extends Type {
         if (input instanceof FloatType)
             return new BooleanType(((FloatType) input).value.floatValue() != (float) 0.0);
 
-        throw new RuntimeException("Invalid boolean type '" + input.getClass().getName() + "'");
+        throw new RuntimeException("Invalid boolean type '" + input.getClass().getSimpleName() + "'");
     }
 
     public static BooleanType lessThan(NumberType left, NumberType right) {
@@ -84,16 +84,7 @@ public class BooleanType extends Type {
     public static BooleanType booleanNot(BooleanType input) {
         return new BooleanType(!input.value);
     }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this)
-            return true;
-        if (!(other instanceof BooleanType) || other == null)
-            return false;
-        return value == ((BooleanType) other).value;
-    }
-
+    
     @Override
     public String toString() {
         return Boolean.toString(this.value);

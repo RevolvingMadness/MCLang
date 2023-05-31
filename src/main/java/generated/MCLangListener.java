@@ -124,6 +124,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitLessThanOrEqualToExpression(MCLangParser.LessThanOrEqualToExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code nullExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterNullExpression(MCLangParser.NullExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code nullExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitNullExpression(MCLangParser.NullExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code bitwiseAndExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -147,6 +159,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLessThanExpression(MCLangParser.LessThanExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code listExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterListExpression(MCLangParser.ListExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code listExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitListExpression(MCLangParser.ListExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code booleanNotExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
@@ -219,6 +243,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBooleanExpression(MCLangParser.BooleanExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code dictExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterDictExpression(MCLangParser.DictExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code dictExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitDictExpression(MCLangParser.DictExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code divideExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
@@ -489,4 +525,24 @@ public interface MCLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBody(MCLangParser.BodyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#list}.
+	 * @param ctx the parse tree
+	 */
+	void enterList(MCLangParser.ListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#list}.
+	 * @param ctx the parse tree
+	 */
+	void exitList(MCLangParser.ListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#dict}.
+	 * @param ctx the parse tree
+	 */
+	void enterDict(MCLangParser.DictContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#dict}.
+	 * @param ctx the parse tree
+	 */
+	void exitDict(MCLangParser.DictContext ctx);
 }

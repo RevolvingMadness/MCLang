@@ -6,11 +6,13 @@ statement
     : variableAssignment ';'
     | ifStatement ';'?
     | whileStatement ';'?
+//    | functionStatement ';'?
     ;
 
 expr
     // Literals
     : NUMBER #numberExpression
+    | NULL #nullExpression
     | STRING #stringExpression
     | BOOLEAN #booleanExpression
     | IDENTIFIER #identifierExpression
@@ -45,6 +47,10 @@ expr
 
     // Assignment Expression
     | IDENTIFIER ':=' expr #assignmentExpression
+
+    // Other
+    | list #listExpression
+    | dict #dictExpression
     ;
 
 variableAssignment
@@ -69,15 +75,22 @@ ifStatement: 'if' '(' expr ')' body ('else' body)?;
 
 whileStatement: 'while' '(' expr ')' body;
 
+//functionStatement: 'function' IDENTIFIER '(' (IDENTIFIER ','?)* ')' body;
+
 body: '{' statement* '}';
 
+list: '[' (expr ','?)* ']';
+
+dict: '{' (STRING ':' expr ','?)* '}';
+
 // Literals
-STRING: '"' ( ~[\\"\n\r] | '\\' [\\"] )* '"';
-NUMBER: '-'? INT | FLOAT;
-INT: [0-9]+;
-FLOAT: INT '.' INT;
 BOOLEAN: 'true' | 'false';
-IDENTIFIER: [a-zA-Z0-9_]+;
+NULL: 'null';
+NUMBER: '-'? INT | FLOAT;
+FLOAT: INT '.' INT;
+INT: [0-9]+;
+STRING: '"' ( ~[\\"\n\r] | '\\' [\\"] )* '"';
+IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
 
 // Whitespace
 WS: [ \r\t\n] -> skip;

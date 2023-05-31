@@ -4,6 +4,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class MCLangTests {
     MCLangInterpreter interpreter = new MCLangInterpreter();
     @Test
@@ -40,6 +45,39 @@ public class MCLangTests {
                 c = a + b;
                 """);
         Assertions.assertEquals(new IntegerType(2), interpreter.variables.get("c"));
+    }
+
+    @Test
+    @DisplayName("Null Types")
+    public void nullTypes() {
+        interpreter.run("a = null;");
+        Assertions.assertEquals(new NullType(), interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Lists")
+    public void lists() {
+        interpreter.run("a = [1, 2, 3];");
+        List<Type> list = new ArrayList<>();
+        list.add(new IntegerType(1));
+        list.add(new IntegerType(2));
+        list.add(new IntegerType(3));
+        Assertions.assertEquals(new ListType(list), interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Dicts")
+    public void dicts() {
+        interpreter.run("""
+                a = {
+                    "a": 1,
+                    "b": 2
+                };
+                """);
+        Map<StringType, Type> dict = new HashMap<>();
+        dict.put(new StringType("b"), new IntegerType(2));
+        dict.put(new StringType("a"), new IntegerType(1));
+        Assertions.assertEquals(new DictType(dict), interpreter.variables.get("a"));
     }
 
     @Test

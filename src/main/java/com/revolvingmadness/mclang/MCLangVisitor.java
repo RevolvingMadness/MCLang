@@ -5,8 +5,7 @@ import com.revolvingmadness.mclang.types.*;
 import generated.MCLangBaseVisitor;
 import generated.MCLangParser;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     Map<String, Type> variables = new HashMap<>();
@@ -34,6 +33,11 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
             throw new RuntimeException("Variable '" + name + "' does not exist.");
 
         return variables.get(name);
+    }
+
+    @Override
+    public Type visitNullExpression(MCLangParser.NullExpressionContext context) {
+        return new NullType();
     }
 
     @Override
@@ -336,6 +340,31 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         variables.put(name, NumberType.bitwiseOr((NumberType) oldValue, (NumberType) newValue));
 
         return null;
+    }
+
+    @Override
+    public Type visitList(MCLangParser.ListContext context) {
+        List<Type> list = new ArrayList<>();
+        context.expr().forEach(context1 -> list.add(visit(context1)));
+
+        return new ListType(list);
+    }
+
+    @Override
+    public Type visitDict(MCLangParser.DictContext context) {
+        Map<StringType, Type> dict = new HashMap<>();
+
+        ListIterator<MCLangParser.ExprContext> it = context.expr().listIterator();
+        while (it.hasNext()) {
+            String wholeString = context.STRING(it.nextIndex()).getText();
+            StringType key = new StringType(wholeString.substring(1, wholeString.length()-1));
+            Type value = visit(context.expr(it.nextIndex()));
+            dict.put(key, value);
+
+            it.next();
+        }
+
+        return new DictType(dict);
     }
 
     @Override
