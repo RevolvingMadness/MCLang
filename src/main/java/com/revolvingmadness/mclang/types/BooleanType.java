@@ -1,7 +1,5 @@
 package com.revolvingmadness.mclang.types;
 
-import com.revolvingmadness.mclang.MCLangInterpreter;
-
 import java.util.Objects;
 
 public class BooleanType extends Type {
@@ -9,6 +7,52 @@ public class BooleanType extends Type {
 
     public BooleanType(boolean value) {
         this.value = value;
+        this.name = this.getClass().getSimpleName();
+    }
+
+    @Override
+    public Type booleanAnd(Type other) {
+        if (!(other instanceof BooleanType))
+            super.booleanAnd(other);
+
+        return new BooleanType(((BooleanType) other).value && value);
+    }
+
+    @Override
+    public Type booleanOr(Type other) {
+        if (!(other instanceof BooleanType))
+            super.booleanAnd(other);
+
+        return new BooleanType(((BooleanType) other).value || value);
+    }
+
+    @Override
+    public Type booleanNot() {
+        return new BooleanType(!value);
+    }
+
+    @Override
+    public Type bitwiseAnd(Type other) {
+        if (!(other instanceof BooleanType))
+            super.booleanAnd(other);
+
+        return new BooleanType(((BooleanType) other).value & value);
+    }
+
+    @Override
+    public Type bitwiseXor(Type other) {
+        if (!(other instanceof BooleanType))
+            super.booleanAnd(other);
+
+        return new BooleanType(((BooleanType) other).value ^ value);
+    }
+
+    @Override
+    public Type bitwiseOr(Type other) {
+        if (!(other instanceof BooleanType))
+            super.booleanAnd(other);
+
+        return new BooleanType(((BooleanType) other).value | value);
     }
 
     public static BooleanType getBoolean(String input) {
@@ -28,63 +72,9 @@ public class BooleanType extends Type {
         if (input instanceof FloatType)
             return new BooleanType(((FloatType) input).value.floatValue() != (float) 0.0);
 
-        throw new RuntimeException("Invalid boolean type '" + input.getClass().getSimpleName() + "'");
+        throw new RuntimeException("Invalid boolean type '" + input.name + "'");
     }
 
-    public static BooleanType lessThan(NumberType left, NumberType right) {
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("<", left, right);
-
-        return new BooleanType(left.value.floatValue() < right.value.floatValue());
-    }
-
-    public static BooleanType lessThanOrEqualTo(NumberType left, NumberType right) {
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("<=", left, right);
-
-        return new BooleanType(left.value.floatValue() <= right.value.floatValue());
-    }
-
-    public static BooleanType greaterThan(NumberType left, NumberType right) {
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException(">", left, right);
-
-        return new BooleanType(left.value.floatValue() > right.value.floatValue());
-    }
-
-    public static BooleanType greaterThanOrEqualTo(NumberType left, NumberType right) {
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException(">=", left, right);
-
-        return new BooleanType(left.value.floatValue() >= right.value.floatValue());
-    }
-
-    public static BooleanType notEqualTo(NumberType left, NumberType right) {
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("!=", left, right);
-
-        return new BooleanType(left.value.floatValue() != right.value.floatValue());
-    }
-
-    public static BooleanType equalTo(NumberType left, NumberType right) {
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("==", left, right);
-
-        return new BooleanType(left.value.floatValue() == right.value.floatValue());
-    }
-
-    public static BooleanType booleanOr(BooleanType left, BooleanType right) {
-        return new BooleanType(left.value || right.value);
-    }
-
-    public static BooleanType booleanAnd(BooleanType left, BooleanType right) {
-        return new BooleanType(left.value && right.value);
-    }
-
-    public static BooleanType booleanNot(BooleanType input) {
-        return new BooleanType(!input.value);
-    }
-    
     @Override
     public String toString() {
         return Boolean.toString(this.value);

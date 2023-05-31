@@ -1,93 +1,138 @@
 package com.revolvingmadness.mclang.types;
 
-import com.revolvingmadness.mclang.MCLangInterpreter;
-
 public class NumberType extends Type {
     public Number value;
 
     public NumberType(Number value) {
         this.value = value;
+        this.name = getClass().getSuperclass().getSimpleName();
     }
 
-    public static NumberType exponentiate(NumberType left, NumberType right) {
-        if (!bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("**", left, right);
+    @Override
+    public Type exponentiate(Type other) {
+        if (!(other instanceof NumberType))
+            super.exponentiate(other);
 
-        if (isFloatAndInteger(left, right))
-            return new FloatType(Math.pow(left.value.doubleValue(), right.value.doubleValue()));
+        Number result = Math.pow(value.doubleValue(), ((NumberType) other).value.doubleValue());
 
-        return new IntegerType(Math.pow(left.value.doubleValue(), right.value.doubleValue()));
+        return NumberType.of(result);
     }
 
-    public static NumberType multiply(NumberType left, NumberType right) {
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("*", left, right);
+    @Override
+    public Type multiply(Type other) {
+        if (!(other instanceof NumberType || other instanceof StringType))
+            super.multiply(other);
 
-        if (isFloatAndInteger(left, right))
-            return new FloatType(left.value.floatValue() * right.value.floatValue());
+        Number result = value.intValue() * ((NumberType) other).value.intValue();
 
-        return new IntegerType(left.value.intValue() * right.value.intValue());
+        return NumberType.of(result);
     }
 
-    public static NumberType divide(NumberType left, NumberType right) {
-        if (!bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("/", left, right);
+    @Override
+    public Type divide(Type other) {
+        if (!(other instanceof NumberType))
+            super.divide(other);
 
-        return new FloatType(left.value.floatValue() / right.value.floatValue());
+        return new FloatType(value.floatValue() / ((NumberType) other).value.floatValue());
     }
 
-    public static NumberType floorDivide(NumberType left, NumberType right) {
-        if (!bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("//", left, right);
+    @Override
+    public Type floorDivide(Type other) {
+        if (!(other instanceof NumberType))
+            super.floorDivide(other);
 
-        return new IntegerType(Math.floorDiv(left.value.longValue(), right.value.longValue()));
+        return new IntegerType(Math.floorDiv(value.longValue(), ((NumberType) other).value.longValue()));
     }
 
-    public static NumberType modulo(NumberType left, NumberType right) {
-        if (!bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("%", left, right);
+    @Override
+    public Type modulo(Type other) {
+        if (!(other instanceof NumberType))
+            super.modulo(other);
 
-        return new IntegerType(Math.floorMod(left.value.longValue(), right.value.longValue()));
+        return new IntegerType(Math.floorMod(value.longValue(), ((NumberType) other).value.longValue()));
     }
 
-    public static NumberType add(NumberType left, NumberType right) {
-        if (!bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("+", left, right);
+    @Override
+    public Type bitwiseXor(Type other) {
+        if (!(other instanceof NumberType))
+            super.bitwiseXor(other);
 
-        if (isFloatAndInteger(left, right))
-            return new FloatType(left.value.floatValue() + right.value.floatValue());
-
-        return new IntegerType(left.value.floatValue() + right.value.floatValue());
+        return new IntegerType(value.intValue() ^ ((NumberType) other).value.intValue());
     }
 
-    public static NumberType subtract(NumberType left, NumberType right) {
-        if (!bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("-", left, right);
+    @Override
+    public Type bitwiseOr(Type other) {
+        if (!(other instanceof NumberType))
+            super.bitwiseOr(other);
 
-        if (isFloatAndInteger(left, right))
-            return new FloatType(left.value.floatValue() - right.value.floatValue());
-
-        return new IntegerType(left.value.floatValue() - right.value.floatValue());
+        return new IntegerType(value.intValue() | ((NumberType) other).value.intValue());
     }
 
-    public static IntegerType bitwiseXor(NumberType left, NumberType right) {
-        return new IntegerType(left.value.intValue() ^ right.value.intValue());
+    @Override
+    public Type bitwiseAnd(Type other) {
+        if (!(other instanceof NumberType))
+            super.bitwiseAnd(other);
+
+        return new IntegerType(value.intValue() & ((NumberType) other).value.intValue());
     }
 
-    public static IntegerType bitwiseOr(NumberType left, NumberType right) {
-        return new IntegerType(left.value.intValue() | right.value.intValue());
+    @Override
+    public Type add(Type other) {
+        if (!(other instanceof NumberType))
+            super.add(other);
+
+        Number result = ((NumberType) other).value.doubleValue() + value.doubleValue();
+
+        return NumberType.of(result);
     }
 
-    public static IntegerType bitwiseAnd(NumberType left, NumberType right) {
-        return new IntegerType(left.value.intValue() & right.value.intValue());
+    @Override
+    public Type subtract(Type other) {
+        if (!(other instanceof NumberType))
+            super.subtract(other);
+
+        Number result = ((NumberType) other).value.doubleValue() - value.doubleValue();
+
+        return NumberType.of(result);
     }
 
-    public static boolean isFloatAndInteger(NumberType left, NumberType right) {
-        return (left instanceof FloatType || right instanceof FloatType) && (left instanceof IntegerType || right instanceof IntegerType);
+    @Override
+    public Type lessThan(Type other) {
+        if (!(other instanceof NumberType))
+            super.lessThan(other);
+
+        return new BooleanType(((NumberType) other).value.doubleValue() < value.doubleValue());
     }
 
-    public static boolean bothNumbers(Type left, Type right) {
-        return left instanceof NumberType && right instanceof NumberType;
+    @Override
+    public Type lessThanOrEqualTo(Type other) {
+        if (!(other instanceof NumberType))
+            super.lessThanOrEqualTo(other);
+
+        return new BooleanType(((NumberType) other).value.doubleValue() <= value.doubleValue());
+    }
+
+    @Override
+    public Type greaterThan(Type other) {
+        if (!(other instanceof NumberType))
+            super.greaterThan(other);
+
+        return new BooleanType(((NumberType) other).value.doubleValue() > value.doubleValue());
+    }
+
+    @Override
+    public Type greaterThanOrEqualTo(Type other) {
+        if (!(other instanceof NumberType))
+            super.greaterThanOrEqualTo(other);
+
+        return new BooleanType(((NumberType) other).value.doubleValue() >= value.doubleValue());
+    }
+
+    public static NumberType of(Number input) {
+        if (input instanceof Float || input instanceof Double)
+            return new FloatType(input);
+
+        return new IntegerType(input);
     }
 
     public static NumberType parseNumber(String numberString) {

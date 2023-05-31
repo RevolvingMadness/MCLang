@@ -45,10 +45,8 @@ expr
     | expr '||' expr #booleanOrExpression
     | '!' expr #booleanNotExpression
 
-    // Assignment Expression
-    | IDENTIFIER ':=' expr #assignmentExpression
-
     // Other
+    | IDENTIFIER ':=' expr #assignmentExpression
     | list #listExpression
     | dict #dictExpression
     ;
@@ -75,7 +73,7 @@ ifStatement: 'if' '(' expr ')' body ('else' body)?;
 
 whileStatement: 'while' '(' expr ')' body;
 
-//functionStatement: 'function' IDENTIFIER '(' (IDENTIFIER ','?)* ')' body;
+//functionStatement: 'function ' IDENTIFIER '(' (IDENTIFIER ','?)* ')' body;
 
 body: '{' statement* '}';
 

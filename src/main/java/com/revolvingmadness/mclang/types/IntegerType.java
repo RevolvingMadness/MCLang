@@ -2,11 +2,11 @@ package com.revolvingmadness.mclang.types;
 
 public class IntegerType extends NumberType {
     public IntegerType(Number value) {
-        super(value.intValue());
+        super(value.longValue());
     }
 
     @Override
     public String toString() {
-        return Integer.toString(value.intValue());
+        return Long.toString(value.longValue());
     }
 }

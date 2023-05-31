@@ -9,6 +9,7 @@ import java.util.*;
 
 public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     Map<String, Type> variables = new HashMap<>();
+    List<String> expressionKeywords = List.of("true", "false", "null");
 
     @Override
     public Type visitNumberExpression(MCLangParser.NumberExpressionContext context) {
@@ -28,11 +29,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitIdentifierExpression(MCLangParser.IdentifierExpressionContext context) {
-        String name = context.IDENTIFIER().getText();
-        if (!variables.containsKey(name))
-            throw new RuntimeException("Variable '" + name + "' does not exist.");
-
-        return variables.get(name);
+        return getVariable(context.IDENTIFIER().getText());
     }
 
     @Override
@@ -50,7 +47,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return NumberType.exponentiate((NumberType) left, (NumberType) right);
+        return left.exponentiate(right);
     }
 
     @Override
@@ -58,10 +55,10 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (StringType.canMultiply(left, right))
+        if (StringType.isStringMultiplication(left, right))
             return StringType.multiply(left, right);
 
-        return NumberType.multiply((NumberType) left, (NumberType) right);
+        return left.multiply(right);
     }
 
     @Override
@@ -69,10 +66,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("/", left, right);
-
-        return NumberType.divide((NumberType) left, (NumberType) right);
+        return left.divide(right);
     }
 
     @Override
@@ -80,7 +74,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return NumberType.floorDivide((NumberType) left, (NumberType) right);
+        return left.floorDivide(right);
     }
 
     @Override
@@ -88,7 +82,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return NumberType.modulo((NumberType) left, (NumberType) right);
+        return left.modulo(right);
     }
 
     @Override
@@ -96,13 +90,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (left instanceof StringType && right instanceof StringType)
-            return ((StringType) left).concat((StringType) right);
-
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("+", left, right);
-
-        return NumberType.add((NumberType) left, (NumberType) right);
+        return left.add(right);
     }
 
     @Override
@@ -110,10 +98,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        if (!NumberType.bothNumbers(left, right))
-            MCLangInterpreter.throwBinOpException("-", left, right);
-
-        return NumberType.subtract((NumberType) left, (NumberType) right);
+        return left.subtract(right);
     }
 
     @Override
@@ -121,7 +106,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.lessThan((NumberType) left, (NumberType) right);
+        return left.lessThan(right);
     }
 
     @Override
@@ -129,7 +114,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.lessThanOrEqualTo((NumberType) left, (NumberType) right);
+        return left.lessThanOrEqualTo(right);
 
     }
 
@@ -138,7 +123,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.greaterThan((NumberType) left, (NumberType) right);
+        return left.greaterThan(right);
 
     }
 
@@ -147,7 +132,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.greaterThanOrEqualTo((NumberType) left, (NumberType) right);
+        return left.greaterThanOrEqualTo(right);
 
     }
 
@@ -156,7 +141,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.notEqualTo((NumberType) left, (NumberType) right);
+        return Type.notEqualTo(left, right);
     }
 
     @Override
@@ -164,7 +149,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.equalTo((NumberType) left, (NumberType) right);
+        return Type.equalTo(left, right);
     }
 
     @Override
@@ -172,7 +157,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return NumberType.bitwiseAnd((IntegerType) left, (IntegerType) right);
+        return left.bitwiseAnd(right);
     }
 
     @Override
@@ -180,7 +165,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.booleanAnd(BooleanType.valueOf(left), BooleanType.valueOf(right));
+        return left.booleanAnd(right);
     }
 
     @Override
@@ -188,7 +173,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return NumberType.bitwiseXor((NumberType) left, (NumberType) right);
+        return left.bitwiseXor(right);
     }
 
     @Override
@@ -196,7 +181,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return NumberType.bitwiseOr((NumberType) left, (NumberType) right);
+        return left.bitwiseOr(right);
     }
 
     @Override
@@ -204,14 +189,14 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type left = visit(context.expr(0));
         Type right = visit(context.expr(1));
 
-        return BooleanType.booleanOr(BooleanType.valueOf(left), BooleanType.valueOf(right));
+        return left.booleanOr(right);
     }
 
     @Override
     public Type visitBooleanNotExpression(MCLangParser.BooleanNotExpressionContext context) {
         Type input = visit(context.expr());
 
-        return BooleanType.booleanNot(BooleanType.valueOf(input));
+        return input.booleanNot();
     }
 
     @Override
@@ -226,6 +211,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitRegularVariableAssignment(MCLangParser.RegularVariableAssignmentContext context) {
         String name = context.IDENTIFIER().getText();
+        if (expressionKeywords.contains(name))
+            throw new RuntimeException("Variable name cannot be named keyword '" + name + "'");
         Type value = visit(context.expr());
         variables.put(name, value);
 
@@ -238,7 +225,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.exponentiate((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.exponentiate(newValue));
 
         return null;
     }
@@ -249,7 +236,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.multiply((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.multiply(newValue));
 
         return null;
     }
@@ -260,7 +247,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.divide((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.divide(newValue));
 
         return null;
     }
@@ -271,7 +258,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.floorDivide((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.floorDivide(newValue));
 
         return null;
     }
@@ -282,7 +269,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.modulo((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.modulo(newValue));
 
         return null;
     }
@@ -293,7 +280,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.add((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.add(newValue));
 
         return null;
     }
@@ -304,7 +291,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.subtract((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.subtract(newValue));
 
         return null;
     }
@@ -315,7 +302,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.bitwiseAnd((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.bitwiseAnd(newValue));
 
         return null;
     }
@@ -326,7 +313,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.bitwiseXor((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.bitwiseXor(newValue));
 
         return null;
     }
@@ -337,7 +324,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type oldValue = variables.get(name);
         Type newValue = visit(context.expr());
 
-        variables.put(name, NumberType.bitwiseOr((NumberType) oldValue, (NumberType) newValue));
+        variables.put(name, oldValue.bitwiseOr(newValue));
 
         return null;
     }
@@ -352,16 +339,16 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitDict(MCLangParser.DictContext context) {
-        Map<StringType, Type> dict = new HashMap<>();
+        List<MCLangParser.ExprContext> expressions = context.expr();
 
-        ListIterator<MCLangParser.ExprContext> it = context.expr().listIterator();
-        while (it.hasNext()) {
-            String wholeString = context.STRING(it.nextIndex()).getText();
-            StringType key = new StringType(wholeString.substring(1, wholeString.length()-1));
-            Type value = visit(context.expr(it.nextIndex()));
+        HashMap<StringType, Type> dict = new HashMap<>();
+
+        for (int index = 0; index < expressions.size(); index++) {
+            String wholeString = context.STRING(index).getText();
+            StringType key = new StringType(wholeString.substring(1, wholeString.length() - 1));
+            Type value = visit(expressions.get(index));
+
             dict.put(key, value);
-
-            it.next();
         }
 
         return new DictType(dict);
@@ -393,5 +380,12 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
             visitStatement(context1);
         }
         return null;
+    }
+
+    public Type getVariable(String name) {
+        if (!variables.containsKey(name))
+            throw new RuntimeException("Variable '" + name + "' does not exist.");
+
+        return variables.get(name);
     }
 }

@@ -7,6 +7,7 @@ public class DictType extends Type {
 
     public DictType(Map<StringType, Type> value) {
         this.value = value;
+        this.name = this.getClass().getSimpleName();
     }
 
     @Override

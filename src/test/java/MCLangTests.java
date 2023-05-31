@@ -11,34 +11,33 @@ import java.util.Map;
 
 public class MCLangTests {
     MCLangInterpreter interpreter = new MCLangInterpreter();
+
     @Test
-    @DisplayName("Numbers")
-    public void numbers() {
+    @DisplayName("Literal Expressions")
+    public void literalExpressions() {
+        // Numbers
         interpreter.run("a = 1;");
         Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
         interpreter.run("a = -1;");
         Assertions.assertEquals(new IntegerType(-1), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Strings")
-    public void strings() {
+        // Null types
+        interpreter.run("a = null;");
+        Assertions.assertEquals(new NullType(), interpreter.variables.get("a"));
+
+        // Strings
         interpreter.run("a = \"1\";");
         Assertions.assertEquals(new StringType("1"), interpreter.variables.get("a"));
-    }
+        interpreter.run("a = \"1\" * 3;");
+        Assertions.assertEquals(new StringType("111"), interpreter.variables.get("a"));
 
-    @Test
-    @DisplayName("Booleans")
-    public void booleans() {
+        // Booleans
         interpreter.run("a = true;");
         Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
         interpreter.run("a = false;");
         Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Variables")
-    public void variables() {
+        // Identifiers / Variables
         interpreter.run("""
                 a = 1;
                 b = 1;
@@ -48,129 +47,86 @@ public class MCLangTests {
     }
 
     @Test
-    @DisplayName("Null Types")
-    public void nullTypes() {
-        interpreter.run("a = null;");
-        Assertions.assertEquals(new NullType(), interpreter.variables.get("a"));
-    }
-
-    @Test
-    @DisplayName("Lists")
-    public void lists() {
-        interpreter.run("a = [1, 2, 3];");
-        List<Type> list = new ArrayList<>();
-        list.add(new IntegerType(1));
-        list.add(new IntegerType(2));
-        list.add(new IntegerType(3));
-        Assertions.assertEquals(new ListType(list), interpreter.variables.get("a"));
-    }
-
-    @Test
-    @DisplayName("Dicts")
-    public void dicts() {
-        interpreter.run("""
-                a = {
-                    "a": 1,
-                    "b": 2
-                };
-                """);
-        Map<StringType, Type> dict = new HashMap<>();
-        dict.put(new StringType("b"), new IntegerType(2));
-        dict.put(new StringType("a"), new IntegerType(1));
-        Assertions.assertEquals(new DictType(dict), interpreter.variables.get("a"));
-    }
-
-    @Test
-    @DisplayName("Parenthesis")
-    public void parenthesis() {
+    @DisplayName("Arithmetic Expressions")
+    public void arithmeticExpressions() {
+        // Parenthesis
         interpreter.run("a = 1 + 2 * 3;");
         Assertions.assertEquals(new IntegerType(7), interpreter.variables.get("a"));
         interpreter.run("a = (1 + 2) * 3;");
         Assertions.assertEquals(new IntegerType(9), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Exponentiation")
-    public void exponentiation() {
+        // Exponentiation
         interpreter.run("a = 2 ** 2;");
         Assertions.assertEquals(new IntegerType(4), interpreter.variables.get("a"));
         interpreter.run("a = 2 ** 2.1;");
         Assertions.assertEquals(new FloatType(4.2870936), interpreter.variables.get("a"));
-    }
+        Assertions.assertThrows(RuntimeException.class, () -> interpreter.run("a= 2 ** \"\";"));
 
-    @Test
-    @DisplayName("Multiplication")
-    public void multiplication() {
+        // Multiplication
         interpreter.run("a = 2 * 5;");
         Assertions.assertEquals(new IntegerType(10), interpreter.variables.get("a"));
-    }
+        interpreter.run("a = \"0\" * 2;");
+        Assertions.assertEquals(new StringType("00"), interpreter.variables.get("a"));
 
-    @Test
-    @DisplayName("Floor Division")
-    public void floorDivision() {
+        // Division
+        interpreter.run("a = 1 / 3;");
+        Assertions.assertEquals(new FloatType(0.33333334), interpreter.variables.get("a"));
+
+        // Floor division
         interpreter.run("a = 1 // 3;");
         Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Modulo")
-    public void modulo() {
+        // Modulo
         interpreter.run("a = 10 % 3;");
         Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+
+        // Addition
+        interpreter.run("a = 5 + 5;");
+        Assertions.assertEquals(new IntegerType(10), interpreter.variables.get("a"));
+
+        // Subtraction
+        interpreter.run("a = 10 - 5;");
+        Assertions.assertEquals(new IntegerType(5), interpreter.variables.get("a"));
     }
 
     @Test
-    @DisplayName("Less Than")
-    public void lessThan() {
+    @DisplayName("Comparison Expressions")
+    public void comparisonExpressions() {
+        // Less than
         interpreter.run("a = 1 < 2;");
         Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
         interpreter.run("a = 2 < 1;");
         Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Less Than Or Equal To")
-    public void lessThanOrEqualTo() {
+        // Less than or equal to
         interpreter.run("a = 1 <= 2;");
         Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
         interpreter.run("a = 1 <= 1;");
         Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
         interpreter.run("a = 2 <= 1;");
         Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Greater Than")
-    public void greaterThan() {
+        // Greater than
         interpreter.run("a = 2 > 1;");
         Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
         interpreter.run("a = 1 > 2;");
         Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Greater Than Or Equal To")
-    public void greaterThanOrEqualTo() {
+        // Greater than or equal to
         interpreter.run("a = 2 >= 1;");
         Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
         interpreter.run("a = 1 >= 1;");
         Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
         interpreter.run("a = 1 >= 2;");
         Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Not Equal To")
-    public void notEqualTo() {
+        // Not equal to
         interpreter.run("a = 1 != 2;");
         Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
         interpreter.run("a = 1 != 1;");
         Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Equal To")
-    public void equalTo() {
+        // Equal to
         interpreter.run("a = 1 == 1;");
         Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
         interpreter.run("a = 1 == 2;");
@@ -178,56 +134,25 @@ public class MCLangTests {
     }
 
     @Test
-    @DisplayName("Bitwise And")
-    public void bitwiseAnd() {
+    @DisplayName("Bitwise Expressions")
+    public void bitwiseExpressions() {
+        // Bitwise and
         interpreter.run("a = 1 & 1;");
         Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
         interpreter.run("a = 1 & 2;");
         Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Boolean And")
-    public void booleanAnd() {
-        interpreter.run("a = 1 && 1;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
-        interpreter.run("a = 1 && 0;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
-    }
-
-    @Test
-    @DisplayName("Boolean Or")
-    public void booleanOr() {
-        interpreter.run("a = 0 || 0;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
-        interpreter.run("a = 1 || 0;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
-        interpreter.run("a = 0 || 1;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
-        interpreter.run("a = 1 || 1;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
-    }
-
-    @Test
-    @DisplayName("Boolean Not")
-    public void booleanNot() {
-        interpreter.run("a = !1;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
-        interpreter.run("a = !0;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
-    }
-
-    @Test
-    @DisplayName("Assignment")
-    public void assignment() {
-        interpreter.run("a = b := 1;");
+        // Bitwise xor
+        interpreter.run("a = 0 ^ 0;");
+        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        interpreter.run("a = 0 ^ 1;");
         Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("b"));
-    }
+        interpreter.run("a = 1 ^ 0;");
+        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        interpreter.run("a = 1 ^ 1;");
+        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
 
-    @Test
-    @DisplayName("Bitwise Or")
-    public void bitwiseOr() {
+        // Bitwise or
         interpreter.run("a = 0 | 0;");
         Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
         interpreter.run("a = 0 | 1;");
@@ -239,109 +164,114 @@ public class MCLangTests {
     }
 
     @Test
-    @DisplayName("Bitwise Xor")
-    public void bitwiseXor() {
-        interpreter.run("a = 0 ^ 0;");
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
-        interpreter.run("a = 0 ^ 1;");
+    @DisplayName("Boolean Expressions")
+    public void booleanExpressions() {
+        // Boolean and
+        interpreter.run("a = true && true;");
+        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        interpreter.run("a = true && false;");
+        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+
+        // Boolean or
+        interpreter.run("a = false || false;");
+        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        interpreter.run("a = true || false;");
+        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        interpreter.run("a = false || true;");
+        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        interpreter.run("a = true || true;");
+        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+
+        // Boolean not
+        interpreter.run("a = !true;");
+        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        interpreter.run("a = !false;");
+        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+    }
+
+    @Test
+    @DisplayName("Other Expressions")
+    public void otherExpressions() {
+        // List expression
+        interpreter.run("a = [1, \"2\", null];");
+        List<Type> list = new ArrayList<>();
+        list.add(new IntegerType(1));
+        list.add(new StringType("2"));
+        list.add(new NullType());
+        Assertions.assertEquals(new ListType(list), interpreter.variables.get("a"));
+
+        // Dict expression
+        interpreter.run("""
+                a = {
+                    "a": 1,
+                    "b": 2
+                };
+                """);
+        Map<StringType, Type> dict = new HashMap<>();
+        dict.put(new StringType("a"), new IntegerType(1));
+        dict.put(new StringType("b"), new IntegerType(2));
+        Assertions.assertEquals(new DictType(dict), interpreter.variables.get("a"));
+
+        // Assignment expression
+        interpreter.run("a = b := 1;");
         Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
-        interpreter.run("a = 1 ^ 0;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
-        interpreter.run("a = 1 ^ 1;");
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
-    }
-
-    @Test
-    @DisplayName("Division")
-    public void division() {
-        interpreter.run("a = 1 / 3;");
-        Assertions.assertEquals(new FloatType(0.33333334), interpreter.variables.get("a"));
-    }
-
-    @Test
-    @DisplayName("Addition")
-    public void addition() {
-        interpreter.run("a = 5 + 5;");
-        Assertions.assertEquals(new IntegerType(10), interpreter.variables.get("a"));
-    }
-
-    @Test
-    @DisplayName("Subtraction")
-    public void subtraction() {
-        interpreter.run("a = 10 - 5;");
-        Assertions.assertEquals(new IntegerType(5), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("b"));
     }
 
     @Test
     @DisplayName("Regular Variable Assignment")
     public void regularVariableAssignment() {
+        // Regular variable assignment
         interpreter.run("a = 1;");
         Assertions.assertTrue(interpreter.variables.containsKey("a"));
     }
 
     @Test
-    @DisplayName("Exponentiate Variable Assignment")
-    public void exponentiateVariableAssignment() {
+    @DisplayName("Arithmetic Variable Assignment")
+    public void variableVariableAssignment() {
+        // Exponentiate variable assignment
         interpreter.run("""
                 a = 2;
                 a **= 5;
                 """);
         Assertions.assertEquals(new IntegerType(32), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Multiplication Variable Assignment")
-    public void multiplicationVariableAssignment() {
+        // Multiplication variable assignment
         interpreter.run("""
                 a = 2;
                 a *= 5;
                 """);
         Assertions.assertEquals(new IntegerType(10), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Division Variable Assignment")
-    public void divisionVariableAssignment() {
+        // Division variable assignment
         interpreter.run("""
                 a = 10;
                 a /= 2;
                 """);
         Assertions.assertEquals(new FloatType(5.0), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Floor Division Variable Assignment")
-    public void floorDivisionVariableAssignment() {
+        // Floor division variable assignment
         interpreter.run("""
                 a = 1;
                 a //= 3;
                 """);
         Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Modulo Variable Assignment")
-    public void moduloVariableAssignment() {
+        // Modulo variable assignment
         interpreter.run("""
                 a = 10;
                 a %= 3;
                 """);
         Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Addition Variable Assignment")
-    public void additionVariableAssignment() {
+        // Addition variable assignment
         interpreter.run("""
                 a = 1;
                 a += 1;
                 """);
         Assertions.assertEquals(new IntegerType(2), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Subtraction Variable Assignment")
-    public void subtractionVariableAssignment() {
+        // Subtraction variable assignment
         interpreter.run("""
                 a = 2;
                 a -= 1;
@@ -350,8 +280,9 @@ public class MCLangTests {
     }
 
     @Test
-    @DisplayName("Bitwise And Variable Assignment")
-    public void bitwiseAndVariableAssignment() {
+    @DisplayName("Bitwise Variable Assignment")
+    public void bitwiseVariableAssignment() {
+        // Bitwise and variable assignment
         interpreter.run("""
                 a = 1;
                 a &= 1;
@@ -362,11 +293,8 @@ public class MCLangTests {
                 a &= 2;
                 """);
         Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
-    }
 
-    @Test
-    @DisplayName("Bitwise Xor Variable Assignment")
-    public void bitwiseXorVariableAssignment() {
+        // Bitwise xor variable assignment
         interpreter.run("""
                 a = 0;
                 a ^= 0;
@@ -387,10 +315,8 @@ public class MCLangTests {
                 a ^= 1;
                 """);
         Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
-    }
-    @Test
-    @DisplayName("Bitwise Or Variable Assignment")
-    public void bitwiseOrVariableAssignment() {
+
+        // Bitwise or variable assignment
         interpreter.run("""
                 a = 0;
                 a |= 0;
@@ -413,10 +339,10 @@ public class MCLangTests {
         Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
     }
 
-
     @Test
-    @DisplayName("If Statements")
-    public void ifStatements() {
+    @DisplayName("Statements")
+    public void statements() {
+        // If statement
         interpreter.run("""
                 a = true;
                 if (a) {
@@ -480,11 +406,8 @@ public class MCLangTests {
                 }
                 """);
         Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("b"));
-    }
 
-    @Test
-    @DisplayName("While Loops")
-    public void whileLoops() {
+        // While loops
         interpreter.run("""
                 i = 0;
                 while (i < 5) {
@@ -495,31 +418,12 @@ public class MCLangTests {
     }
 
     @Test
-    @DisplayName("Both Numbers")
-    public void bothNumbers() {
-        Assertions.assertTrue(NumberType.bothNumbers(new IntegerType(0), new IntegerType(0)));
-        Assertions.assertFalse(NumberType.bothNumbers(new IntegerType(0), new StringType("")));
-        Assertions.assertFalse(NumberType.bothNumbers(new StringType(""), new IntegerType(0)));
-        Assertions.assertFalse(NumberType.bothNumbers(new StringType(""), new StringType("")));
-    }
-
-    @Test
-    @DisplayName("Has Float And Integer")
-    public void hasFloatAndInteger() {
-        Assertions.assertTrue(NumberType.isFloatAndInteger(new FloatType(0.0), new IntegerType(0)));
-        Assertions.assertTrue(NumberType.isFloatAndInteger(new IntegerType(0), new FloatType(0.0)));
-        Assertions.assertFalse(NumberType.isFloatAndInteger(new IntegerType(0), new IntegerType(0)));
-        Assertions.assertFalse(NumberType.isFloatAndInteger(new FloatType(0.0), new FloatType(0.0)));
-    }
-
-    @Test
-    @DisplayName("Parse Number")
-    public void parseNumber() {
+    @DisplayName("Utility Functions")
+    public void utilityFunctions() {
+        // Parse number
         NumberType intResult = NumberType.parseNumber("1");
         Assertions.assertTrue(intResult instanceof IntegerType);
-        Assertions.assertFalse(intResult instanceof FloatType);
         NumberType floatResult = NumberType.parseNumber("1.0");
         Assertions.assertTrue(floatResult instanceof FloatType);
-        Assertions.assertFalse(floatResult instanceof IntegerType);
     }
 }
