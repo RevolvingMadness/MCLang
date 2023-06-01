@@ -1,7 +1,6 @@
 package com.revolvingmadness.mclang;
 
 
-import com.revolvingmadness.mclang.data.FunctionCall;
 import com.revolvingmadness.mclang.types.*;
 import generated.MCLangBaseVisitor;
 import generated.MCLangLexer;
@@ -17,8 +16,8 @@ import java.util.*;
 
 public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	Stack<Map<String, Type>> variableScopes = new Stack<>();
-	Stack<FunctionCall> functionCallStack = new Stack<>();
 	List<String> expressionKeywords = List.of("true", "false", "null");
+	Type functionReturnValue = new NullType();
 	
 	public MCLangVisitor() {
 		variableScopes.add(new HashMap<>());
@@ -397,8 +396,6 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		if (!(variable instanceof FunctionType function))
 			throw new RuntimeException("Variable '" + name + "' is not a function");
 		
-		functionCallStack.add(new FunctionCall());
-		
 		Map<String, Type> functionVariables = new HashMap<>();
 		variableScopes.push(functionVariables);
 		
@@ -415,18 +412,21 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		}
 		
 		
-		for (MCLangParser.StatementContext statement : function.body) {
-			visit(statement);
-			
-			if (!Objects.equals(functionCallStack.lastElement().returnValue, new NullType())) {
-				break;
+		if (function.body != null)
+			for (MCLangParser.StatementContext statement : function.body) {
+				visit(statement);
+				
+				if (!Objects.equals(functionReturnValue, new NullType())) {
+					break;
+				}
 			}
-		}
+		if (function.shorthandBody != null)
+			functionReturnValue = visit(function.shorthandBody);
 		
 		
-		Type returnValue = functionCallStack.lastElement().returnValue;
+		Type returnValue = functionReturnValue;
 		variableScopes.pop();
-		functionCallStack.pop();
+		functionReturnValue = new NullType();
 		
 		return returnValue;
 	}
@@ -439,7 +439,10 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		identifierArguments.remove(0);
 		identifierArguments.forEach(identifierNode -> arguments.add(identifierNode.getText()));
 		
-		assignVariable(name, new FunctionType(name, arguments, context.body()));
+		if (context.body() != null)
+			assignVariable(name, new FunctionType(name, arguments, context.body()));
+		if (context.expr() != null)
+			assignVariable(name, new FunctionType(name, arguments, context.expr()));
 		
 		return null;
 	}
@@ -478,7 +481,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitReturnStatement(MCLangParser.ReturnStatementContext context) {
-		functionCallStack.lastElement().returnValue = visit(context.expr());
+		functionReturnValue = visit(context.expr());
 		return null;
 	}
 	

@@ -10,6 +10,8 @@ public class FunctionType extends Type {
 	public String name;
 	public List<String> arguments;
 	public List<MCLangParser.StatementContext> body;
+	
+	public MCLangParser.ExprContext shorthandBody;
 	public Type returnValue;
 	
 	
@@ -20,6 +22,12 @@ public class FunctionType extends Type {
 		
 		this.body.addAll(body.statement());
 		this.returnValue = new NullType();
+	}
+	
+	public FunctionType(String name, List<String> arguments, MCLangParser.ExprContext shorthandBody) {
+		this.name = name;
+		this.arguments = arguments;
+		this.shorthandBody = shorthandBody;
 	}
 	
 	@Override

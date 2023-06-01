@@ -7,7 +7,7 @@ statement
     | functionCall ';'
     | ifStatement ';'?
     | whileStatement ';'?
-    | functionDeclarationStatement ';'?
+    | functionDeclarationStatement
     | returnStatement ';'
     | importStatement ';'
     | statement '//' .*?
@@ -83,7 +83,7 @@ ifStatement: 'if' '(' expr ')' body ('else' body)?;
 
 whileStatement: 'while' '(' expr ')' body;
 
-functionDeclarationStatement: 'function ' IDENTIFIER '(' (IDENTIFIER ','?)* ')' body;
+functionDeclarationStatement: 'function ' IDENTIFIER '(' (IDENTIFIER ','?)* ')' (body ';'? | '=>' expr ';');
 
 functionCall: IDENTIFIER '(' argument* ')';
 
