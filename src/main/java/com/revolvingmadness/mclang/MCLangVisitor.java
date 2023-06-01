@@ -10,8 +10,9 @@ import java.util.*;
 
 public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	Map<String, Type> variables = new HashMap<>();
-	Stack<Map<String, Type>> variableScopes = new Stack<Map<String, Type>>();
+	Stack<Map<String, Type>> variableScopes = new Stack<>();
 	List<String> expressionKeywords = List.of("true", "false", "null");
+	Type functionReturnValue = new NullType();
 	
 	@Override
 	public Type visitNumberExpression(MCLangParser.NumberExpressionContext context) {
@@ -207,7 +208,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	public Type visitAssignmentExpression(MCLangParser.AssignmentExpressionContext context) {
 		String name = context.IDENTIFIER().getText();
 		Type value = visit(context.expr());
-		variables.put(name, value);
+		assignVariable(name, value);
 		
 		return value;
 	}
@@ -218,7 +219,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		if (expressionKeywords.contains(name))
 			throw new RuntimeException("Variable name cannot be named keyword '" + name + "'");
 		Type value = visit(context.expr());
-		variables.put(name, value);
+		assignVariable(name, value);
 		
 		return null;
 	}
@@ -229,7 +230,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.exponentiate(newValue));
+		assignVariable(name, oldValue.exponentiate(newValue));
 		
 		return null;
 	}
@@ -240,7 +241,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.multiply(newValue));
+		assignVariable(name, oldValue.multiply(newValue));
 		
 		return null;
 	}
@@ -251,7 +252,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.divide(newValue));
+		assignVariable(name, oldValue.divide(newValue));
 		
 		return null;
 	}
@@ -262,7 +263,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.floorDivide(newValue));
+		assignVariable(name, oldValue.floorDivide(newValue));
 		
 		return null;
 	}
@@ -273,7 +274,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.modulo(newValue));
+		assignVariable(name, oldValue.modulo(newValue));
 		
 		return null;
 	}
@@ -284,7 +285,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.add(newValue));
+		assignVariable(name, oldValue.add(newValue));
 		
 		return null;
 	}
@@ -295,7 +296,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.subtract(newValue));
+		assignVariable(name, oldValue.subtract(newValue));
 		
 		return null;
 	}
@@ -306,7 +307,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.bitwiseAnd(newValue));
+		assignVariable(name, oldValue.bitwiseAnd(newValue));
 		
 		return null;
 	}
@@ -317,7 +318,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.bitwiseXor(newValue));
+		assignVariable(name, oldValue.bitwiseXor(newValue));
 		
 		return null;
 	}
@@ -328,7 +329,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type oldValue = variables.get(name);
 		Type newValue = visit(context.expr());
 		
-		variables.put(name, oldValue.bitwiseOr(newValue));
+		assignVariable(name, oldValue.bitwiseOr(newValue));
 		
 		return null;
 	}
@@ -392,14 +393,23 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		context.argument().forEach(context1 -> functionCallArguments.add(visitArgument(context1)));
 		
 		for (int i = 0; i < context.argument().size(); i++) {
-			functionVariables.put(function.arguments.get(i), functionCallArguments.get(i));
+			function.variables.put(function.arguments.get(i), functionCallArguments.get(i));
 		}
 		
-		visitBody(function.bodyContext);
+		for (MCLangParser.StatementContext statement : function.body) {
+			visit(statement);
+			
+			if (!Objects.equals(functionReturnValue, new NullType())) {
+				break;
+			}
+		}
+		
+		Type oldFunctionReturnValue = functionReturnValue;
+		functionReturnValue = new NullType();
 		
 		variableScopes.pop();
 		
-		return new NullType();
+		return oldFunctionReturnValue;
 	}
 	
 	@Override
@@ -410,9 +420,14 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		identifierArguments.remove(0);
 		identifierArguments.forEach(identifierNode -> arguments.add(identifierNode.getText()));
 		
-		variables.put(name, new FunctionType(name, arguments, context.body()));
+		assignVariable(name, new FunctionType(name, arguments, context.body()));
 		
 		return null;
+	}
+	
+	@Override
+	public Type visitFunctionCallExpression(MCLangParser.FunctionCallExpressionContext context) {
+		return visitFunctionCall(context.functionCall());
 	}
 	
 	@Override
@@ -422,7 +437,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitReturnStatement(MCLangParser.ReturnStatementContext context) {
-		return visit(context.expr());
+		functionReturnValue = visit(context.expr());
+		return null;
 	}
 	
 	@Override
@@ -444,6 +460,14 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 				throw new RuntimeException("Variable '" + name + "' is not defined");
 			
 			return variables.get(name);
+		}
+	}
+	
+	public void assignVariable(String name, Type value) {
+		if (!variableScopes.isEmpty()) {
+			variableScopes.firstElement().put(name, value);
+		} else {
+			variables.put(name, value);
 		}
 	}
 }
