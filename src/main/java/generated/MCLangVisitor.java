@@ -100,6 +100,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLessThanExpression(MCLangParser.LessThanExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code functionCallExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionCallExpression(MCLangParser.FunctionCallExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code listExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -307,6 +314,30 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitWhileStatement(MCLangParser.WhileStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#functionDeclarationStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#functionCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionCall(MCLangParser.FunctionCallContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#returnStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnStatement(MCLangParser.ReturnStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#argument}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgument(MCLangParser.ArgumentContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MCLangParser#body}.
 	 * @param ctx the parse tree

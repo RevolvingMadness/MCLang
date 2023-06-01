@@ -160,6 +160,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitLessThanExpression(MCLangParser.LessThanExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code functionCallExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionCallExpression(MCLangParser.FunctionCallExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code functionCallExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionCallExpression(MCLangParser.FunctionCallExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code listExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -515,6 +527,46 @@ public interface MCLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitWhileStatement(MCLangParser.WhileStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#functionDeclarationStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#functionDeclarationStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#functionCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionCall(MCLangParser.FunctionCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#functionCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionCall(MCLangParser.FunctionCallContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#returnStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnStatement(MCLangParser.ReturnStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#returnStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnStatement(MCLangParser.ReturnStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#argument}.
+	 * @param ctx the parse tree
+	 */
+	void enterArgument(MCLangParser.ArgumentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#argument}.
+	 * @param ctx the parse tree
+	 */
+	void exitArgument(MCLangParser.ArgumentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MCLangParser#body}.
 	 * @param ctx the parse tree

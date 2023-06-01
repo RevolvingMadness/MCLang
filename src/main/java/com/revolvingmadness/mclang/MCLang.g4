@@ -4,9 +4,11 @@ program: statement*;
 
 statement
     : variableAssignment ';'
+    | functionCall ';'
     | ifStatement ';'?
     | whileStatement ';'?
-//    | functionStatement ';'?
+    | functionDeclarationStatement ';'?
+    | returnStatement ';'
     ;
 
 expr
@@ -49,6 +51,7 @@ expr
     | IDENTIFIER ':=' expr #assignmentExpression
     | list #listExpression
     | dict #dictExpression
+    | functionCall #functionCallExpression
     ;
 
 variableAssignment
@@ -73,7 +76,13 @@ ifStatement: 'if' '(' expr ')' body ('else' body)?;
 
 whileStatement: 'while' '(' expr ')' body;
 
-//functionStatement: 'function ' IDENTIFIER '(' (IDENTIFIER ','?)* ')' body;
+functionDeclarationStatement: 'function ' IDENTIFIER '(' (IDENTIFIER ','?)* ')' body;
+
+functionCall: IDENTIFIER '(' argument* ')';
+
+returnStatement: 'return ' expr;
+
+argument: expr ','?;
 
 body: '{' statement* '}';
 
