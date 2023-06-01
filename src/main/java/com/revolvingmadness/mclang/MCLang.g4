@@ -62,7 +62,7 @@ expr
     ;
 
 variableAssignment
-    : IDENTIFIER '=' expr #regularVariableAssignment
+    : IDENTIFIER? IDENTIFIER '=' expr #regularVariableAssignment
 
     // Arithmetic Assignments
     | IDENTIFIER '**=' expr #exponentiationVariableAssignment

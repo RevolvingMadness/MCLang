@@ -224,10 +224,14 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitRegularVariableAssignment(MCLangParser.RegularVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		Class<? extends Type> type = Type.of(context.IDENTIFIER(0).getText());
+		String name = context.IDENTIFIER(1).getText();
 		if (expressionKeywords.contains(name))
 			throw new RuntimeException("Variable name cannot be named keyword '" + name + "'");
 		Type value = visit(context.expr());
+		if (!type.isInstance(value)) {
+			throw new RuntimeException("Invalid data type (got '" + value.name + "', expected '" + type.getSimpleName() + "')");
+		}
 		assignVariable(name, value);
 		
 		return null;

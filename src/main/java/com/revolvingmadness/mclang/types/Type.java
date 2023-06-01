@@ -7,8 +7,42 @@ import java.util.Objects;
 public abstract class Type {
     public Object value;
     public String name;
-
-    public Type exponentiate(Type other) {
+    
+    public static Class<? extends Type> of(String input) {
+        switch (input) {
+            case "bool" -> {
+                return BooleanType.class;
+            }
+            case "dict" -> {
+                return DictType.class;
+            }
+            case "float" -> {
+                return FloatType.class;
+            }
+            case "func" -> {
+                return FunctionType.class;
+            }
+            case "int" -> {
+                return IntegerType.class;
+            }
+            case "list" -> {
+                return ListType.class;
+            }
+            case "null" -> {
+                return NullType.class;
+            }
+            case "number" -> {
+                return NumberType.class;
+            }
+            case "str" -> {
+                return StringType.class;
+            }
+        }
+        
+        throw new RuntimeException("Unknown data type '" + input + "'");
+    }
+	
+	public Type exponentiate(Type other) {
         MCLangInterpreter.throwBinOpException("**", this, other);
         return null;
     }
