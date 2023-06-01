@@ -26,7 +26,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitNumberExpression(MCLangParser.NumberExpressionContext context) {
-		return NumberType.parseNumber(context.NUMBER().getText());
+		return visitNumber(context.number());
 	}
 	
 	@Override
@@ -215,7 +215,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	}
 	
 	@Override
-	public Type visitAssignmentExpression(MCLangParser.AssignmentExpressionContext context) {
+	public Type visitWalrusOperatorExpression(MCLangParser.WalrusOperatorExpressionContext context) {
 		String name = context.IDENTIFIER().getText();
 		Type value = visit(context.expr());
 		assignVariable(name, value);
@@ -373,9 +373,10 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	public Type visitIfStatement(MCLangParser.IfStatementContext context) {
 		BooleanType cond = BooleanType.valueOf(visit(context.expr()));
 		if (cond.value)
-			visit(context.body(0));
+			visitBody(context.body(0));
 		else
-			visit(context.body(1));
+			if (context.body(1) != null)
+				visitBody(context.body(1));
 		
 		return null;
 	}
@@ -402,7 +403,13 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		variableScopes.push(functionVariables);
 		
 		List<Type> functionCallArguments = new ArrayList<>();
-		context.argument().forEach(context1 -> functionCallArguments.add(visitArgument(context1)));
+		for (MCLangParser.ArgumentContext context1 : context.argument()) {
+			functionCallArguments.add(visitArgument(context1));
+		}
+		System.out.println(functionCallArguments);
+		
+		if (function.arguments.size() != functionCallArguments.size())
+			throw new RuntimeException("Invalid number of arguments for function '" + function.name + "' (got " + functionCallArguments.size() + ", expected " + function.arguments.size() + ")");
 		
 		for (int i = 0; i < context.argument().size(); i++) {
 			functionVariables.put(function.arguments.get(i), functionCallArguments.get(i));
@@ -411,7 +418,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		for (MCLangParser.StatementContext statement : function.body) {
 			visit(statement);
 			
-			if (!Objects.equals(functionCallStack.lastElement().returnValue, new NullType())) {
+			if (new NullType().equals(functionCallStack.lastElement().returnValue)) {
 				break;
 			}
 		}
@@ -442,13 +449,25 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	}
 	
 	@Override
-	public Type visitTernaryExpression(MCLangParser.TernaryExpressionContext context) {
+	public Type visitTernaryOperatorExpression(MCLangParser.TernaryOperatorExpressionContext context) {
 		BooleanType cond = BooleanType.valueOf(visit(context.expr(0)));
 		
 		if (cond.value)
 			return visit(context.expr(1));
 		else
 			return visit(context.expr(2));
+	}
+	
+	@Override
+	public Type visitUnaryOperatorExpression(MCLangParser.UnaryOperatorExpressionContext context) {
+		Type input = visit(context.expr());
+		
+		return input.unary();
+	}
+	
+	@Override
+	public Type visitNumber(MCLangParser.NumberContext context) {
+		return NumberType.parseNumber(context.getText());
 	}
 	
 	@Override
@@ -490,10 +509,19 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	}
 	
 	public Type getVariable(String name) {
-		if (!variableScopes.lastElement().containsKey(name))
+		Type variable = null;
+		
+		for (Map<String, Type> variableScope : variableScopes) {
+			if (variableScope.containsKey(name)) {
+				variable = variableScope.get(name);
+				break;
+			}
+		}
+		
+		if (variable == null)
 			throw new RuntimeException("Variable '" + name + "' is not defined");
 		
-		return variableScopes.lastElement().get(name);
+		return variable;
 	}
 	
 	public void assignVariable(String name, Type value) {

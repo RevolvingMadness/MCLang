@@ -128,6 +128,11 @@ public class NumberType extends Type {
 		return new BooleanType(value.doubleValue() >= ((NumberType) other).value.doubleValue());
 	}
 	
+	@Override
+	public Type unary() {
+		return NumberType.of(-value.doubleValue());
+	}
+	
 	public static NumberType parseNumber(String numberString) {
 		try {
 			return new IntegerType(Integer.parseInt(numberString));

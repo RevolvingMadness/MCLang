@@ -113,6 +113,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTernaryOperatorExpression(MCLangParser.TernaryOperatorExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTernaryOperatorExpression(MCLangParser.TernaryOperatorExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterStringExpression(MCLangParser.StringExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -120,6 +132,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStringExpression(MCLangParser.StringExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWalrusOperatorExpression(MCLangParser.WalrusOperatorExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWalrusOperatorExpression(MCLangParser.WalrusOperatorExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -233,18 +257,6 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignmentExpression(MCLangParser.AssignmentExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAssignmentExpression(MCLangParser.AssignmentExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterBooleanOrExpression(MCLangParser.BooleanOrExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -288,6 +300,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDivideExpression(MCLangParser.DivideExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUnaryOperatorExpression(MCLangParser.UnaryOperatorExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnaryOperatorExpression(MCLangParser.UnaryOperatorExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -372,18 +396,6 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNotEqualToExpression(MCLangParser.NotEqualToExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTernaryExpression(MCLangParser.TernaryExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTernaryExpression(MCLangParser.TernaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -648,6 +660,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDict(MCLangParser.DictContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNumber(MCLangParser.NumberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNumber(MCLangParser.NumberContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

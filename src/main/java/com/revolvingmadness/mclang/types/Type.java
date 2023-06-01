@@ -91,6 +91,11 @@ public abstract class Type {
         MCLangInterpreter.throwBinOpException("!", this);
         return null;
     }
+    
+    public Type unary() {
+        MCLangInterpreter.throwBinOpException("-", this);
+        return null;
+    }
 
     @Override
     public boolean equals(Object other) {

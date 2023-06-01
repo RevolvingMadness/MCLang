@@ -14,8 +14,7 @@ statement
 
 expr
     // Literals
-    : NUMBER #numberExpression
-    | NULL #nullExpression
+    : NULL #nullExpression
     | STRING #stringExpression
     | BOOLEAN #booleanExpression
     | IDENTIFIER #identifierExpression
@@ -48,12 +47,16 @@ expr
     | expr '||' expr #booleanOrExpression
     | '!' expr #booleanNotExpression
 
+    // Operators
+    | IDENTIFIER ':=' expr #walrusOperatorExpression
+    | expr '?' expr ':' expr #ternaryOperatorExpression
+    | '-' expr #unaryOperatorExpression
+
     // Other
-    | IDENTIFIER ':=' expr #assignmentExpression
     | list #listExpression
     | dict #dictExpression
     | functionCall #functionCallExpression
-    | expr '?' expr ':' expr #ternaryExpression
+    | number #numberExpression
     ;
 
 variableAssignment
@@ -94,10 +97,11 @@ list: '[' (expr ','?)* ']';
 
 dict: '{' (STRING ':' expr ','?)* '}';
 
+number: '-'? (INT | FLOAT);
+
 // Literals
 BOOLEAN: 'true' | 'false';
 NULL: 'null';
-NUMBER: '-'? INT | FLOAT;
 FLOAT: INT '.' INT;
 INT: [0-9]+;
 STRING: '"' ( ~[\\"\n\r] | '\\' [\\"] )* '"';

@@ -65,12 +65,26 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitGreaterThanExpression(MCLangParser.GreaterThanExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ternaryOperatorExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTernaryOperatorExpression(MCLangParser.TernaryOperatorExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code stringExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitStringExpression(MCLangParser.StringExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code walrusOperatorExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWalrusOperatorExpression(MCLangParser.WalrusOperatorExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code lessThanOrEqualToExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
@@ -135,13 +149,6 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParenthesisExpression(MCLangParser.ParenthesisExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code assignmentExpression}
-	 * labeled alternative in {@link MCLangParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignmentExpression(MCLangParser.AssignmentExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code booleanOrExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -169,6 +176,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDivideExpression(MCLangParser.DivideExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code unaryOperatorExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnaryOperatorExpression(MCLangParser.UnaryOperatorExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code bitwiseOrExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
@@ -218,13 +232,6 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNotEqualToExpression(MCLangParser.NotEqualToExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ternaryExpression}
-	 * labeled alternative in {@link MCLangParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTernaryExpression(MCLangParser.TernaryExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code booleanAndExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
@@ -369,4 +376,10 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDict(MCLangParser.DictContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#number}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNumber(MCLangParser.NumberContext ctx);
 }
