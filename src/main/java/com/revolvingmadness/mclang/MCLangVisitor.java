@@ -393,7 +393,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		context.argument().forEach(context1 -> functionCallArguments.add(visitArgument(context1)));
 		
 		for (int i = 0; i < context.argument().size(); i++) {
-			function.variables.put(function.arguments.get(i), functionCallArguments.get(i));
+			functionVariables.put(function.arguments.get(i), functionCallArguments.get(i));
 		}
 		
 		for (MCLangParser.StatementContext statement : function.body) {

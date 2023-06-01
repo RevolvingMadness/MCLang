@@ -4,15 +4,11 @@ public class Main {
 	public static void main(String[] args) {
 		MCLangInterpreter interpreter = new MCLangInterpreter();
 		interpreter.run("""
-				function foobar() {
-					function bar() {
-						return "bar";
-					}
-					return "foo" + bar();
+				function foobar(x) {
+					return x;
 				}
-				foobar = foobar();
+				foobar = foobar(1);
 				""");
-		
 		System.out.println(interpreter.variables);
 	}
 }

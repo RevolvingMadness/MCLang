@@ -406,7 +406,7 @@ public class MCLangTests {
                 }
                 """);
         Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("b"));
-
+        
         // While loops
         interpreter.run("""
                 i = 0;
@@ -415,6 +415,16 @@ public class MCLangTests {
                 }
                 """);
         Assertions.assertEquals(new IntegerType(5), interpreter.variables.get("i"));
+        
+        // Functions
+        interpreter.run("""
+                function add(a, b) {
+                    return a + b;
+                    return 1;
+                }
+                result = add(1, 1);
+                """);
+        Assertions.assertEquals(new IntegerType(2), interpreter.variables.get("result"));
     }
 
     @Test
