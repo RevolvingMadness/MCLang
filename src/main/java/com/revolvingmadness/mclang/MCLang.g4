@@ -53,6 +53,7 @@ expr
     | list #listExpression
     | dict #dictExpression
     | functionCall #functionCallExpression
+    | expr '?' expr ':' expr #ternaryExpression
     ;
 
 variableAssignment

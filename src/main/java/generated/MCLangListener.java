@@ -364,6 +364,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitNotEqualToExpression(MCLangParser.NotEqualToExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code ternaryExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterTernaryExpression(MCLangParser.TernaryExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ternaryExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitTernaryExpression(MCLangParser.TernaryExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code booleanAndExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree

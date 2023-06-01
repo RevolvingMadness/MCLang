@@ -1,6 +1,7 @@
 package com.revolvingmadness.mclang;
 
 
+import com.revolvingmadness.mclang.data.FunctionCall;
 import com.revolvingmadness.mclang.types.*;
 import generated.MCLangBaseVisitor;
 import generated.MCLangLexer;
@@ -15,10 +16,13 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class MCLangVisitor extends MCLangBaseVisitor<Type> {
-	Map<String, Type> variables = new HashMap<>();
 	Stack<Map<String, Type>> variableScopes = new Stack<>();
+	Stack<FunctionCall> functionCallStack = new Stack<>();
 	List<String> expressionKeywords = List.of("true", "false", "null");
-	Type functionReturnValue = new NullType();
+	
+	public MCLangVisitor() {
+		variableScopes.add(new HashMap<>());
+	}
 	
 	@Override
 	public Type visitNumberExpression(MCLangParser.NumberExpressionContext context) {
@@ -152,7 +156,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type left = visit(context.expr(0));
 		Type right = visit(context.expr(1));
 		
-		return Type.notEqualTo(left, right);
+		return new BooleanType(!left.equals(right));
 	}
 	
 	@Override
@@ -160,7 +164,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		Type left = visit(context.expr(0));
 		Type right = visit(context.expr(1));
 		
-		return Type.equalTo(left, right);
+		return new BooleanType(left.equals(right));
 	}
 	
 	@Override
@@ -233,7 +237,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitExponentiationVariableAssignment(MCLangParser.ExponentiationVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.exponentiate(newValue));
@@ -244,7 +248,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitMultiplyVariableAssignment(MCLangParser.MultiplyVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.multiply(newValue));
@@ -255,7 +259,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitDivideVariableAssignment(MCLangParser.DivideVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.divide(newValue));
@@ -266,7 +270,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitFloorDivideVariableAssignment(MCLangParser.FloorDivideVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.floorDivide(newValue));
@@ -277,7 +281,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitModuloVariableAssignment(MCLangParser.ModuloVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.modulo(newValue));
@@ -288,7 +292,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitAddVariableAssignment(MCLangParser.AddVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.add(newValue));
@@ -299,7 +303,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.subtract(newValue));
@@ -310,7 +314,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitBitwiseAndVariableAssignment(MCLangParser.BitwiseAndVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.bitwiseAnd(newValue));
@@ -321,7 +325,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitBitwiseXorVariableAssignment(MCLangParser.BitwiseXorVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.bitwiseXor(newValue));
@@ -332,7 +336,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitBitwiseOrVariableAssignment(MCLangParser.BitwiseOrVariableAssignmentContext context) {
 		String name = context.IDENTIFIER().getText();
-		Type oldValue = variables.get(name);
+		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
 		assignVariable(name, oldValue.bitwiseOr(newValue));
@@ -392,6 +396,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		if (!(variable instanceof FunctionType function))
 			throw new RuntimeException("Variable '" + name + "' is not a function");
 		
+		functionCallStack.add(new FunctionCall());
+		
 		Map<String, Type> functionVariables = new HashMap<>();
 		variableScopes.push(functionVariables);
 		
@@ -405,17 +411,16 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		for (MCLangParser.StatementContext statement : function.body) {
 			visit(statement);
 			
-			if (!Objects.equals(functionReturnValue, new NullType())) {
+			if (!Objects.equals(functionCallStack.lastElement().returnValue, new NullType())) {
 				break;
 			}
 		}
 		
-		Type oldFunctionReturnValue = functionReturnValue;
-		functionReturnValue = new NullType();
-		
+		Type returnValue = functionCallStack.lastElement().returnValue;
 		variableScopes.pop();
+		functionCallStack.pop();
 		
-		return oldFunctionReturnValue;
+		return returnValue;
 	}
 	
 	@Override
@@ -437,20 +442,30 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	}
 	
 	@Override
+	public Type visitTernaryExpression(MCLangParser.TernaryExpressionContext context) {
+		BooleanType cond = BooleanType.valueOf(visit(context.expr(0)));
+		
+		if (cond.value)
+			return visit(context.expr(1));
+		else
+			return visit(context.expr(2));
+	}
+	
+	@Override
 	public Type visitArgument(MCLangParser.ArgumentContext context) {
 		return visit(context.expr());
 	}
 	
 	@Override
 	public Type visitReturnStatement(MCLangParser.ReturnStatementContext context) {
-		functionReturnValue = visit(context.expr());
+		functionCallStack.lastElement().returnValue = visit(context.expr());
 		return null;
 	}
 	
 	@Override
 	public Type visitImportStatement(MCLangParser.ImportStatementContext context) {
 		String wholeName = context.STRING().toString();
-		String name = wholeName.substring(1, wholeName.length()-1);
+		String name = wholeName.substring(1, wholeName.length() - 1);
 		StringBuilder content = new StringBuilder();
 		try {
 			Files.readAllLines(Path.of(name)).forEach(content::append);
@@ -475,24 +490,13 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	}
 	
 	public Type getVariable(String name) {
-		if (!variableScopes.isEmpty()) {
-			if (!variableScopes.firstElement().containsKey(name))
-				throw new RuntimeException("Variable '" + name + "' is not defined");
-			
-			return variableScopes.firstElement().get(name);
-		} else {
-			if (!variables.containsKey(name))
-				throw new RuntimeException("Variable '" + name + "' is not defined");
-			
-			return variables.get(name);
-		}
+		if (!variableScopes.lastElement().containsKey(name))
+			throw new RuntimeException("Variable '" + name + "' is not defined");
+		
+		return variableScopes.lastElement().get(name);
 	}
 	
 	public void assignVariable(String name, Type value) {
-		if (!variableScopes.isEmpty()) {
-			variableScopes.firstElement().put(name, value);
-		} else {
-			variables.put(name, value);
-		}
+		variableScopes.lastElement().put(name, value);
 	}
 }

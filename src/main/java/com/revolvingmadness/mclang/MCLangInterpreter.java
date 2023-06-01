@@ -28,7 +28,7 @@ public class MCLangInterpreter {
 
         visitor.visit(programContext);
 
-        this.variables = visitor.variables;
+        this.variables = visitor.variableScopes.firstElement();
     }
 
     public static void throwBinOpException(String type, Object left, Object right) {

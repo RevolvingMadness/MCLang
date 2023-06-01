@@ -377,6 +377,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTernaryExpression(MCLangParser.TernaryExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTernaryExpression(MCLangParser.TernaryExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBooleanAndExpression(MCLangParser.BooleanAndExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}

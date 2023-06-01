@@ -5,7 +5,7 @@ public class NumberType extends Type {
 	
 	public NumberType(Number value) {
 		this.value = value;
-		this.name = getClass().getSuperclass().getSimpleName();
+		this.name = this.getClass().getSimpleName();
 	}
 	
 	@Override
@@ -81,7 +81,7 @@ public class NumberType extends Type {
 		if (!(other instanceof NumberType))
 			super.add(other);
 		
-		Number result = ((NumberType) other).value.doubleValue() + value.doubleValue();
+		Number result = value.doubleValue() + ((NumberType) other).value.doubleValue();
 		
 		return NumberType.of(result);
 	}
@@ -91,7 +91,7 @@ public class NumberType extends Type {
 		if (!(other instanceof NumberType))
 			super.subtract(other);
 		
-		Number result = ((NumberType) other).value.doubleValue() - value.doubleValue();
+		Number result = value.doubleValue() - ((NumberType) other).value.doubleValue();
 		
 		return NumberType.of(result);
 	}
@@ -101,7 +101,7 @@ public class NumberType extends Type {
 		if (!(other instanceof NumberType))
 			super.lessThan(other);
 		
-		return new BooleanType(((NumberType) other).value.doubleValue() < value.doubleValue());
+		return new BooleanType(value.doubleValue() < ((NumberType) other).value.doubleValue());
 	}
 	
 	@Override
@@ -109,7 +109,7 @@ public class NumberType extends Type {
 		if (!(other instanceof NumberType))
 			super.lessThanOrEqualTo(other);
 		
-		return new BooleanType(((NumberType) other).value.doubleValue() <= value.doubleValue());
+		return new BooleanType(value.doubleValue() <= ((NumberType) other).value.doubleValue());
 	}
 	
 	@Override
@@ -117,7 +117,7 @@ public class NumberType extends Type {
 		if (!(other instanceof NumberType))
 			super.greaterThan(other);
 		
-		return new BooleanType(((NumberType) other).value.doubleValue() > value.doubleValue());
+		return new BooleanType(value.doubleValue() > ((NumberType) other).value.doubleValue());
 	}
 	
 	@Override
@@ -125,7 +125,7 @@ public class NumberType extends Type {
 		if (!(other instanceof NumberType))
 			super.greaterThanOrEqualTo(other);
 		
-		return new BooleanType(((NumberType) other).value.doubleValue() >= value.doubleValue());
+		return new BooleanType(value.doubleValue() >= ((NumberType) other).value.doubleValue());
 	}
 	
 	public static NumberType parseNumber(String numberString) {
@@ -139,11 +139,11 @@ public class NumberType extends Type {
 			}
 		}
 	}
-    
-    public static NumberType of(Number number) {
-        if (number.toString().endsWith(".0"))
-            return new IntegerType(number);
-        
-        return new FloatType(number);
-    }
+	
+	public static NumberType of(Number number) {
+		if (number.toString().endsWith(".0"))
+			return new IntegerType(number);
+		
+		return new FloatType(number);
+	}
 }

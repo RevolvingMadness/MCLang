@@ -62,14 +62,6 @@ public abstract class Type {
         return null;
     }
 
-    public static BooleanType notEqualTo(Type left, Type right) {
-        return new BooleanType(!Objects.equals(left.value, right.value));
-    }
-
-    public static BooleanType equalTo(Type left, Type right) {
-        return new BooleanType(Objects.equals(left.value, right.value));
-    }
-
     public Type bitwiseAnd(Type other) {
         MCLangInterpreter.throwBinOpException("&", this, other);
         return null;
@@ -102,10 +94,11 @@ public abstract class Type {
 
     @Override
     public boolean equals(Object other) {
-        if (other == this)
-            return true;
-        if (!(other instanceof Type))
-            return false;
-        return Objects.equals(value, ((Type) other).value);
+        throw new RuntimeException("Please implement an equals method for class '" + this.getClass().getSimpleName() + "'");
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

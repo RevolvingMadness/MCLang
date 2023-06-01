@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class BooleanType extends Type {
     public Boolean value;
-
+    
     public BooleanType(boolean value) {
         this.value = value;
         this.name = this.getClass().getSimpleName();
@@ -15,7 +15,7 @@ public class BooleanType extends Type {
         if (!(other instanceof BooleanType))
             super.booleanAnd(other);
 
-        return new BooleanType(((BooleanType) other).value && value);
+        return new BooleanType(value && ((BooleanType) other).value);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class BooleanType extends Type {
         if (!(other instanceof BooleanType))
             super.booleanAnd(other);
 
-        return new BooleanType(((BooleanType) other).value || value);
+        return new BooleanType(value || ((BooleanType) other).value);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BooleanType extends Type {
         if (!(other instanceof BooleanType))
             super.booleanAnd(other);
 
-        return new BooleanType(((BooleanType) other).value & value);
+        return new BooleanType(value & ((BooleanType) other).value);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class BooleanType extends Type {
         if (!(other instanceof BooleanType))
             super.booleanAnd(other);
 
-        return new BooleanType(((BooleanType) other).value ^ value);
+        return new BooleanType(value ^ ((BooleanType) other).value);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class BooleanType extends Type {
         if (!(other instanceof BooleanType))
             super.booleanAnd(other);
 
-        return new BooleanType(((BooleanType) other).value | value);
+        return new BooleanType(value | ((BooleanType) other).value);
     }
 
     public static BooleanType getBoolean(String input) {
@@ -78,5 +78,14 @@ public class BooleanType extends Type {
     @Override
     public String toString() {
         return Boolean.toString(this.value);
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other == this)
+            return true;
+        if (!(other instanceof BooleanType type))
+            return false;
+        return Objects.equals(value, type.value);
     }
 }

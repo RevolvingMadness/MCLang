@@ -219,6 +219,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNotEqualToExpression(MCLangParser.NotEqualToExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ternaryExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTernaryExpression(MCLangParser.TernaryExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code booleanAndExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree

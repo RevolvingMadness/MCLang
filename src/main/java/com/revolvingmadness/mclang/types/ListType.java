@@ -1,7 +1,7 @@
 package com.revolvingmadness.mclang.types;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListType extends Type {
     public List<Type> value;
@@ -12,20 +12,16 @@ public class ListType extends Type {
     }
 
     @Override
-    public Type add(Type other) {
-        if (!(other instanceof ListType))
-            super.add(other);
-
-        List<Type> result = new ArrayList<>();
-
-        result.addAll(value);
-        result.addAll(((ListType) other).value);
-
-        return new ListType(result);
-    }
-
-    @Override
     public String toString() {
         return value.toString();
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other == this)
+            return true;
+        if (!(other instanceof ListType type))
+            return false;
+        return Objects.equals(value, type.value);
     }
 }
