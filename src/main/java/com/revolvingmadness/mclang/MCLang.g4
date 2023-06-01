@@ -10,6 +10,8 @@ statement
     | functionDeclarationStatement ';'?
     | returnStatement ';'
     | importStatement ';'
+    | statement '//' .*?
+    | '//' .*?
     ;
 
 expr

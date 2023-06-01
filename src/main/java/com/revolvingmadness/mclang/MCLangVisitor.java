@@ -406,7 +406,6 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		for (MCLangParser.ArgumentContext context1 : context.argument()) {
 			functionCallArguments.add(visitArgument(context1));
 		}
-		System.out.println(functionCallArguments);
 		
 		if (function.arguments.size() != functionCallArguments.size())
 			throw new RuntimeException("Invalid number of arguments for function '" + function.name + "' (got " + functionCallArguments.size() + ", expected " + function.arguments.size() + ")");
@@ -415,13 +414,15 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 			functionVariables.put(function.arguments.get(i), functionCallArguments.get(i));
 		}
 		
+		
 		for (MCLangParser.StatementContext statement : function.body) {
 			visit(statement);
 			
-			if (new NullType().equals(functionCallStack.lastElement().returnValue)) {
+			if (!Objects.equals(functionCallStack.lastElement().returnValue, new NullType())) {
 				break;
 			}
 		}
+		
 		
 		Type returnValue = functionCallStack.lastElement().returnValue;
 		variableScopes.pop();
@@ -514,7 +515,6 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		for (Map<String, Type> variableScope : variableScopes) {
 			if (variableScope.containsKey(name)) {
 				variable = variableScope.get(name);
-				break;
 			}
 		}
 		
