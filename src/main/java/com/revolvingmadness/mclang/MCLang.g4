@@ -9,6 +9,7 @@ statement
     | whileStatement ';'?
     | functionDeclarationStatement ';'?
     | returnStatement ';'
+    | importStatement ';'
     ;
 
 expr
@@ -81,6 +82,8 @@ functionDeclarationStatement: 'function ' IDENTIFIER '(' (IDENTIFIER ','?)* ')' 
 functionCall: IDENTIFIER '(' argument* ')';
 
 returnStatement: 'return ' expr;
+
+importStatement: 'import ' STRING;
 
 argument: expr ','?;
 

@@ -333,6 +333,12 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReturnStatement(MCLangParser.ReturnStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MCLangParser#importStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitImportStatement(MCLangParser.ImportStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MCLangParser#argument}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

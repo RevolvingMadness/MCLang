@@ -3,9 +3,15 @@ package com.revolvingmadness.mclang;
 
 import com.revolvingmadness.mclang.types.*;
 import generated.MCLangBaseVisitor;
+import generated.MCLangLexer;
 import generated.MCLangParser;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class MCLangVisitor extends MCLangBaseVisitor<Type> {
@@ -438,6 +444,25 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	@Override
 	public Type visitReturnStatement(MCLangParser.ReturnStatementContext context) {
 		functionReturnValue = visit(context.expr());
+		return null;
+	}
+	
+	@Override
+	public Type visitImportStatement(MCLangParser.ImportStatementContext context) {
+		String wholeName = context.STRING().toString();
+		String name = wholeName.substring(1, wholeName.length()-1);
+		StringBuilder content = new StringBuilder();
+		try {
+			Files.readAllLines(Path.of(name)).forEach(content::append);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		MCLangLexer lexer = new MCLangLexer(CharStreams.fromString(content.toString()));
+		MCLangParser parser = new MCLangParser(new CommonTokenStream(lexer));
+		MCLangParser.ProgramContext program = parser.program();
+		visit(program);
+		
 		return null;
 	}
 	
