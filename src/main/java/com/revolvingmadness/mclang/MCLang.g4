@@ -83,15 +83,17 @@ ifStatement: 'if' '(' expr ')' body ('else' body)?;
 
 whileStatement: 'while' '(' expr ')' body;
 
-functionDeclarationStatement: 'function ' IDENTIFIER '(' (IDENTIFIER ','?)* ')' ('->' returnType=DATA_TYPE)? (body ';'? | '=>' expr ';');
+functionDeclarationStatement: 'function ' IDENTIFIER '(' identifierArgument* ')' ('->' IDENTIFIER)? (body ';'? | '=>' expr ';');
 
-functionCall: IDENTIFIER '(' argument* ')';
+identifierArgument: IDENTIFIER? IDENTIFIER ','?;
+
+functionCall: IDENTIFIER '(' exprArgument* ')';
 
 returnStatement: 'return ' expr;
 
 importStatement: 'import ' STRING;
 
-argument: expr ','?;
+exprArgument: expr ','?;
 
 body: '{' statement* '}';
 
@@ -102,7 +104,6 @@ dict: '{' (STRING ':' expr ','?)* '}';
 number: '-'? (INT | FLOAT);
 
 // Literals
-DATA_TYPE: 'bool' | 'dict' | 'float' | 'func' | 'int' | 'list' | 'void' | 'number' | 'str';
 NULL: 'null';
 BOOLEAN: 'true' | 'false';
 FLOAT: INT '.' INT;

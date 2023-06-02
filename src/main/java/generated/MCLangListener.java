@@ -562,6 +562,16 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MCLangParser#identifierArgument}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifierArgument(MCLangParser.IdentifierArgumentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#identifierArgument}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifierArgument(MCLangParser.IdentifierArgumentContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MCLangParser#functionCall}.
 	 * @param ctx the parse tree
 	 */
@@ -592,15 +602,15 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitImportStatement(MCLangParser.ImportStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MCLangParser#argument}.
+	 * Enter a parse tree produced by {@link MCLangParser#exprArgument}.
 	 * @param ctx the parse tree
 	 */
-	void enterArgument(MCLangParser.ArgumentContext ctx);
+	void enterExprArgument(MCLangParser.ExprArgumentContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MCLangParser#argument}.
+	 * Exit a parse tree produced by {@link MCLangParser#exprArgument}.
 	 * @param ctx the parse tree
 	 */
-	void exitArgument(MCLangParser.ArgumentContext ctx);
+	void exitExprArgument(MCLangParser.ExprArgumentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MCLangParser#body}.
 	 * @param ctx the parse tree

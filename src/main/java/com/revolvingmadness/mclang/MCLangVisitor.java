@@ -7,7 +7,6 @@ import generated.MCLangLexer;
 import generated.MCLangParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -427,10 +426,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		variableScopes.push(functionVariables);
 		
 		// Process the function call arguments
-		List<Type> functionCallArguments = new ArrayList<>();
-		for (MCLangParser.ArgumentContext argumentContext : context.argument()) {
-			functionCallArguments.add(visitArgument(argumentContext));
-		}
+		List<Type> functionCallArguments = getExprArguments(context.exprArgument());
 		
 		// Check if the number of arguments matches the function's expected number of arguments
 		if (function.arguments.size() != functionCallArguments.size()) {
@@ -438,8 +434,14 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		}
 		
 		// Bind the function call arguments to the function variables
-		for (int i = 0; i < context.argument().size(); i++) {
-			functionVariables.put(function.arguments.get(i), functionCallArguments.get(i));
+		for (int i = 0; i < context.exprArgument().size(); i++) {
+			String actualName = function.arguments.keySet().stream().toList().get(i);
+			Type actualValue = functionCallArguments.get(i);
+			Class<? extends Type> expectedValue = function.arguments.get(actualName);
+			
+			if (expectedValue != NullType.class && !expectedValue.isInstance(actualValue))
+				throw new RuntimeException("Invalid data type (got '" + actualValue.name + "', expected '" + expectedValue.getSimpleName() + "')");
+			functionVariables.put(actualName, actualValue);
 		}
 		
 		// Execute the function body statements if available
@@ -468,8 +470,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		// Reset the function return value to null
 		functionReturnValue = new NullType();
 		
-		if (function.returnType != null && !function.returnType.isInstance(returnValue))
-			throw new RuntimeException("Invalid return type (got '" + returnValue.name + "', expected '" + function.returnType.getSimpleName() + "')");
+		if (function.returnType != NullType.class && !function.returnType.isInstance(returnValue))
+			throw new RuntimeException("Invalid data type (got '" + returnValue.name + "', expected '" + function.returnType.getSimpleName() + "')");
 		
 		return returnValue;
 	}
@@ -479,16 +481,11 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		// Get the name of the function
 		String name = context.IDENTIFIER(0).getText();
 		// Extract the arguments of the function
-		boolean hasType = context.returnType != null;
-		Class<? extends Type> returnType = null;
+		boolean hasType = context.IDENTIFIER().size() == 2;
+		Class<? extends Type> returnType = NullType.class;
 		if (hasType)
-			returnType = Type.of(context.returnType.getText());
-		List<String> arguments = new ArrayList<>();
-		List<TerminalNode> identifierArguments = context.IDENTIFIER();
-		identifierArguments.remove(0);
-//		if (hasType)
-//			identifierArguments.remove(identifierArguments.size()-1);
-		identifierArguments.forEach(identifierNode -> arguments.add(identifierNode.getText()));
+			returnType = Type.of(context.IDENTIFIER(1).getText());
+		Map<String, Class<? extends Type>> arguments = getIdentifierArguments(context.identifierArgument());
 		
 		// Check if the function has a body
 		if (context.body() != null) {
@@ -503,6 +500,33 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		}
 		
 		return null;
+	}
+	
+	public Map<String, Class<? extends Type>> getIdentifierArguments(List<MCLangParser.IdentifierArgumentContext> listContext) {
+		Map<String, Class<? extends Type>> result = new LinkedHashMap<>();
+		boolean hasType = false;
+		for (MCLangParser.IdentifierArgumentContext context : listContext) {
+			if (context.IDENTIFIER().size() == 2) {
+				result.put(context.IDENTIFIER(1).getText(), Type.of(context.IDENTIFIER(0).getText()));
+				hasType = true;
+			} else {
+				result.put(context.IDENTIFIER(0).getText(), NullType.class);
+			}
+		}
+		if (hasType) {
+			for (Class<? extends Type> clazz : result.values()) {
+				if (clazz == NullType.class) {
+					throw new RuntimeException("All parameters have to have specified types if at least one other parameter has a specified type");
+				}
+			}
+		}
+		return result;
+	}
+	
+	public List<Type> getExprArguments(List<MCLangParser.ExprArgumentContext> listContext) {
+		List<Type> result = new ArrayList<>();
+		listContext.forEach(context -> result.add(visit(context)));
+		return result;
 	}
 	
 	@Override
@@ -533,8 +557,15 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	}
 	
 	@Override
-	public Type visitArgument(MCLangParser.ArgumentContext context) {
+	public Type visitExprArgument(MCLangParser.ExprArgumentContext context) {
 		return visit(context.expr());
+	}
+	
+	@Override
+	public Type visitIdentifierArgument(MCLangParser.IdentifierArgumentContext context) {
+		if (context.IDENTIFIER().size() == 2)
+			return visit(context.IDENTIFIER(1));
+		return visit(context.IDENTIFIER(0));
 	}
 	
 	@Override

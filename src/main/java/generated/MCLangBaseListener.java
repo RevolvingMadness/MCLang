@@ -581,6 +581,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIdentifierArgument(MCLangParser.IdentifierArgumentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifierArgument(MCLangParser.IdentifierArgumentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFunctionCall(MCLangParser.FunctionCallContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -617,13 +629,13 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArgument(MCLangParser.ArgumentContext ctx) { }
+	@Override public void enterExprArgument(MCLangParser.ExprArgumentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArgument(MCLangParser.ArgumentContext ctx) { }
+	@Override public void exitExprArgument(MCLangParser.ExprArgumentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
