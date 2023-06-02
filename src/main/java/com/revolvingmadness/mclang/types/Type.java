@@ -6,7 +6,20 @@ import java.util.Objects;
 
 public abstract class Type {
     public Object value;
-    public String name;
+    public String typeName;
+    public Class<? extends Type> type;
+    
+    public Type(Object value) {
+        this.typeName = this.getClass().getSimpleName();
+        this.value = value;
+        this.type = this.getClass();
+    }
+    
+    public Type() {
+        this.typeName = this.getClass().getSimpleName();
+        this.value = null;
+        this.type = this.getClass();
+    }
     
     public static Class<? extends Type> of(String input) {
         switch (input) {
@@ -68,6 +81,11 @@ public abstract class Type {
 
     public Type add(Type other) {
         MCLangInterpreter.throwBinOpException("+", this, other);
+        return null;
+    }
+    
+    public Type increment() {
+        MCLangInterpreter.throwBinOpException("++", this);
         return null;
     }
 

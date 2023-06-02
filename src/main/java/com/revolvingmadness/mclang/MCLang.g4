@@ -71,7 +71,9 @@ variableAssignment
     | IDENTIFIER '//=' expr #floorDivideVariableAssignment
     | IDENTIFIER '%=' expr #moduloVariableAssignment
     | IDENTIFIER '+=' expr #addVariableAssignment
+    | IDENTIFIER '++' #incrementVariableAssignment
     | IDENTIFIER '-=' expr #subtractVariableAssignment
+    | IDENTIFIER '--' #decrementVariableAssignment
 
     // Bitwise Assignments
     | IDENTIFIER '&=' expr #bitwiseAndVariableAssignment

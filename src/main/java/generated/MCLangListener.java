@@ -484,6 +484,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitAddVariableAssignment(MCLangParser.AddVariableAssignmentContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code incrementVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterIncrementVariableAssignment(MCLangParser.IncrementVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code incrementVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitIncrementVariableAssignment(MCLangParser.IncrementVariableAssignmentContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code subtractVariableAssignment}
 	 * labeled alternative in {@link MCLangParser#variableAssignment}.
 	 * @param ctx the parse tree
@@ -495,6 +507,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code decrementVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterDecrementVariableAssignment(MCLangParser.DecrementVariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code decrementVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitDecrementVariableAssignment(MCLangParser.DecrementVariableAssignmentContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code bitwiseAndVariableAssignment}
 	 * labeled alternative in {@link MCLangParser#variableAssignment}.

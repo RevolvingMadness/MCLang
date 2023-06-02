@@ -18,6 +18,7 @@ public class FunctionType extends Type {
 	
 	
 	public FunctionType(String name, Map<String, Class<? extends Type>> arguments, Class<? extends Type> returnType, MCLangParser.BodyContext body) {
+		super();
 		this.name = name;
 		this.body = new ArrayList<>();
 		this.arguments = arguments;
@@ -43,8 +44,8 @@ public class FunctionType extends Type {
 	public boolean equals(Object other) {
 		if (other == this)
 			return true;
-		if (!(other instanceof FunctionType type))
+		if (!(other instanceof FunctionType functionType))
 			return false;
-		return Objects.equals(name, type.name) && Objects.equals(arguments, type.arguments) && Objects.equals(body, type.body) && Objects.equals(returnValue, type.returnValue);
+		return Objects.equals(name, functionType.name) && Objects.equals(arguments, functionType.arguments) && Objects.equals(body, functionType.body) && Objects.equals(returnValue, functionType.returnValue);
 	}
 }

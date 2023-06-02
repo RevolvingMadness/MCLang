@@ -4,8 +4,9 @@ public class NumberType extends Type {
 	public Number value;
 	
 	public NumberType(Number value) {
+		super(value);
 		this.value = value;
-		this.name = this.getClass().getSimpleName();
+		this.typeName = this.getClass().getSimpleName();
 	}
 	
 	@Override
@@ -20,7 +21,7 @@ public class NumberType extends Type {
 	
 	@Override
 	public Type multiply(Type other) {
-		if (!(other instanceof NumberType || other instanceof StringType))
+		if (!(other instanceof NumberType))
 			super.multiply(other);
 		
 		Number result = value.doubleValue() * ((NumberType) other).value.doubleValue();
@@ -84,6 +85,11 @@ public class NumberType extends Type {
 		Number result = value.doubleValue() + ((NumberType) other).value.doubleValue();
 		
 		return NumberType.of(result);
+	}
+	
+	@Override
+	public Type increment() {
+		return NumberType.of(value.doubleValue()+1);
 	}
 	
 	@Override

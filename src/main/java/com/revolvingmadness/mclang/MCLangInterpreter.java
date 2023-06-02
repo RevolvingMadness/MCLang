@@ -1,6 +1,5 @@
 package com.revolvingmadness.mclang;
 
-import com.revolvingmadness.mclang.types.Type;
 import generated.MCLangLexer;
 import generated.MCLangParser;
 import org.antlr.v4.runtime.CharStream;
@@ -10,15 +9,15 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MCLangInterpreter {
-    public Map<String, Type> variables;
+    public List<Variable> variables;
     private static final MCLangVisitor visitor = new MCLangVisitor();
 
     public void runCode(String code) {
-        this.variables = new HashMap<>();
+        this.variables = new ArrayList<>();
         CharStream inputStream = CharStreams.fromString(code);
         MCLangLexer lexer = new MCLangLexer(inputStream);
         CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
@@ -28,7 +27,7 @@ public class MCLangInterpreter {
 
         visitor.visit(programContext);
 
-        this.variables = visitor.variableScopes.firstElement();
+        this.variables = visitor.variableScopes.get(0);
     }
 
     public static void throwBinOpException(String type, Object left, Object right) {

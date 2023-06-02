@@ -4,9 +4,10 @@ import java.util.Objects;
 
 public class NullType extends Type {
     public Object value;
+    
     public NullType() {
         this.value = null;
-        this.name = this.getClass().getSimpleName();
+        this.typeName = this.getClass().getSimpleName();
     }
 
     @Override
@@ -18,8 +19,8 @@ public class NullType extends Type {
     public boolean equals(Object other) {
         if (other == this)
             return true;
-        if (!(other instanceof NullType type))
+        if (!(other instanceof NullType nullType))
             return false;
-        return Objects.equals(value, type.value);
+        return Objects.equals(value, nullType.value);
     }
 }

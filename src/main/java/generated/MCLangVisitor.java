@@ -289,12 +289,26 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAddVariableAssignment(MCLangParser.AddVariableAssignmentContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code incrementVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIncrementVariableAssignment(MCLangParser.IncrementVariableAssignmentContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code subtractVariableAssignment}
 	 * labeled alternative in {@link MCLangParser#variableAssignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code decrementVariableAssignment}
+	 * labeled alternative in {@link MCLangParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDecrementVariableAssignment(MCLangParser.DecrementVariableAssignmentContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code bitwiseAndVariableAssignment}
 	 * labeled alternative in {@link MCLangParser#variableAssignment}.

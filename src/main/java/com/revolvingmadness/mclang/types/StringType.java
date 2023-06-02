@@ -7,8 +7,9 @@ public class StringType extends Type {
 	public String value;
 	
 	public StringType(String value) {
+		super(value);
 		this.value = value;
-		this.name = this.getClass().getSimpleName();
+		this.typeName = this.getClass().getSimpleName();
 	}
 	
 	@Override
@@ -38,9 +39,9 @@ public class StringType extends Type {
 			return new StringType(((StringType) right).value.repeat(((IntegerType) left).value.intValue()));
 		
 		if (!(left instanceof StringType) && right instanceof IntegerType)
-			throw new RuntimeException("Cannot multiply string with type '" + left.name + "'.");
+			throw new RuntimeException("Cannot multiply string with type '" + left.typeName + "'.");
 		if (left instanceof StringType && !(right instanceof IntegerType))
-			throw new RuntimeException("Cannot multiply string with type '" + right.name + "'.");
+			throw new RuntimeException("Cannot multiply string with type '" + right.typeName + "'.");
 		
 		return null;
 	}
@@ -54,8 +55,8 @@ public class StringType extends Type {
 	public boolean equals(Object other) {
 		if (other == this)
 			return true;
-		if (!(other instanceof StringType type))
+		if (!(other instanceof StringType stringType))
 			return false;
-		return Objects.equals(value, type.value);
+		return Objects.equals(value, stringType.value);
 	}
 }

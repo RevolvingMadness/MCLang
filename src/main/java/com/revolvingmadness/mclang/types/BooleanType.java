@@ -6,8 +6,9 @@ public class BooleanType extends Type {
     public Boolean value;
     
     public BooleanType(boolean value) {
+        super(value);
         this.value = value;
-        this.name = this.getClass().getSimpleName();
+        this.typeName = this.getClass().getSimpleName();
     }
 
     @Override
@@ -72,7 +73,7 @@ public class BooleanType extends Type {
         if (input instanceof FloatType)
             return new BooleanType(((FloatType) input).value.floatValue() != (float) 0.0);
 
-        throw new RuntimeException("Invalid boolean type '" + input.name + "'");
+        throw new RuntimeException("Invalid boolean type '" + input.typeName + "'");
     }
 
     @Override
@@ -84,8 +85,8 @@ public class BooleanType extends Type {
     public boolean equals(Object other) {
         if (other == this)
             return true;
-        if (!(other instanceof BooleanType type))
+        if (!(other instanceof BooleanType booleanType))
             return false;
-        return Objects.equals(value, type.value);
+        return Objects.equals(value, booleanType.value);
     }
 }

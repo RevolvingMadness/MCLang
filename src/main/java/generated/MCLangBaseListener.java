@@ -497,6 +497,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIncrementVariableAssignment(MCLangParser.IncrementVariableAssignmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIncrementVariableAssignment(MCLangParser.IncrementVariableAssignmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -504,6 +516,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDecrementVariableAssignment(MCLangParser.DecrementVariableAssignmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDecrementVariableAssignment(MCLangParser.DecrementVariableAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

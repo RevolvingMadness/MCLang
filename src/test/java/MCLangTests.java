@@ -1,41 +1,47 @@
 import com.revolvingmadness.mclang.MCLangInterpreter;
+import com.revolvingmadness.mclang.Variable;
 import com.revolvingmadness.mclang.types.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MCLangTests {
     MCLangInterpreter interpreter = new MCLangInterpreter();
+    
+    public Type getVariable(String name) {
+        for (Variable variable : interpreter.variables) {
+            if (Objects.equals(variable.name, name))
+                return variable.value;
+        }
+        return null;
+    }
 
     @Test
     @DisplayName("Literal Expressions")
     public void literalExpressions() {
         // Numbers
         interpreter.runCode("a = 1;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("a = -1;");
-        Assertions.assertEquals(new IntegerType(-1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(-1), getVariable("a"));
 
         // Null types
         interpreter.runCode("a = null;");
-        Assertions.assertEquals(new NullType(), interpreter.variables.get("a"));
+        Assertions.assertEquals(new NullType(), getVariable("a"));
 
         // Strings
         interpreter.runCode("a = \"1\";");
-        Assertions.assertEquals(new StringType("1"), interpreter.variables.get("a"));
+        Assertions.assertEquals(new StringType("1"), getVariable("a"));
         interpreter.runCode("a = \"1\" * 3;");
-        Assertions.assertEquals(new StringType("111"), interpreter.variables.get("a"));
+        Assertions.assertEquals(new StringType("111"), getVariable("a"));
 
         // Booleans
         interpreter.runCode("a = true;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = false;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
 
         // Identifiers / Variables
         interpreter.runCode("""
@@ -43,7 +49,7 @@ public class MCLangTests {
                 b = 1;
                 c = a + b;
                 """);
-        Assertions.assertEquals(new IntegerType(2), interpreter.variables.get("c"));
+        Assertions.assertEquals(new IntegerType(2), getVariable("c"));
     }
 
     @Test
@@ -51,41 +57,41 @@ public class MCLangTests {
     public void arithmeticExpressions() {
         // Parenthesis
         interpreter.runCode("a = 1 + 2 * 3;");
-        Assertions.assertEquals(new IntegerType(7), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(7), getVariable("a"));
         interpreter.runCode("a = (1 + 2) * 3;");
-        Assertions.assertEquals(new IntegerType(9), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(9), getVariable("a"));
 
         // Exponentiation
         interpreter.runCode("a = 2 ** 2;");
-        Assertions.assertEquals(new IntegerType(4), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(4), getVariable("a"));
         interpreter.runCode("a = 2 ** 2.1;");
-//        Assertions.assertEquals(new FloatType(4.287093566752561), interpreter.variables.get("a"));
+//        Assertions.assertEquals(new FloatType(4.287093566752561), getVariable("a"));
 
         // Multiplication
         interpreter.runCode("a = 2 * 5;");
-        Assertions.assertEquals(new IntegerType(10), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(10), getVariable("a"));
         interpreter.runCode("a = \"0\" * 2;");
-        Assertions.assertEquals(new StringType("00"), interpreter.variables.get("a"));
+        Assertions.assertEquals(new StringType("00"), getVariable("a"));
 
         // Division
         interpreter.runCode("a = 1 / 3;");
-        Assertions.assertEquals(new FloatType(0.33333334), interpreter.variables.get("a"));
+        Assertions.assertEquals(new FloatType(0.33333334), getVariable("a"));
 
         // Floor division
         interpreter.runCode("a = 1 // 3;");
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
 
         // Modulo
         interpreter.runCode("a = 10 % 3;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
 
         // Addition
         interpreter.runCode("a = 5 + 5;");
-        Assertions.assertEquals(new IntegerType(10), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(10), getVariable("a"));
 
         // Subtraction
         interpreter.runCode("a = 10 - 5;");
-        Assertions.assertEquals(new IntegerType(5), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(5), getVariable("a"));
     }
 
     @Test
@@ -93,43 +99,43 @@ public class MCLangTests {
     public void comparisonExpressions() {
         // Less than
         interpreter.runCode("a = 1 < 2;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = 2 < 1;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
 
         // Less than or equal to
         interpreter.runCode("a = 1 <= 2;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = 1 <= 1;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = 2 <= 1;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
 
         // Greater than
         interpreter.runCode("a = 2 > 1;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = 1 > 2;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
 
         // Greater than or equal to
         interpreter.runCode("a = 2 >= 1;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = 1 >= 1;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = 1 >= 2;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
 
         // Not equal to
         interpreter.runCode("a = 1 != 2;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = 1 != 1;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
 
         // Equal to
         interpreter.runCode("a = 1 == 1;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = 1 == 2;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
     }
 
     @Test
@@ -137,29 +143,29 @@ public class MCLangTests {
     public void bitwiseExpressions() {
         // Bitwise and
         interpreter.runCode("a = 1 & 1;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("a = 1 & 2;");
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
 
         // Bitwise xor
         interpreter.runCode("a = 0 ^ 0;");
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
         interpreter.runCode("a = 0 ^ 1;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("a = 1 ^ 0;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("a = 1 ^ 1;");
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
 
         // Bitwise or
         interpreter.runCode("a = 0 | 0;");
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
         interpreter.runCode("a = 0 | 1;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("a = 1 | 0;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("a = 1 | 1;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
     }
 
     @Test
@@ -167,25 +173,25 @@ public class MCLangTests {
     public void booleanExpressions() {
         // Boolean and
         interpreter.runCode("a = true && true;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = true && false;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
 
         // Boolean or
         interpreter.runCode("a = false || false;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
         interpreter.runCode("a = true || false;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = false || true;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
         interpreter.runCode("a = true || true;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
 
         // Boolean not
         interpreter.runCode("a = !true;");
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("a"));
         interpreter.runCode("a = !false;");
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("a"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("a"));
     }
 
     @Test
@@ -197,7 +203,7 @@ public class MCLangTests {
         list.add(new IntegerType(1));
         list.add(new StringType("2"));
         list.add(new NullType());
-        Assertions.assertEquals(new ListType(list), interpreter.variables.get("a"));
+        Assertions.assertEquals(new ListType(list), getVariable("a"));
 
         // Dict expression
         interpreter.runCode("""
@@ -209,12 +215,12 @@ public class MCLangTests {
         Map<StringType, Type> dict = new HashMap<>();
         dict.put(new StringType("a"), new IntegerType(1));
         dict.put(new StringType("b"), new IntegerType(2));
-        Assertions.assertEquals(new DictType(dict), interpreter.variables.get("a"));
+        Assertions.assertEquals(new DictType(dict), getVariable("a"));
 
         // Assignment expression
         interpreter.runCode("a = b := 1;");
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("b"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("b"));
     }
 
     @Test
@@ -222,7 +228,7 @@ public class MCLangTests {
     public void regularVariableAssignment() {
         // Regular variable assignment
         interpreter.runCode("a = 1;");
-        Assertions.assertTrue(interpreter.variables.containsKey("a"));
+        Assertions.assertTrue(interpreter.variables.contains(new Variable("a", new IntegerType(1))));
     }
 
     @Test
@@ -233,49 +239,49 @@ public class MCLangTests {
                 a = 2;
                 a **= 5;
                 """);
-        Assertions.assertEquals(new IntegerType(32), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(32), getVariable("a"));
 
         // Multiplication variable assignment
         interpreter.runCode("""
                 a = 2;
                 a *= 5;
                 """);
-        Assertions.assertEquals(new IntegerType(10), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(10), getVariable("a"));
 
         // Division variable assignment
         interpreter.runCode("""
                 a = 10;
                 a /= 2;
                 """);
-        Assertions.assertEquals(new FloatType(5.0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new FloatType(5.0), getVariable("a"));
 
         // Floor division variable assignment
         interpreter.runCode("""
                 a = 1;
                 a //= 3;
                 """);
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
 
         // Modulo variable assignment
         interpreter.runCode("""
                 a = 10;
                 a %= 3;
                 """);
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
 
         // Addition variable assignment
         interpreter.runCode("""
                 a = 1;
                 a += 1;
                 """);
-        Assertions.assertEquals(new IntegerType(2), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(2), getVariable("a"));
 
         // Subtraction variable assignment
         interpreter.runCode("""
                 a = 2;
                 a -= 1;
                 """);
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
     }
 
     @Test
@@ -286,56 +292,56 @@ public class MCLangTests {
                 a = 1;
                 a &= 1;
                 """);
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("""
                 a = 1;
                 a &= 2;
                 """);
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
 
         // Bitwise xor variable assignment
         interpreter.runCode("""
                 a = 0;
                 a ^= 0;
                 """);
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
         interpreter.runCode("""
                 a = 1;
                 a ^= 0;
                 """);
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("""
                 a = 0;
                 a ^= 1;
                 """);
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("""
                 a = 1;
                 a ^= 1;
                 """);
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
 
         // Bitwise or variable assignment
         interpreter.runCode("""
                 a = 0;
                 a |= 0;
                 """);
-        Assertions.assertEquals(new IntegerType(0), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(0), getVariable("a"));
         interpreter.runCode("""
                 a = 1;
                 a |= 0;
                 """);
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("""
                 a = 0;
                 a |= 1;
                 """);
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
         interpreter.runCode("""
                 a = 1;
                 a |= 1;
                 """);
-        Assertions.assertEquals(new IntegerType(1), interpreter.variables.get("a"));
+        Assertions.assertEquals(new IntegerType(1), getVariable("a"));
     }
 
     @Test
@@ -350,7 +356,7 @@ public class MCLangTests {
                     b = false;
                 }
                 """);
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("b"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("b"));
         interpreter.runCode("""
                 a = false;
                 if (a) {
@@ -359,7 +365,7 @@ public class MCLangTests {
                     b = false;
                 }
                 """);
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("b"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("b"));
         interpreter.runCode("""
                 a = 1;
                 if (a) {
@@ -368,7 +374,7 @@ public class MCLangTests {
                     b = false;
                 }
                 """);
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("b"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("b"));
         interpreter.runCode("""
                 a = 0;
                 if (a) {
@@ -377,7 +383,7 @@ public class MCLangTests {
                     b = false;
                 }
                 """);
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("b"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("b"));
         interpreter.runCode("""
                 a = -1;
                 if (a) {
@@ -386,7 +392,7 @@ public class MCLangTests {
                     b = false;
                 }
                 """);
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("b"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("b"));
         interpreter.runCode("""
                 a = "a";
                 if (a) {
@@ -395,7 +401,7 @@ public class MCLangTests {
                     b = false;
                 }
                 """);
-        Assertions.assertEquals(new BooleanType(true), interpreter.variables.get("b"));
+        Assertions.assertEquals(new BooleanType(true), getVariable("b"));
         interpreter.runCode("""
                 a = "";
                 if (a) {
@@ -404,7 +410,7 @@ public class MCLangTests {
                     b = false;
                 }
                 """);
-        Assertions.assertEquals(new BooleanType(false), interpreter.variables.get("b"));
+        Assertions.assertEquals(new BooleanType(false), getVariable("b"));
         
         // While loops
         interpreter.runCode("""
@@ -413,7 +419,7 @@ public class MCLangTests {
                     i = i + 1;
                 }
                 """);
-        Assertions.assertEquals(new IntegerType(5), interpreter.variables.get("i"));
+        Assertions.assertEquals(new IntegerType(5), getVariable("i"));
         
         // Functions
         interpreter.runCode("""
@@ -423,7 +429,7 @@ public class MCLangTests {
                 }
                 result = add(1, 1);
                 """);
-        Assertions.assertEquals(new IntegerType(2), interpreter.variables.get("result"));
+        Assertions.assertEquals(new IntegerType(2), getVariable("result"));
     }
 
     @Test

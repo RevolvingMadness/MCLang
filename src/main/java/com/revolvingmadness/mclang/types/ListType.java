@@ -7,8 +7,9 @@ public class ListType extends Type {
     public List<Type> value;
 
     public ListType(List<Type> value) {
+        super(value);
         this.value = value;
-        this.name = this.getClass().getSimpleName();
+        this.typeName = this.getClass().getSimpleName();
     }
 
     @Override
@@ -20,8 +21,8 @@ public class ListType extends Type {
     public boolean equals(Object other) {
         if (other == this)
             return true;
-        if (!(other instanceof ListType type))
+        if (!(other instanceof ListType listType))
             return false;
-        return Objects.equals(value, type.value);
+        return Objects.equals(value, listType.value);
     }
 }

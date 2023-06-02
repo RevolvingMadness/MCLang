@@ -7,8 +7,9 @@ public class DictType extends Type {
     public Map<StringType, Type> value;
 
     public DictType(Map<StringType, Type> value) {
+        super(value);
         this.value = value;
-        this.name = this.getClass().getSimpleName();
+        this.typeName = this.getClass().getSimpleName();
     }
 
     @Override
@@ -20,8 +21,8 @@ public class DictType extends Type {
     public boolean equals(Object other) {
         if (other == this)
             return true;
-        if (!(other instanceof DictType type))
+        if (!(other instanceof DictType dictType))
             return false;
-        return Objects.equals(value, type.value);
+        return Objects.equals(value, dictType.value);
     }
 }
