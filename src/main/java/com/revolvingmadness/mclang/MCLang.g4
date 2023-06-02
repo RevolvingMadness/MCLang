@@ -83,7 +83,7 @@ ifStatement: 'if' '(' expr ')' body ('else' body)?;
 
 whileStatement: 'while' '(' expr ')' body;
 
-functionDeclarationStatement: 'function ' IDENTIFIER '(' (IDENTIFIER ','?)* ')' (body ';'? | '=>' expr ';');
+functionDeclarationStatement: 'function ' IDENTIFIER '(' (IDENTIFIER ','?)* ')' ('->' returnType=DATA_TYPE)? (body ';'? | '=>' expr ';');
 
 functionCall: IDENTIFIER '(' argument* ')';
 
@@ -102,8 +102,9 @@ dict: '{' (STRING ':' expr ','?)* '}';
 number: '-'? (INT | FLOAT);
 
 // Literals
-BOOLEAN: 'true' | 'false';
+DATA_TYPE: 'bool' | 'dict' | 'float' | 'func' | 'int' | 'list' | 'void' | 'number' | 'str';
 NULL: 'null';
+BOOLEAN: 'true' | 'false';
 FLOAT: INT '.' INT;
 INT: [0-9]+;
 STRING: '"' ( ~[\\"\n\r] | '\\' [\\"] )* '"';

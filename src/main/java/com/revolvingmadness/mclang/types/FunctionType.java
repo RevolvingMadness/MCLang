@@ -13,20 +13,23 @@ public class FunctionType extends Type {
 	
 	public MCLangParser.ExprContext shorthandBody;
 	public Type returnValue;
+	public Class<? extends Type> returnType;
 	
 	
-	public FunctionType(String name, List<String> arguments, MCLangParser.BodyContext body) {
+	public FunctionType(String name, List<String> arguments, Class<? extends Type> returnType, MCLangParser.BodyContext body) {
 		this.name = name;
 		this.body = new ArrayList<>();
 		this.arguments = arguments;
+		this.returnType = returnType;
 		
 		this.body.addAll(body.statement());
 		this.returnValue = new NullType();
 	}
 	
-	public FunctionType(String name, List<String> arguments, MCLangParser.ExprContext shorthandBody) {
+	public FunctionType(String name, List<String> arguments, Class<? extends Type> returnType, MCLangParser.ExprContext shorthandBody) {
 		this.name = name;
 		this.arguments = arguments;
+		this.returnType = returnType;
 		this.shorthandBody = shorthandBody;
 	}
 	

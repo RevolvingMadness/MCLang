@@ -16,7 +16,7 @@ import java.util.*;
 
 public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	Stack<Map<String, Type>> variableScopes = new Stack<>();
-	List<String> expressionKeywords = List.of("true", "false", "null");
+	List<String> keywords = List.of("true", "false", "null");
 	Type functionReturnValue = new NullType();
 	
 	public MCLangVisitor() {
@@ -224,14 +224,32 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitRegularVariableAssignment(MCLangParser.RegularVariableAssignmentContext context) {
-		Class<? extends Type> type = Type.of(context.IDENTIFIER(0).getText());
-		String name = context.IDENTIFIER(1).getText();
-		if (expressionKeywords.contains(name))
+		boolean hasType = context.IDENTIFIER().size() == 2;
+		// Get the type of the variable
+		Class<? extends Type> type = null;
+		String name;
+		
+		if (hasType) {
+			type = Type.of(context.IDENTIFIER(0).getText());
+			name = context.IDENTIFIER(1).getText();
+		} else {
+			name = context.IDENTIFIER(0).getText();
+		}
+		
+		// Check if the variable name is a reserved keyword
+		if (keywords.contains(name)) {
 			throw new RuntimeException("Variable name cannot be named keyword '" + name + "'");
+		}
+		
+		// Get the value of the expression assigned to the variable
 		Type value = visit(context.expr());
-		if (!type.isInstance(value)) {
+		
+		// Check if the assigned value has the correct data type
+		if (type != null && !type.isInstance(value)) {
 			throw new RuntimeException("Invalid data type (got '" + value.name + "', expected '" + type.getSimpleName() + "')");
 		}
+		
+		// Assign the value to the variable
 		assignVariable(name, value);
 		
 		return null;
@@ -377,9 +395,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		BooleanType cond = BooleanType.valueOf(visit(context.expr()));
 		if (cond.value)
 			visitBody(context.body(0));
-		else
-			if (context.body(1) != null)
-				visitBody(context.body(1));
+		else if (context.body(1) != null)
+			visitBody(context.body(1));
 		
 		return null;
 	}
@@ -395,58 +412,95 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitFunctionCall(MCLangParser.FunctionCallContext context) {
+		// Get the name of the function
 		String name = context.IDENTIFIER().getText();
+		// Retrieve the variable associated with the function name
 		Type variable = getVariable(name);
-		if (!(variable instanceof FunctionType function))
-			throw new RuntimeException("Variable '" + name + "' is not a function");
 		
+		// Check if the variable is actually a function
+		if (!(variable instanceof FunctionType function)) {
+			throw new RuntimeException("Variable '" + name + "' is not a function");
+		}
+		
+		// Create a new scope for the function variables
 		Map<String, Type> functionVariables = new HashMap<>();
 		variableScopes.push(functionVariables);
 		
+		// Process the function call arguments
 		List<Type> functionCallArguments = new ArrayList<>();
-		for (MCLangParser.ArgumentContext context1 : context.argument()) {
-			functionCallArguments.add(visitArgument(context1));
+		for (MCLangParser.ArgumentContext argumentContext : context.argument()) {
+			functionCallArguments.add(visitArgument(argumentContext));
 		}
 		
-		if (function.arguments.size() != functionCallArguments.size())
+		// Check if the number of arguments matches the function's expected number of arguments
+		if (function.arguments.size() != functionCallArguments.size()) {
 			throw new RuntimeException("Invalid number of arguments for function '" + function.name + "' (got " + functionCallArguments.size() + ", expected " + function.arguments.size() + ")");
+		}
 		
+		// Bind the function call arguments to the function variables
 		for (int i = 0; i < context.argument().size(); i++) {
 			functionVariables.put(function.arguments.get(i), functionCallArguments.get(i));
 		}
 		
-		
-		if (function.body != null)
+		// Execute the function body statements if available
+		if (function.body != null) {
 			for (MCLangParser.StatementContext statement : function.body) {
 				visit(statement);
 				
+				// Break the loop if a non-null function return value is encountered
 				if (!Objects.equals(functionReturnValue, new NullType())) {
 					break;
 				}
 			}
-		if (function.shorthandBody != null)
+		}
+		
+		// Execute the shorthand function body if available
+		if (function.shorthandBody != null) {
 			functionReturnValue = visit(function.shorthandBody);
+		}
 		
-		
+		// Retrieve the return value of the function
 		Type returnValue = functionReturnValue;
+		
+		// Remove the function variable scope
 		variableScopes.pop();
+		
+		// Reset the function return value to null
 		functionReturnValue = new NullType();
+		
+		if (function.returnType != null && !function.returnType.isInstance(returnValue))
+			throw new RuntimeException("Invalid return type (got '" + returnValue.name + "', expected '" + function.returnType.getSimpleName() + "')");
 		
 		return returnValue;
 	}
 	
 	@Override
 	public Type visitFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext context) {
+		// Get the name of the function
 		String name = context.IDENTIFIER(0).getText();
+		// Extract the arguments of the function
+		boolean hasType = context.returnType != null;
+		Class<? extends Type> returnType = null;
+		if (hasType)
+			returnType = Type.of(context.returnType.getText());
 		List<String> arguments = new ArrayList<>();
 		List<TerminalNode> identifierArguments = context.IDENTIFIER();
 		identifierArguments.remove(0);
+//		if (hasType)
+//			identifierArguments.remove(identifierArguments.size()-1);
 		identifierArguments.forEach(identifierNode -> arguments.add(identifierNode.getText()));
 		
-		if (context.body() != null)
-			assignVariable(name, new FunctionType(name, arguments, context.body()));
-		if (context.expr() != null)
-			assignVariable(name, new FunctionType(name, arguments, context.expr()));
+		// Check if the function has a body
+		if (context.body() != null) {
+			// Create a FunctionType object with the name, arguments, and body
+			assignVariable(name, new FunctionType(name, arguments, returnType, context.body()));
+		}
+		
+		// Check if the function has an expression
+		if (context.expr() != null) {
+			// Create a FunctionType object with the name, arguments, and expression
+			assignVariable(name, new FunctionType(name, arguments, returnType, context.expr()));
+		}
 		
 		return null;
 	}

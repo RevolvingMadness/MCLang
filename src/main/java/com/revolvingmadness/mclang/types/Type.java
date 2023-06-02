@@ -28,7 +28,7 @@ public abstract class Type {
             case "list" -> {
                 return ListType.class;
             }
-            case "null" -> {
+            case "null", "void" -> {
                 return NullType.class;
             }
             case "number" -> {

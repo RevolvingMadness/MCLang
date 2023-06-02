@@ -1,2 +1,19 @@
-str num0 = 1.5;
-number num1 = 1;
+function add(a, b) -> void {
+
+}
+
+result = add(1, 1);
+
+function add(a, b) -> void => null;
+
+result = add(1, 1);
+
+function add(a, b) {
+
+}
+
+result = add(1, 1);
+
+function add(a, b) => null;
+
+result = add(1, 1);
