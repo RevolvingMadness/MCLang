@@ -7,7 +7,10 @@ statement
     | functionCall ';'
     | ifStatement ';'?
     | whileStatement ';'?
-    | functionDeclarationStatement
+    | functionDeclarationStatement ';'?
+    | classDeclarationStatement ';'?
+    | classConstructorStatement ';'?
+    | propertyClassMemberAccess ';'
     | returnStatement ';'
     | importStatement ';'
     | statement '//' .*?
@@ -62,23 +65,23 @@ expr
     ;
 
 variableAssignment
-    : IDENTIFIER? IDENTIFIER '=' expr #regularVariableAssignment
+    : IDENTIFIER? propertyClassMemberAccess '=' expr #regularVariableAssignment
 
     // Arithmetic Assignments
-    | IDENTIFIER '**=' expr #exponentiationVariableAssignment
-    | IDENTIFIER '*=' expr #multiplyVariableAssignment
-    | IDENTIFIER '/=' expr #divideVariableAssignment
-    | IDENTIFIER '//=' expr #floorDivideVariableAssignment
-    | IDENTIFIER '%=' expr #moduloVariableAssignment
-    | IDENTIFIER '+=' expr #addVariableAssignment
-    | IDENTIFIER '++' #incrementVariableAssignment
-    | IDENTIFIER '-=' expr #subtractVariableAssignment
-    | IDENTIFIER '--' #decrementVariableAssignment
+    | propertyClassMemberAccess '**=' expr #exponentiationVariableAssignment
+    | propertyClassMemberAccess '*=' expr #multiplyVariableAssignment
+    | propertyClassMemberAccess '/=' expr #divideVariableAssignment
+    | propertyClassMemberAccess '//=' expr #floorDivideVariableAssignment
+    | propertyClassMemberAccess '%=' expr #moduloVariableAssignment
+    | propertyClassMemberAccess '+=' expr #addVariableAssignment
+    | propertyClassMemberAccess '++' #incrementVariableAssignment
+    | propertyClassMemberAccess '-=' expr #subtractVariableAssignment
+    | propertyClassMemberAccess '--' #decrementVariableAssignment
 
     // Bitwise Assignments
-    | IDENTIFIER '&=' expr #bitwiseAndVariableAssignment
-    | IDENTIFIER '^=' expr #bitwiseXorVariableAssignment
-    | IDENTIFIER '|=' expr #bitwiseOrVariableAssignment
+    | propertyClassMemberAccess '&=' expr #bitwiseAndVariableAssignment
+    | propertyClassMemberAccess '^=' expr #bitwiseXorVariableAssignment
+    | propertyClassMemberAccess '|=' expr #bitwiseOrVariableAssignment
     ;
 
 ifStatement: 'if' '(' expr ')' body ('else' body)?;
@@ -86,6 +89,15 @@ ifStatement: 'if' '(' expr ')' body ('else' body)?;
 whileStatement: 'while' '(' expr ')' body;
 
 functionDeclarationStatement: 'function ' IDENTIFIER '(' identifierArgument* ')' ('->' IDENTIFIER)? (body ';'? | '=>' expr ';');
+
+classDeclarationStatement: 'class ' IDENTIFIER body;
+
+classConstructorStatement: IDENTIFIER '(' identifierArgument* ')' body;
+
+propertyClassMemberAccess
+    : IDENTIFIER
+    | IDENTIFIER '.' propertyClassMemberAccess
+    ;
 
 identifierArgument: IDENTIFIER? IDENTIFIER ','?;
 

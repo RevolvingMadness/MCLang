@@ -148,6 +148,14 @@ public abstract class Type {
         MCLangInterpreter.throwBinOpException("-", this);
         return null;
     }
+    
+    public Type getMember(String member) {
+        throw new RuntimeException("Type '" + this.getClass().getSimpleName() + "' has no properties");
+    }
+    
+    public Type assignMember(String member) {
+        throw new RuntimeException("Type '" + this.getClass().getSimpleName() + "' has no properties");
+    }
 
     @Override
     public boolean equals(Object other) {

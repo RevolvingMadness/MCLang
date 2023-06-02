@@ -17,6 +17,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	Stack<List<Variable>> variableScopes = new Stack<>();
 	List<String> datatypes = List.of("bool", "dict", "float", "func", "int", "list", "null", "number", "str");
 	Type functionReturnValue = new NullType();
+	ClassType workingClass = null;
 	
 	public MCLangVisitor() {
 		variableScopes.add(new ArrayList<>());
@@ -223,17 +224,16 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitRegularVariableAssignment(MCLangParser.RegularVariableAssignmentContext context) {
-		boolean hasType = context.IDENTIFIER().size() == 2;
+		boolean hasType = context.IDENTIFIER() != null;
 		// Get the type of the variable
 		Class<? extends Type> type = null;
 		String name;
 		
 		if (hasType) {
-			type = Type.of(context.IDENTIFIER(0).getText());
-			name = context.IDENTIFIER(1).getText();
-		} else {
-			name = context.IDENTIFIER(0).getText();
+			type = Type.of(context.IDENTIFIER().getText());
 		}
+		
+		name = context.propertyClassMemberAccess().getText();
 		
 		// Check if the variable name is a reserved keyword
 		if (datatypes.contains(name)) {
@@ -256,7 +256,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitExponentiationVariableAssignment(MCLangParser.ExponentiationVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -267,7 +267,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitMultiplyVariableAssignment(MCLangParser.MultiplyVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -278,7 +278,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitDivideVariableAssignment(MCLangParser.DivideVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -289,7 +289,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitFloorDivideVariableAssignment(MCLangParser.FloorDivideVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -300,7 +300,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitModuloVariableAssignment(MCLangParser.ModuloVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -311,7 +311,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitAddVariableAssignment(MCLangParser.AddVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -322,7 +322,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitIncrementVariableAssignment(MCLangParser.IncrementVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		
 		Type value = getVariable(name).increment();
 		
@@ -333,7 +333,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -344,7 +344,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitBitwiseAndVariableAssignment(MCLangParser.BitwiseAndVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -355,7 +355,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitBitwiseXorVariableAssignment(MCLangParser.BitwiseXorVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -366,7 +366,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitBitwiseOrVariableAssignment(MCLangParser.BitwiseOrVariableAssignmentContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type oldValue = getVariable(name);
 		Type newValue = visit(context.expr());
 		
@@ -498,19 +498,59 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 			returnType = Type.of(context.IDENTIFIER(1).getText());
 		Map<String, Class<? extends Type>> arguments = getIdentifierArguments(context.identifierArgument());
 		
+		FunctionType function = null;
+		
 		// Check if the function has a body
 		if (context.body() != null) {
-			// Create a FunctionType object with the name, arguments, and body
-			assignVariable(name, new FunctionType(name, arguments, returnType, context.body()), null);
+			function = new FunctionType(name, arguments, returnType, context.body());
 		}
 		
-		// Check if the function has an expression
+		// Check if the function is an expression
 		if (context.expr() != null) {
-			// Create a FunctionType object with the name, arguments, and expression
-			assignVariable(name, new FunctionType(name, arguments, returnType, context.expr()), null);
+			function = new FunctionType(name, arguments, returnType, context.expr());
+		}
+		
+		if (workingClass != null) {
+			workingClass.methods.add(function);
+		} else {
+			assignVariable(name, function, FunctionType.class);
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public Type visitClassDeclarationStatement(MCLangParser.ClassDeclarationStatementContext context) {
+		String name = context.IDENTIFIER().getText();
+		
+		workingClass = new ClassType(name);
+		visitBody(context.body());
+		ClassType oldWorkingClass = workingClass;
+		workingClass = null;
+		
+		assignVariable(name, oldWorkingClass, ClassType.class);
+		return null;
+	}
+	
+	@Override
+	public Type visitClassConstructorStatement(MCLangParser.ClassConstructorStatementContext context) {
+		if (workingClass == null)
+			throw new RuntimeException("Cannot use a class constructor outside a class");
+		
+		String name = context.IDENTIFIER().getText();
+		
+		workingClass.constructor = new FunctionType(name, getIdentifierArguments(context.identifierArgument()), NullType.class, context.body());
+		
+		return null;
+	}
+	
+	@Override
+	public Type visitPropertyClassMemberAccess(MCLangParser.PropertyClassMemberAccessContext context) {
+		String name = context.IDENTIFIER().getText();
+		if (context.propertyClassMemberAccess() != null) {
+			return visitPropertyClassMemberAccess(context.propertyClassMemberAccess());
+		}
+		return getVariable(name);
 	}
 	
 	public Map<String, Class<? extends Type>> getIdentifierArguments(List<MCLangParser.IdentifierArgumentContext> listContext) {
@@ -615,8 +655,13 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		return null;
 	}
 	
-	public Type getVariable(String name) {
+	public Type getVariable(String memberName) {
 		Type variableToBeGot = null;
+		boolean isProperty = memberName.contains(".");
+		String[] arrayMembers = memberName.split("\\.");
+		List<String> members = Arrays.stream(arrayMembers).toList();
+		String name = members.get(0);
+		String member = members.get(members.size() - 1);
 		
 		for (List<Variable> variableScope : variableScopes) {
 			for (Variable variable : variableScope) {
@@ -626,15 +671,25 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 			}
 		}
 		
-		if (variableToBeGot != null) {
+		if (!isProperty && variableToBeGot != null) {
 			return variableToBeGot;
-		} else {
-			throw new RuntimeException("Variable '" + name + "' is not defined");
 		}
+		
+		Type variable = variableToBeGot;
+		return variable.getMember(member);
 	}
 	
 	public void assignVariable(String name, Type value, Class<? extends Type> type) {
 		Variable variableToBeAssigned = null;
+		boolean isProperty = name.contains(".");
+		if (isProperty) {
+			Type variable = getVariable(name);
+			String[] members = name.split("\\.");
+			String member = Arrays.stream(members).toList().get(members.length - 1);
+			variable.assignMember(member);
+			return;
+		}
+		
 		for (List<Variable> variableScope : variableScopes) {
 			for (Variable variable : variableScope) {
 				if (Objects.equals(variable.name, name)) {

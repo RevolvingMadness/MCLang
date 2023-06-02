@@ -605,6 +605,42 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterClassDeclarationStatement(MCLangParser.ClassDeclarationStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClassDeclarationStatement(MCLangParser.ClassDeclarationStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterClassConstructorStatement(MCLangParser.ClassConstructorStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClassConstructorStatement(MCLangParser.ClassConstructorStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPropertyClassMemberAccess(MCLangParser.PropertyClassMemberAccessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertyClassMemberAccess(MCLangParser.PropertyClassMemberAccessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIdentifierArgument(MCLangParser.IdentifierArgumentContext ctx) { }
 	/**
 	 * {@inheritDoc}

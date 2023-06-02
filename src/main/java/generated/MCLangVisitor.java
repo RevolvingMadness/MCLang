@@ -349,6 +349,24 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MCLangParser#classDeclarationStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassDeclarationStatement(MCLangParser.ClassDeclarationStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#classConstructorStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassConstructorStatement(MCLangParser.ClassConstructorStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#propertyClassMemberAccess}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyClassMemberAccess(MCLangParser.PropertyClassMemberAccessContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MCLangParser#identifierArgument}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
