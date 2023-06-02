@@ -249,7 +249,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		}
 		
 		// Assign the value to the variable
-		assignVariable(name, value, value.type);
+		assignVariable(name, value, type);
 		
 		return null;
 	}
@@ -543,47 +543,53 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		
 		Type variable = getVariable(name);
 		
-		if (!(variable instanceof ClassType classType)) {
+		if (!(variable instanceof ClassType)) {
 			throw new RuntimeException("Variable '" + name + "' is not a class");
 		}
 		
+		ClassType clazz = new ClassType((ClassType) variable);
+		
 		List<Type> classInitArguments = getExprArguments(context.exprArgument());
 		
-		if (classInitArguments.size() > 0 && classType.constructor == null) {
+		if (classInitArguments.size() > 0 && clazz.constructor == null) {
 			throw new RuntimeException("Invalid number of arguments for class '" + name + "' (got " + classInitArguments.size() + ", expected 0)");
 		}
 		
-		if (classInitArguments.size() != classType.constructor.arguments.size()) {
-			throw new RuntimeException("Invalid number of arguments for class '" + name + "' (got " + classInitArguments.size() + ", expected " + classType.constructor.arguments.size() + ")");
+		if (classInitArguments.size() != clazz.constructor.arguments.size()) {
+			throw new RuntimeException("Invalid number of arguments for class '" + name + "' (got " + classInitArguments.size() + ", expected " + clazz.constructor.arguments.size() + ")");
 		}
 		
-		if (classType.constructor != null) {
-			List<Variable> constructorVariables = new ArrayList<>();
-			variableScopes.push(constructorVariables);
-			
-			for (int i = 0; i < context.exprArgument().size(); i++) {
-				String actualName = classType.constructor.arguments.keySet().stream().toList().get(i);
-				Type actualValue = classInitArguments.get(i);
-				Class<? extends Type> expectedValue = classType.constructor.arguments.get(actualName);
-				
-				if (expectedValue != null && !expectedValue.isInstance(actualValue))
-					throw new RuntimeException("Invalid data type (got '" + actualValue.typeName + "', expected '" + expectedValue.getSimpleName() + "')");
-				assignVariable(actualName, actualValue, null);
-			}
-			
-			for (MCLangParser.StatementContext statement : classType.constructor.body) {
-				visit(statement);
-				
-				// Break the loop if a non-null function return value is encountered
-				if (!Objects.equals(functionReturnValue, new NullType())) {
-					break;
-				}
-			}
-			
-			variableScopes.pop();
+		if (clazz.constructor == null) {
+			return clazz;
 		}
 		
-		return variable;
+		List<Variable> constructorVariables = new ArrayList<>();
+		variableScopes.push(constructorVariables);
+		constructorVariables.add(new Variable("this", clazz));
+		
+		for (int i = 0; i < context.exprArgument().size(); i++) {
+			String paramName = clazz.constructor.arguments.keySet().stream().toList().get(i);
+			Type paramValue = classInitArguments.get(i);
+			Class<? extends Type> expectedParamType = clazz.constructor.arguments.get(paramName);
+			
+			if (expectedParamType != null && !expectedParamType.isInstance(paramValue))
+				throw new RuntimeException("Invalid data type (got '" + paramValue.typeName + "', expected '" + expectedParamType.getSimpleName() + "')");
+			assignVariable(paramName, paramValue, null);
+		}
+		
+		for (MCLangParser.StatementContext statement : clazz.constructor.body) {
+			visit(statement);
+			
+			// Break the loop if a non-null function return value is encountered
+			if (!Objects.equals(functionReturnValue, new NullType())) {
+				break;
+			}
+		}
+		
+		
+		variableScopes.pop();
+		
+		return clazz;
 	}
 	
 	@Override
@@ -712,10 +718,14 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	public Type getVariable(String memberName) {
 		Type variableToGet = null;
 		boolean isProperty = memberName.contains(".");
-		String[] arrayMembers = memberName.split("\\.");
-		List<String> members = Arrays.stream(arrayMembers).toList();
-		String name = members.get(0);
-		String member = members.get(members.size() - 1);
+		List<String> members = Arrays.stream(memberName.split("\\.")).toList();
+		String name = memberName;
+		String member = null;
+		
+		if (isProperty) {
+			name = members.get(0);
+			member = members.get(1);
+		}
 		
 		for (List<Variable> variableScope : variableScopes) {
 			for (Variable variable : variableScope) {
@@ -729,22 +739,22 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 			throw new RuntimeException("Variable '" + name + "' is not defined");
 		}
 		
-		if (!isProperty) {
-			return variableToGet;
+		if (isProperty) {
+			return variableToGet.getMember(member);
 		}
 		
-		Type variable = variableToGet;
-		return variable.getMember(member);
+		return variableToGet;
 	}
 	
 	public void assignVariable(String name, Type value, Class<? extends Type> type) {
 		Variable variableToAssign = null;
 		boolean isProperty = name.contains(".");
 		if (isProperty) {
-			Type variable = getVariable(name);
 			String[] members = name.split("\\.");
-			String member = Arrays.stream(members).toList().get(members.length - 1);
-			variable.assignMember(member);
+			List<String> membersList = Arrays.stream(members).toList();
+			String member = membersList.get(members.length - 1);
+			Type variable = getVariable(membersList.get(0));
+			variable.assignMember(member, value);
 			return;
 		}
 		
@@ -755,6 +765,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 				}
 			}
 		}
+		
 		if (variableToAssign != null) {
 			variableToAssign.value = value;
 		} else {

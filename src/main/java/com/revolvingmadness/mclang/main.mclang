@@ -1,9 +1,10 @@
-x = 1;
-
-class Apple {
-    Apple(a) {
-        x = a;
+class Person {
+    Person(str firstName, str lastName, int age) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
     }
 }
 
-apple = new Apple(5);
+robert = new Person("Robert", "Stone", 56);
+michael = new Person("Michael", "Connor", 27);

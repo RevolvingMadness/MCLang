@@ -21,6 +21,10 @@ public class Variable {
 		this.type = null;
 	}
 	
+	public Variable(String name) {
+		this.name = name;
+	}
+	
 	@Override
 	public String toString() {
 		return name + "=" + value;
