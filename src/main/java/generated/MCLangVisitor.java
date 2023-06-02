@@ -121,6 +121,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctionCallExpression(MCLangParser.FunctionCallExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code classInitExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassInitExpression(MCLangParser.ClassInitExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code listExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -360,6 +367,12 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitClassConstructorStatement(MCLangParser.ClassConstructorStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#classInit}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassInit(MCLangParser.ClassInitContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MCLangParser#propertyClassMemberAccess}.
 	 * @param ctx the parse tree

@@ -209,6 +209,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterClassInitExpression(MCLangParser.ClassInitExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClassInitExpression(MCLangParser.ClassInitExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterListExpression(MCLangParser.ListExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -624,6 +636,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitClassConstructorStatement(MCLangParser.ClassConstructorStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterClassInit(MCLangParser.ClassInitContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClassInit(MCLangParser.ClassInitContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -1,11 +1,9 @@
-function fibonacci(n) {
-    if (n == 0) {
-        return 0;
+x = 1;
+
+class Apple {
+    Apple(a) {
+        x = a;
     }
-    if (n == 1) {
-        return 1;
-    }
-    return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
-result = fibonacci(15); // Results in 610
+apple = new Apple(5);

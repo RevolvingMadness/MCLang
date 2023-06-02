@@ -62,6 +62,7 @@ expr
     | dict #dictExpression
     | functionCall #functionCallExpression
     | number #numberExpression
+    | classInit #classInitExpression
     ;
 
 variableAssignment
@@ -93,6 +94,8 @@ functionDeclarationStatement: 'function ' IDENTIFIER '(' identifierArgument* ')'
 classDeclarationStatement: 'class ' IDENTIFIER body;
 
 classConstructorStatement: IDENTIFIER '(' identifierArgument* ')' body;
+
+classInit: 'new ' IDENTIFIER '(' exprArgument* ')';
 
 propertyClassMemberAccess
     : IDENTIFIER

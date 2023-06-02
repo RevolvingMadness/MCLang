@@ -196,6 +196,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitFunctionCallExpression(MCLangParser.FunctionCallExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code classInitExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassInitExpression(MCLangParser.ClassInitExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code classInitExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassInitExpression(MCLangParser.ClassInitExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code listExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -605,6 +617,16 @@ public interface MCLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClassConstructorStatement(MCLangParser.ClassConstructorStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#classInit}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassInit(MCLangParser.ClassInitContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#classInit}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassInit(MCLangParser.ClassInitContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MCLangParser#propertyClassMemberAccess}.
 	 * @param ctx the parse tree
