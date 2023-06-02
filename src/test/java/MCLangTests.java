@@ -423,10 +423,7 @@ public class MCLangTests {
         
         // Functions
         interpreter.runCode("""
-                function add(a, b) {
-                    return a + b;
-                    return 1;
-                }
+                function add(int a, int b) -> int => a + b;
                 result = add(1, 1);
                 """);
         Assertions.assertEquals(new IntegerType(2), getVariable("result"));

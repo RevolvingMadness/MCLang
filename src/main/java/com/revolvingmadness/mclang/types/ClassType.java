@@ -30,11 +30,18 @@ public class ClassType extends Type {
 	
 	@Override
 	public Type getMember(String member) {
+		Type variableToGet = null;
+		
 		for (Variable variable : variables) {
 			if (Objects.equals(variable.name, member))
-				return variable.value;
+				variableToGet = variable.value;
 		}
-		return null;
+		
+		if (variableToGet == null) {
+			throw new RuntimeException("Variable '" + member + "' is not defined");
+		}
+		
+		return variableToGet;
 	}
 	
 	@Override

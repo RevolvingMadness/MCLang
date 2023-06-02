@@ -15,7 +15,7 @@ import java.util.*;
 
 public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	Stack<List<Variable>> variableScopes = new Stack<>();
-	List<String> datatypes = List.of("bool", "dict", "float", "func", "int", "list", "null", "number", "str");
+	List<String> dataTypes = List.of("bool", "dict", "float", "func", "int", "list", "null", "number", "str");
 	Type functionReturnValue = new NullType();
 	ClassType workingClass = null;
 	
@@ -41,8 +41,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitIdentifierExpression(MCLangParser.IdentifierExpressionContext context) {
-		String name = context.IDENTIFIER().getText();
-		return getVariable(name);
+		return visitPropertyClassMemberAccess(context.propertyClassMemberAccess());
 	}
 	
 	
@@ -215,7 +214,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitWalrusOperatorExpression(MCLangParser.WalrusOperatorExpressionContext context) {
-		String name = context.IDENTIFIER().getText();
+		String name = context.propertyClassMemberAccess().getText();
 		Type value = visit(context.expr());
 		assignVariable(name, value, value.type);
 		
@@ -236,8 +235,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		name = context.propertyClassMemberAccess().getText();
 		
 		// Check if the variable name is a reserved keyword
-		if (datatypes.contains(name)) {
-			throw new RuntimeException("Variable name cannot be named keyword or datatype '" + name + "'");
+		if (dataTypes.contains(name)) {
+			throw new RuntimeException("Variable name cannot be named datatype '" + name + "'");
 		}
 		
 		// Get the value of the expression assigned to the variable
@@ -448,10 +447,10 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		for (int i = 0; i < context.exprArgument().size(); i++) {
 			String actualName = function.arguments.keySet().stream().toList().get(i);
 			Type actualValue = functionCallArguments.get(i);
-			Class<? extends Type> expectedValue = function.arguments.get(actualName);
+			Class<? extends Type> expectedType = function.arguments.get(actualName);
 			
-			if (expectedValue != null && !expectedValue.isInstance(actualValue))
-				throw new RuntimeException("Invalid data type (got '" + actualValue.typeName + "', expected '" + expectedValue.getSimpleName() + "')");
+			if (expectedType != null && !expectedType.isInstance(actualValue))
+				throw new RuntimeException("Invalid data type (got '" + actualValue.typeName + "', expected '" + expectedType.getSimpleName() + "')");
 			assignVariable(actualName, actualValue, null);
 		}
 		
@@ -555,7 +554,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 			throw new RuntimeException("Invalid number of arguments for class '" + name + "' (got " + classInitArguments.size() + ", expected 0)");
 		}
 		
-		if (classInitArguments.size() != clazz.constructor.arguments.size()) {
+		if (clazz.constructor != null && classInitArguments.size() != clazz.constructor.arguments.size()) {
 			throw new RuntimeException("Invalid number of arguments for class '" + name + "' (got " + classInitArguments.size() + ", expected " + clazz.constructor.arguments.size() + ")");
 		}
 		
@@ -606,11 +605,20 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 	
 	@Override
 	public Type visitPropertyClassMemberAccess(MCLangParser.PropertyClassMemberAccessContext context) {
-		String name = context.IDENTIFIER().getText();
-		if (context.propertyClassMemberAccess() != null) {
-			return visitPropertyClassMemberAccess(context.propertyClassMemberAccess());
+		return getVariable(getPropertyClassMemberAccess(context));
+	}
+	
+	public String getPropertyClassMemberAccess(MCLangParser.PropertyClassMemberAccessContext context) {
+		StringBuilder result = new StringBuilder();
+		
+		if (context.IDENTIFIER() != null) {
+			result.append(context.IDENTIFIER().getText());
 		}
-		return getVariable(name);
+		if (context.propertyClassMemberAccess() != null) {
+			result.append(".").append(getPropertyClassMemberAccess(context.propertyClassMemberAccess()));
+		}
+		
+		return result.toString();
 	}
 	
 	public Map<String, Class<? extends Type>> getIdentifierArguments(List<MCLangParser.IdentifierArgumentContext> listContext) {
@@ -715,16 +723,15 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		return null;
 	}
 	
-	public Type getVariable(String memberName) {
+	public Type getVariable(String name) {
 		Type variableToGet = null;
-		boolean isProperty = memberName.contains(".");
-		List<String> members = Arrays.stream(memberName.split("\\.")).toList();
-		String name = memberName;
-		String member = null;
-		
+		boolean isProperty = name.contains(".");
 		if (isProperty) {
-			name = members.get(0);
-			member = members.get(1);
+			String[] members = name.split("\\.");
+			List<String> membersList = Arrays.stream(members).toList();
+			Type variable = getVariable(membersList.get(0));
+			String memberName = membersList.get(members.length - 1);
+			return variable.getMember(memberName);
 		}
 		
 		for (List<Variable> variableScope : variableScopes) {
@@ -735,22 +742,15 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 			}
 		}
 		
-		if (variableToGet == null) {
-			throw new RuntimeException("Variable '" + name + "' is not defined");
-		}
-		
-		if (isProperty) {
-			return variableToGet.getMember(member);
-		}
-		
 		return variableToGet;
 	}
 	
-	public void assignVariable(String name, Type value, Class<? extends Type> type) {
+	public void assignVariable(String memberName, Type value, Class<? extends Type> type) {
 		Variable variableToAssign = null;
-		boolean isProperty = name.contains(".");
+		boolean isProperty = memberName.contains(".");
+		
 		if (isProperty) {
-			String[] members = name.split("\\.");
+			String[] members = memberName.split("\\.");
 			List<String> membersList = Arrays.stream(members).toList();
 			String member = membersList.get(members.length - 1);
 			Type variable = getVariable(membersList.get(0));
@@ -760,7 +760,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		
 		for (List<Variable> variableScope : variableScopes) {
 			for (Variable variable : variableScope) {
-				if (Objects.equals(variable.name, name)) {
+				if (Objects.equals(variable.name, memberName)) {
 					variableToAssign = variable;
 				}
 			}
@@ -769,7 +769,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		if (variableToAssign != null) {
 			variableToAssign.value = value;
 		} else {
-			variableScopes.lastElement().add(new Variable(name, value, type));
+			variableScopes.lastElement().add(new Variable(memberName, value, type));
 		}
 	}
 }

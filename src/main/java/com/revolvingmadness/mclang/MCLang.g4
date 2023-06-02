@@ -22,10 +22,13 @@ expr
     : NULL #nullExpression
     | STRING #stringExpression
     | BOOLEAN #booleanExpression
-    | IDENTIFIER #identifierExpression
+    | propertyClassMemberAccess #identifierExpression
 
     // Arithmetic Expressions
     | '(' expr ')' #parenthesisExpression
+    | propertyClassMemberAccess ':=' expr #walrusOperatorExpression
+    | expr '?' expr ':' expr #ternaryOperatorExpression
+    | '-' expr #unaryOperatorExpression
     | expr '**' expr #exponentiationExpression
     | expr '*' expr #multiplyExpression
     | expr '/' expr #divideExpression
@@ -51,11 +54,6 @@ expr
     | expr '&&' expr #booleanAndExpression
     | expr '||' expr #booleanOrExpression
     | '!' expr #booleanNotExpression
-
-    // Operators
-    | IDENTIFIER ':=' expr #walrusOperatorExpression
-    | expr '?' expr ':' expr #ternaryOperatorExpression
-    | '-' expr #unaryOperatorExpression
 
     // Other
     | list #listExpression
