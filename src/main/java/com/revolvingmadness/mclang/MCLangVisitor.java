@@ -729,11 +729,15 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Variable variableToGet = null;
         boolean isProperty = name.contains(".");
         if (isProperty) {
-            String[] members = name.split("\\.");
-            List<String> membersList = Arrays.stream(members).toList();
-            Variable variable = getVariableFromList(variables, membersList.get(0));
-            String memberName = String.join(".", Arrays.stream(Arrays.copyOfRange(members, 1, members.length)).toList());
-            return variable.value.getMember(memberName);
+            String[] allPropertiesArray = name.split("\\.");
+            String[] properties = Arrays.copyOfRange(allPropertiesArray, 1, allPropertiesArray.length);
+            String member = allPropertiesArray[0];
+            Variable currentVariable = getVariableFromList(variables, member);
+
+            for (String property : properties) {
+                currentVariable = currentVariable.value.getMember(property);
+            }
+            return currentVariable;
         }
 
         for (Variable variable : variables) {
