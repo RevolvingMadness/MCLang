@@ -9,12 +9,10 @@ import java.util.List;
 public class ClassType extends Type {
 	public String name;
 	public List<Variable> variables;
-	public List<FunctionType> methods;
 	public FunctionType constructor;
 	
 	public ClassType(String name) {
 		this.name = name;
-		this.methods = new ArrayList<>();
 		this.variables = new ArrayList<>();
 	}
 	
@@ -24,7 +22,6 @@ public class ClassType extends Type {
 		this.type = other.type;
 		this.name = other.name;
 		this.variables = new ArrayList<>(other.variables);
-		this.methods = new ArrayList<>(other.methods);
 		this.constructor = other.constructor;
 	}
 	

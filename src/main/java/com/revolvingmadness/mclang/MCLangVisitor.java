@@ -420,14 +420,11 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitFunctionCall(MCLangParser.FunctionCallContext context) {
-        // Get the name of the function
-        String name = context.IDENTIFIER().getText();
-        // Retrieve the variable associated with the function name
-        Type variable = getVariable(name);
+        Type variable = visitPropertyClassMemberAccess(context.propertyClassMemberAccess());
 
         // Check if the variable is actually a function
         if (!(variable instanceof FunctionType function)) {
-            throw new RuntimeException("Variable '" + name + "' is not a function");
+            throw new RuntimeException("Variable '" + context.propertyClassMemberAccess().getText() + "' is not a function");
         }
 
         // Create a new scope for the function variables
@@ -509,7 +506,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         }
 
         if (workingClass != null) {
-            workingClass.methods.add(function);
+            workingClass.variables.add(new Variable(name, function, FunctionType.class));
         } else {
             assignVariable(name, function, FunctionType.class);
         }

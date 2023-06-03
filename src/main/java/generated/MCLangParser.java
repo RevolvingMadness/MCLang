@@ -2630,7 +2630,9 @@ public class MCLangParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class FunctionCallContext extends ParserRuleContext {
-		public TerminalNode IDENTIFIER() { return getToken(MCLangParser.IDENTIFIER, 0); }
+		public PropertyClassMemberAccessContext propertyClassMemberAccess() {
+			return getRuleContext(PropertyClassMemberAccessContext.class,0);
+		}
 		public List<ExprArgumentContext> exprArgument() {
 			return getRuleContexts(ExprArgumentContext.class);
 		}
@@ -2664,7 +2666,7 @@ public class MCLangParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(326);
-			match(IDENTIFIER);
+			propertyClassMemberAccess();
 			setState(327);
 			match(T__2);
 			setState(331);
@@ -3421,7 +3423,7 @@ public class MCLangParser extends Parser {
 		"\u0141\u0142\u0001\u0000\u0000\u0000\u0142\u0144\u0005<\u0000\u0000\u0143"+
 		"\u0145\u00050\u0000\u0000\u0144\u0143\u0001\u0000\u0000\u0000\u0144\u0145"+
 		"\u0001\u0000\u0000\u0000\u0145\u0017\u0001\u0000\u0000\u0000\u0146\u0147"+
-		"\u0005<\u0000\u0000\u0147\u014b\u0005\u0003\u0000\u0000\u0148\u014a\u0003"+
+		"\u0003\u0014\n\u0000\u0147\u014b\u0005\u0003\u0000\u0000\u0148\u014a\u0003"+
 		"\u001e\u000f\u0000\u0149\u0148\u0001\u0000\u0000\u0000\u014a\u014d\u0001"+
 		"\u0000\u0000\u0000\u014b\u0149\u0001\u0000\u0000\u0000\u014b\u014c\u0001"+
 		"\u0000\u0000\u0000\u014c\u014e\u0001\u0000\u0000\u0000\u014d\u014b\u0001"+

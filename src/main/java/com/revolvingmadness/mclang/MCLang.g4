@@ -102,7 +102,7 @@ propertyClassMemberAccess
 
 identifierArgument: IDENTIFIER? IDENTIFIER ','?;
 
-functionCall: IDENTIFIER '(' exprArgument* ')';
+functionCall: propertyClassMemberAccess '(' exprArgument* ')';
 
 returnStatement: 'return ' expr;
 
