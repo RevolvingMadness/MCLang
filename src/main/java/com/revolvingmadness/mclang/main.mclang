@@ -1,0 +1,15 @@
+class Calories {
+    Calories(amount) {
+        this.amount = amount;
+    }
+}
+
+class Apple {
+    Apple(calories) {
+        this.calories = new Calories(calories);
+    }
+}
+
+apple = new Apple(5);
+apple.calories.amount = 6;
+x = apple.calories.amount;

@@ -722,29 +722,68 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		}
 		return null;
 	}
-	
+
 	public Type getVariable(String name) {
-		Type variableToGet = null;
+		Variable variableToGet = null;
+		for (List<Variable> variableScope : variableScopes) {
+			Variable variable = getVariableFromList(variableScope, name);
+			if (variable != null) {
+				variableToGet = variable;
+			}
+		}
+
+		if (variableToGet == null) {
+			throw new RuntimeException("Variable '" + name + "' is not defined");
+		}
+
+		return variableToGet.value;
+	}
+
+	public static Variable getVariableFromList(List<Variable> variables, String name) {
+		Variable variableToGet = null;
 		boolean isProperty = name.contains(".");
 		if (isProperty) {
 			String[] members = name.split("\\.");
 			List<String> membersList = Arrays.stream(members).toList();
-			Type variable = getVariable(membersList.get(0));
-			String memberName = membersList.get(members.length - 1);
-			return variable.getMember(memberName);
+			Variable variable = getVariableFromList(variables, membersList.get(0));
+			String memberName = String.join(".", Arrays.stream(Arrays.copyOfRange(members, 1, members.length)).toList());
+			return variable.value.getMember(memberName);
 		}
-		
-		for (List<Variable> variableScope : variableScopes) {
-			for (Variable variable : variableScope) {
-				if (Objects.equals(variable.name, name)) {
-					variableToGet = variable.value;
-				}
+
+		for (Variable variable : variables) {
+			if (Objects.equals(variable.name, name)) {
+				variableToGet = variable;
 			}
 		}
-		
+
 		return variableToGet;
 	}
-	
+
+	public static void assignVariableFromList(List<Variable> variables, String name, Type value) {
+		Variable variableToAssign = null;
+		boolean isProperty = name.contains(".");
+		if (isProperty) {
+			String[] members = name.split("\\.");
+			List<String> membersList = Arrays.stream(members).toList();
+			Variable variable = getVariableFromList(variables, membersList.get(0));
+			String memberName = String.join(".", Arrays.stream(Arrays.copyOfRange(members, 1, members.length)).toList());
+			variable.value.assignMember(memberName, value);
+			return;
+		}
+
+		for (Variable variable : variables) {
+			if (Objects.equals(variable.name, name)) {
+				variableToAssign = variable;
+			}
+		}
+
+		if (variableToAssign != null) {
+			variableToAssign.value = value;
+		} else {
+			variables.add(new Variable(name, value));
+		}
+	}
+
 	public void assignVariable(String memberName, Type value, Class<? extends Type> type) {
 		Variable variableToAssign = null;
 		boolean isProperty = memberName.contains(".");
@@ -752,20 +791,16 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 		if (isProperty) {
 			String[] members = memberName.split("\\.");
 			List<String> membersList = Arrays.stream(members).toList();
-			String member = membersList.get(members.length - 1);
 			Type variable = getVariable(membersList.get(0));
+			String member = String.join(".", Arrays.stream(Arrays.copyOfRange(members, 1, members.length)).toList());
 			variable.assignMember(member, value);
 			return;
 		}
-		
+
 		for (List<Variable> variableScope : variableScopes) {
-			for (Variable variable : variableScope) {
-				if (Objects.equals(variable.name, memberName)) {
-					variableToAssign = variable;
-				}
-			}
+			variableToAssign = getVariableFromList(variableScope, memberName);
 		}
-		
+
 		if (variableToAssign != null) {
 			variableToAssign.value = value;
 		} else {

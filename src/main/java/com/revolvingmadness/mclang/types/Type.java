@@ -1,6 +1,7 @@
 package com.revolvingmadness.mclang.types;
 
 import com.revolvingmadness.mclang.MCLangInterpreter;
+import com.revolvingmadness.mclang.Variable;
 
 import java.util.Objects;
 
@@ -150,7 +151,7 @@ public abstract class Type {
 		return null;
 	}
 	
-	public Type getMember(String member) {
+	public Variable getMember(String member) {
 		throw new RuntimeException("Type '" + this.getClass().getSimpleName() + "' has no properties");
 	}
 	

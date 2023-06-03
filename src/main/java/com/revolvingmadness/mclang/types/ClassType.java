@@ -1,10 +1,10 @@
 package com.revolvingmadness.mclang.types;
 
+import com.revolvingmadness.mclang.MCLangVisitor;
 import com.revolvingmadness.mclang.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ClassType extends Type {
 	public String name;
@@ -29,35 +29,17 @@ public class ClassType extends Type {
 	}
 	
 	@Override
-	public Type getMember(String member) {
-		Type variableToGet = null;
-		
-		for (Variable variable : variables) {
-			if (Objects.equals(variable.name, member))
-				variableToGet = variable.value;
-		}
-		
+	public Variable getMember(String member) {
+		Variable variableToGet = MCLangVisitor.getVariableFromList(variables, member);
 		if (variableToGet == null) {
-			throw new RuntimeException("Variable '" + member + "' is not defined");
+			throw new RuntimeException("Class '" + name + "' has to property '" + member + "'");
 		}
-		
 		return variableToGet;
 	}
 	
 	@Override
 	public void assignMember(String member, Type value) {
-		Variable variableToAssign = null;
-		
-		for (Variable variable : variables) {
-			if (Objects.equals(variable.name, member))
-				variableToAssign = variable;
-		}
-		
-		if (variableToAssign != null) {
-			variableToAssign.value = value;
-		} else {
-			variables.add(new Variable(member, value));
-		}
+		MCLangVisitor.assignVariableFromList(variables, member, value);
 	}
 	
 	@Override
