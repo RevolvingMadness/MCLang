@@ -1,15 +1,11 @@
-class Calories {
-    Calories(amount) {
-        this.amount = amount;
+function fibonacci(n) {
+    if (n == 0) {
+        return 0;
     }
+    if (n == 1) {
+        return 1;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
-class Apple {
-    Apple(calories) {
-        this.calories = new Calories(calories);
-    }
-}
-
-apple = new Apple(5);
-apple.calories.amount = 6;
-x = apple.calories.amount;
+result = fibonacci(15); // Results in 610
