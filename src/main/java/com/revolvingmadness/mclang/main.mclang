@@ -1,6 +1,0 @@
-class Foo {
-    function bar() => "bar";
-}
-
-foo = new Foo();
-bar = foo.bar();

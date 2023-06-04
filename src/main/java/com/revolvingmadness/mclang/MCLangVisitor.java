@@ -16,8 +16,9 @@ import java.util.*;
 public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     Stack<List<Variable>> variableScopes = new Stack<>();
     List<String> dataTypes = List.of("bool", "dict", "float", "func", "int", "list", "null", "number", "str");
+    List<String> keywords = List.of("this");
     Type functionReturnValue = new NullType();
-    ClassType workingClass = null;
+    Stack<ClassType> workingClasses = new Stack<>();
 
     public MCLangVisitor() {
         variableScopes.push(new ArrayList<>());
@@ -234,8 +235,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         name = context.propertyClassMemberAccess().getText();
 
         // Check if the variable name is a reserved keyword
-        if (dataTypes.contains(name)) {
-            throw new RuntimeException("Variable name cannot be named datatype '" + name + "'");
+        if (dataTypes.contains(name) || keywords.contains(name)) {
+            throw new RuntimeException("Variable name cannot be named '" + name + "'");
         }
 
         // Get the value of the expression assigned to the variable
@@ -255,7 +256,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitExponentiationVariableAssignment(MCLangParser.ExponentiationVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.exponentiate(newValue), oldValue.type);
@@ -266,7 +267,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitMultiplyVariableAssignment(MCLangParser.MultiplyVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.multiply(newValue), oldValue.type);
@@ -277,7 +278,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitDivideVariableAssignment(MCLangParser.DivideVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.divide(newValue), oldValue.type);
@@ -288,7 +289,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitFloorDivideVariableAssignment(MCLangParser.FloorDivideVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.floorDivide(newValue), oldValue.type);
@@ -299,7 +300,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitModuloVariableAssignment(MCLangParser.ModuloVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.modulo(newValue), oldValue.type);
@@ -310,7 +311,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitAddVariableAssignment(MCLangParser.AddVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.add(newValue), oldValue.type);
@@ -322,7 +323,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     public Type visitIncrementVariableAssignment(MCLangParser.IncrementVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
 
-        Type value = getVariable(name).increment();
+        Type value = getVariable(name).value.increment();
 
         assignVariable(name, value, value.type);
 
@@ -332,7 +333,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitSubtractVariableAssignment(MCLangParser.SubtractVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.subtract(newValue), oldValue.type);
@@ -343,7 +344,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitBitwiseAndVariableAssignment(MCLangParser.BitwiseAndVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.bitwiseAnd(newValue), oldValue.type);
@@ -354,7 +355,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitBitwiseXorVariableAssignment(MCLangParser.BitwiseXorVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.bitwiseXor(newValue), oldValue.type);
@@ -365,7 +366,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitBitwiseOrVariableAssignment(MCLangParser.BitwiseOrVariableAssignmentContext context) {
         String name = context.propertyClassMemberAccess().getText();
-        Type oldValue = getVariable(name);
+        Type oldValue = getVariable(name).value;
         Type newValue = visit(context.expr());
 
         assignVariable(name, oldValue.bitwiseOr(newValue), oldValue.type);
@@ -429,6 +430,9 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
         // Create a new scope for the function variables
         List<Variable> functionVariables = new ArrayList<>();
+        if (function.clazz != null) {
+            functionVariables.addAll(function.clazz.variables);
+        }
         variableScopes.push(functionVariables);
 
         // Process the function call arguments
@@ -471,7 +475,11 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Type returnValue = functionReturnValue;
 
         // Remove the function variable scope
-        variableScopes.pop();
+        if (function.clazz != null) {
+            function.clazz.variables = variableScopes.pop();
+        } else {
+            variableScopes.pop();
+        }
 
         // Reset the function return value to null
         functionReturnValue = new NullType();
@@ -494,19 +502,24 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         Map<String, Class<? extends Type>> arguments = getIdentifierArguments(context.identifierArgument());
 
         FunctionType function = null;
+        ClassType clazz = null;
+
+        if (!workingClasses.isEmpty()) {
+            clazz = workingClasses.lastElement();
+        }
 
         // Check if the function has a body
         if (context.body() != null) {
-            function = new FunctionType(name, arguments, returnType, context.body());
+            function = new FunctionType(name, arguments, returnType, clazz, context.body());
         }
 
         // Check if the function is an expression
         if (context.expr() != null) {
-            function = new FunctionType(name, arguments, returnType, context.expr());
+            function = new FunctionType(name, arguments, returnType, clazz, context.expr());
         }
 
-        if (workingClass != null) {
-            workingClass.variables.add(new Variable(name, function, FunctionType.class));
+        if (!workingClasses.isEmpty()) {
+            workingClasses.lastElement().variables.add(new Variable(name, function, FunctionType.class));
         } else {
             assignVariable(name, function, FunctionType.class);
         }
@@ -518,12 +531,11 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     public Type visitClassDeclarationStatement(MCLangParser.ClassDeclarationStatementContext context) {
         String name = context.IDENTIFIER().getText();
 
-        workingClass = new ClassType(name);
+        workingClasses.push(new ClassType(name));
         visitBody(context.body());
-        ClassType oldWorkingClass = workingClass;
-        workingClass = null;
+        ClassType workingClass = workingClasses.pop();
 
-        assignVariable(name, oldWorkingClass, ClassType.class);
+        assignVariable(name, workingClass, ClassType.class);
         return null;
     }
 
@@ -536,7 +548,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     public Type visitClassInit(MCLangParser.ClassInitContext context) {
         String name = context.IDENTIFIER().getText();
 
-        Type variable = getVariable(name);
+        Type variable = getVariable(name).value;
 
         if (!(variable instanceof ClassType)) {
             throw new RuntimeException("Variable '" + name + "' is not a class");
@@ -558,9 +570,8 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
             return clazz;
         }
 
-        List<Variable> constructorVariables = new ArrayList<>();
+        List<Variable> constructorVariables = new ArrayList<>(clazz.variables);
         variableScopes.push(constructorVariables);
-        constructorVariables.add(new Variable("this", clazz));
 
         for (int i = 0; i < context.exprArgument().size(); i++) {
             String paramName = clazz.constructor.arguments.keySet().stream().toList().get(i);
@@ -582,26 +593,26 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         }
 
 
-        variableScopes.pop();
+        clazz.variables = variableScopes.pop();
 
         return clazz;
     }
 
     @Override
     public Type visitClassConstructorStatement(MCLangParser.ClassConstructorStatementContext context) {
-        if (workingClass == null)
+        if (workingClasses == null)
             throw new RuntimeException("Cannot use a class constructor outside a class");
 
         String name = context.IDENTIFIER().getText();
 
-        workingClass.constructor = new FunctionType(name, getIdentifierArguments(context.identifierArgument()), NullType.class, context.body());
+        workingClasses.lastElement().constructor = new FunctionType(name, getIdentifierArguments(context.identifierArgument()), NullType.class, workingClasses.lastElement(), context.body());
 
         return null;
     }
 
     @Override
     public Type visitPropertyClassMemberAccess(MCLangParser.PropertyClassMemberAccessContext context) {
-        return getVariable(context.getText());
+        return getVariable(context.getText()).value;
     }
 
     public Map<String, Class<? extends Type>> getIdentifierArguments(List<MCLangParser.IdentifierArgumentContext> listContext) {
@@ -611,8 +622,12 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
             if (context.IDENTIFIER().size() == 2) {
                 Class<? extends Type> type = Type.of(context.IDENTIFIER(0).getText());
                 if (type == NullType.class)
-                    throw new RuntimeException("Parameter cannot be of type 'null'");
-                result.put(context.IDENTIFIER(1).getText(), type);
+                    throw new RuntimeException("Parameter cannot be type 'null'");
+                String name = context.IDENTIFIER(1).getText();
+                if (dataTypes.contains(name)) {
+                    throw new RuntimeException("Parameter cannot be named '" + name + "'");
+                }
+                result.put(name, type);
                 hasType = true;
             } else {
                 result.put(context.IDENTIFIER(0).getText(), null);
@@ -688,6 +703,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
             Files.readAllLines(Path.of(name)).forEach(content::append);
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(-1);
         }
 
         MCLangLexer lexer = new MCLangLexer(CharStreams.fromString(content.toString()));
@@ -706,7 +722,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         return null;
     }
 
-    public Type getVariable(String name) {
+    public Variable getVariable(String name) {
         Variable variableToGet = null;
         for (List<Variable> variableScope : variableScopes) {
             Variable variable = getVariableFromList(variableScope, name);
@@ -719,21 +735,26 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
             throw new RuntimeException("Variable '" + name + "' is not defined");
         }
 
-        return variableToGet.value;
+        return variableToGet;
     }
 
     public static Variable getVariableFromList(List<Variable> variables, String name) {
         Variable variableToGet = null;
         boolean isProperty = name.contains(".");
         if (isProperty) {
-            String[] allPropertiesArray = name.split("\\.");
-            String[] properties = Arrays.copyOfRange(allPropertiesArray, 1, allPropertiesArray.length);
-            String member = allPropertiesArray[0];
-            Variable currentVariable = getVariableFromList(variables, member);
+            String[] allMembers = name.split("\\.");
+            String[] members = Arrays.copyOfRange(allMembers, 1, allMembers.length);
 
-            for (String property : properties) {
-                currentVariable = currentVariable.value.getMember(property);
+            Variable currentVariable = getVariableFromList(variables, allMembers[0]);
+
+            for (String member : members) {
+                if (currentVariable == null) {
+                    return null;
+                }
+
+                currentVariable = currentVariable.value.getMember(member);
             }
+
             return currentVariable;
         }
 
@@ -746,16 +767,16 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         return variableToGet;
     }
 
-    public static void assignVariableFromList(List<Variable> variables, String name, Type value) {
+    public static Variable assignVariableFromList(List<Variable> variables, String name, Type value, Class<? extends Type> type) {
         Variable variableToAssign = null;
         boolean isProperty = name.contains(".");
         if (isProperty) {
-            String[] members = name.split("\\.");
-            List<String> membersList = Arrays.stream(members).toList();
-            Variable variable = getVariableFromList(variables, membersList.get(0));
-            String memberName = String.join(".", Arrays.stream(Arrays.copyOfRange(members, 1, members.length)).toList());
-            variable.value.assignMember(memberName, value);
-            return;
+            String[] allMembers = name.split("\\.");
+            String[] members = Arrays.copyOfRange(allMembers, 1, allMembers.length);
+            Variable variable = getVariableFromList(variables, allMembers[0]);
+            String member = String.join(".", members);
+            variables.add(variable.value.assignMember(member, value));
+            return null;
         }
 
         for (Variable variable : variables) {
@@ -766,32 +787,15 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
         if (variableToAssign != null) {
             variableToAssign.value = value;
+            return variableToAssign;
         } else {
-            variables.add(new Variable(name, value));
+            Variable variable = new Variable(name, value, type);
+            variables.add(variable);
+            return variable;
         }
     }
 
-    public void assignVariable(String memberName, Type value, Class<? extends Type> type) {
-        Variable variableToAssign = null;
-        boolean isProperty = memberName.contains(".");
-
-        if (isProperty) {
-            String[] members = memberName.split("\\.");
-            List<String> membersList = Arrays.stream(members).toList();
-            Type variable = getVariable(membersList.get(0));
-            String member = String.join(".", Arrays.stream(Arrays.copyOfRange(members, 1, members.length)).toList());
-            variable.assignMember(member, value);
-            return;
-        }
-
-        for (List<Variable> variableScope : variableScopes) {
-            variableToAssign = getVariableFromList(variableScope, memberName);
-        }
-
-        if (variableToAssign != null) {
-            variableToAssign.value = value;
-        } else {
-            variableScopes.lastElement().add(new Variable(memberName, value, type));
-        }
+    public void assignVariable(String name, Type value, Class<? extends Type> type) {
+        assignVariableFromList(variableScopes.lastElement(), name, value, type);
     }
 }

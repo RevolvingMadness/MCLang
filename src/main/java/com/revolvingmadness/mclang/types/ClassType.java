@@ -5,6 +5,7 @@ import com.revolvingmadness.mclang.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ClassType extends Type {
 	public String name;
@@ -14,6 +15,7 @@ public class ClassType extends Type {
 	public ClassType(String name) {
 		this.name = name;
 		this.variables = new ArrayList<>();
+		this.variables.add(new Variable("this", this));
 	}
 	
 	public ClassType(ClassType other) {
@@ -27,20 +29,25 @@ public class ClassType extends Type {
 	
 	@Override
 	public Variable getMember(String member) {
-		Variable variableToGet = MCLangVisitor.getVariableFromList(variables, member);
-		if (variableToGet == null) {
-			throw new RuntimeException("Class '" + name + "' has to property '" + member + "'");
-		}
-		return variableToGet;
+		return MCLangVisitor.getVariableFromList(variables, member);
 	}
 	
 	@Override
-	public void assignMember(String member, Type value) {
-		MCLangVisitor.assignVariableFromList(variables, member, value);
+	public Variable assignMember(String member, Type value) {
+		return MCLangVisitor.assignVariableFromList(variables, member, value, null);
 	}
 	
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other == this)
+			return true;
+		if (!(other instanceof ClassType classType))
+			return false;
+		return Objects.equals(name, classType.name) && Objects.equals(variables, classType.variables) && Objects.equals(constructor, classType.constructor);
 	}
 }

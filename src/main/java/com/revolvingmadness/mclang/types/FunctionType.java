@@ -15,23 +15,25 @@ public class FunctionType extends Type {
 	public MCLangParser.ExprContext shorthandBody;
 	public Type returnValue;
 	public Class<? extends Type> returnType;
+	public ClassType clazz;
 	
 	
-	public FunctionType(String name, Map<String, Class<? extends Type>> arguments, Class<? extends Type> returnType, MCLangParser.BodyContext body) {
+	public FunctionType(String name, Map<String, Class<? extends Type>> arguments, Class<? extends Type> returnType, ClassType clazz, MCLangParser.BodyContext body) {
 		super();
 		this.name = name;
 		this.body = new ArrayList<>();
 		this.arguments = arguments;
 		this.returnType = returnType;
+		this.clazz = clazz;
 		
 		this.body.addAll(body.statement());
-		this.returnValue = new NullType();
 	}
 	
-	public FunctionType(String name, Map<String, Class<? extends Type>> arguments, Class<? extends Type> returnType, MCLangParser.ExprContext shorthandBody) {
+	public FunctionType(String name, Map<String, Class<? extends Type>> arguments, Class<? extends Type> returnType, ClassType clazz, MCLangParser.ExprContext shorthandBody) {
 		this.name = name;
 		this.arguments = arguments;
 		this.returnType = returnType;
+		this.clazz = clazz;
 		this.shorthandBody = shorthandBody;
 	}
 	

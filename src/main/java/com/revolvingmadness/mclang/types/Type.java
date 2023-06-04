@@ -155,7 +155,7 @@ public abstract class Type {
 		throw new RuntimeException("Type '" + this.getClass().getSimpleName() + "' has no properties");
 	}
 	
-	public void assignMember(String member, Type value) {
+	public Variable assignMember(String member, Type value) {
 		throw new RuntimeException("Type '" + this.getClass().getSimpleName() + "' has no properties");
 	}
 	

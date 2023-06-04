@@ -430,6 +430,33 @@ public class MCLangTests {
     }
 
     @Test
+    @DisplayName("Classes")
+    public void classes() {
+        interpreter.runCode("""
+                class Calories {
+                    Calories(int value) {
+                        this.value = value;
+                    }
+                    
+                    function getValue() => this.value;
+                }
+                
+                class Apple {
+                    Apple(int calories) {
+                        this.calories = new Calories(calories);
+                    }
+                    
+                    function getCalories() => this.calories.getValue();
+                }
+                
+                apple = new Apple(10);
+                cals = apple.getCalories();
+                """);
+
+        Assertions.assertEquals(new IntegerType(10), getVariable("cals"));
+    }
+
+    @Test
     @DisplayName("Utility Functions")
     public void utilityFunctions() {
         // Parse number
