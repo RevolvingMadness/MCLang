@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -697,19 +698,35 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     @Override
     public Type visitImportStatement(MCLangParser.ImportStatementContext context) {
         String wholeName = context.STRING().toString();
-        String name = wholeName.substring(1, wholeName.length() - 1);
+        String fileName = wholeName.substring(1, wholeName.length() - 1);
+        String name = context.IDENTIFIER().getText();
         StringBuilder content = new StringBuilder();
+        if (!fileName.endsWith(".mclang")) {
+            fileName = fileName + ".mclang";
+        }
         try {
-            Files.readAllLines(Path.of(name)).forEach(content::append);
+            Files.readAllLines(Path.of(fileName)).forEach(content::append);
         } catch (IOException e) {
+            if (e instanceof NoSuchFileException) {
+                System.out.println("Cannot find file '" + fileName + "'");
+                System.exit(-1);
+            }
             e.printStackTrace();
             System.exit(-1);
+        }
+        if (!fileName.endsWith(".mclang")) {
+            throw new RuntimeException("Import files must end with a .mclang extension");
         }
 
         MCLangLexer lexer = new MCLangLexer(CharStreams.fromString(content.toString()));
         MCLangParser parser = new MCLangParser(new CommonTokenStream(lexer));
         MCLangParser.ProgramContext program = parser.program();
+        ClassType importClass = new ClassType(name);
+        List<Variable> importVariables = new ArrayList<>();
+        variableScopes.push(importVariables);
         visit(program);
+        importClass.variables = variableScopes.pop();
+        variableScopes.lastElement().add(new Variable(name, importClass, ClassType.class));
 
         return null;
     }

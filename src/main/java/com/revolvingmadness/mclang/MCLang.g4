@@ -106,7 +106,7 @@ functionCall: propertyClassMemberAccess '(' exprArgument* ')';
 
 returnStatement: 'return ' expr;
 
-importStatement: 'import ' STRING;
+importStatement: 'import ' STRING 'as ' IDENTIFIER;
 
 exprArgument: expr ','?;
 
