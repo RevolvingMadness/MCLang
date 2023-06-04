@@ -89,6 +89,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFunctionDeclarationExpression(MCLangParser.FunctionDeclarationExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionDeclarationExpression(MCLangParser.FunctionDeclarationExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMultiplyExpression(MCLangParser.MultiplyExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -612,6 +624,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVariableFunctionDeclaration(MCLangParser.VariableFunctionDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVariableFunctionDeclaration(MCLangParser.VariableFunctionDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -51,6 +51,13 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIdentifierExpression(MCLangParser.IdentifierExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code functionDeclarationExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionDeclarationExpression(MCLangParser.FunctionDeclarationExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code multiplyExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -355,6 +362,12 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MCLangParser#variableFunctionDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableFunctionDeclaration(MCLangParser.VariableFunctionDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MCLangParser#classDeclarationStatement}.
 	 * @param ctx the parse tree

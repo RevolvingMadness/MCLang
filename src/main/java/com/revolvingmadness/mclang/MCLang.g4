@@ -62,6 +62,7 @@ expr
     | functionCall #functionCallExpression
     | number #numberExpression
     | classInit #classInitExpression
+    | variableFunctionDeclaration #functionDeclarationExpression
     ;
 
 variableAssignment
@@ -88,7 +89,9 @@ ifStatement: 'if' '(' expr ')' body ('else' body)?;
 
 whileStatement: 'while' '(' expr ')' body;
 
-functionDeclarationStatement: 'function ' IDENTIFIER '(' identifierArgument* ')' ('->' IDENTIFIER)? (body ';'? | '=>' expr ';');
+functionDeclarationStatement: 'function ' IDENTIFIER '(' identifierArgument* ')' ('->' IDENTIFIER)? (body | '=>' expr ';');
+
+variableFunctionDeclaration: '(' identifierArgument* ')' ('->' IDENTIFIER)? (body | '=>' expr);
 
 classDeclarationStatement: 'class ' IDENTIFIER body;
 

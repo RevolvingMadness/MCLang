@@ -76,6 +76,18 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitIdentifierExpression(MCLangParser.IdentifierExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code functionDeclarationExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionDeclarationExpression(MCLangParser.FunctionDeclarationExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code functionDeclarationExpression}
+	 * labeled alternative in {@link MCLangParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionDeclarationExpression(MCLangParser.FunctionDeclarationExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code multiplyExpression}
 	 * labeled alternative in {@link MCLangParser#expr}.
 	 * @param ctx the parse tree
@@ -597,6 +609,16 @@ public interface MCLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MCLangParser#variableFunctionDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableFunctionDeclaration(MCLangParser.VariableFunctionDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MCLangParser#variableFunctionDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableFunctionDeclaration(MCLangParser.VariableFunctionDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MCLangParser#classDeclarationStatement}.
 	 * @param ctx the parse tree

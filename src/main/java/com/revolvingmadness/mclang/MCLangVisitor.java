@@ -493,9 +493,7 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
 
     @Override
     public Type visitFunctionDeclarationStatement(MCLangParser.FunctionDeclarationStatementContext context) {
-        // Get the name of the function
         String name = context.IDENTIFIER(0).getText();
-        // Extract the arguments of the function
         boolean hasType = context.IDENTIFIER().size() == 2;
         Class<? extends Type> returnType = NullType.class;
         if (hasType)
@@ -509,12 +507,10 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
             clazz = workingClasses.lastElement();
         }
 
-        // Check if the function has a body
         if (context.body() != null) {
             function = new FunctionType(name, arguments, returnType, clazz, context.body());
         }
 
-        // Check if the function is an expression
         if (context.expr() != null) {
             function = new FunctionType(name, arguments, returnType, clazz, context.expr());
         }
@@ -526,6 +522,37 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
         }
 
         return null;
+    }
+
+    @Override
+    public Type visitFunctionDeclarationExpression(MCLangParser.FunctionDeclarationExpressionContext context) {
+        return visitVariableFunctionDeclaration(context.variableFunctionDeclaration());
+    }
+
+    @Override
+    public Type visitVariableFunctionDeclaration(MCLangParser.VariableFunctionDeclarationContext context) {
+        boolean hasType = context.IDENTIFIER() != null;
+        Class<? extends Type> returnType = NullType.class;
+        if (hasType)
+            returnType = Type.of(context.IDENTIFIER().getText());
+        Map<String, Class<? extends Type>> arguments = getIdentifierArguments(context.identifierArgument());
+
+        FunctionType function = null;
+        ClassType clazz = null;
+
+        if (!workingClasses.isEmpty()) {
+            clazz = workingClasses.lastElement();
+        }
+
+        if (context.body() != null) {
+            function = new FunctionType("", arguments, returnType, clazz, context.body());
+        }
+
+        if (context.expr() != null) {
+            function = new FunctionType("", arguments, returnType, clazz, context.expr());
+        }
+
+        return function;
     }
 
     @Override
