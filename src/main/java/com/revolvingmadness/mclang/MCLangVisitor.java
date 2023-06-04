@@ -732,6 +732,53 @@ public class MCLangVisitor extends MCLangBaseVisitor<Type> {
     }
 
     @Override
+    public Type visitImportFromStatement(MCLangParser.ImportFromStatementContext context) {
+        String wholeName = context.STRING().toString();
+        String fileName = wholeName.substring(1, wholeName.length() - 1);
+        List<String> items = new ArrayList<>();
+        context.IDENTIFIER().forEach(identifierNode -> items.add(identifierNode.getText()));
+        List<String> variableNames = items.stream().distinct().toList();
+        StringBuilder content = new StringBuilder();
+        if (!fileName.endsWith(".mclang")) {
+            fileName = fileName + ".mclang";
+        }
+        try {
+            Files.readAllLines(Path.of(fileName)).forEach(content::append);
+        } catch (IOException e) {
+            if (e instanceof NoSuchFileException) {
+                System.out.println("Cannot find file '" + fileName + "'");
+                System.exit(-1);
+            }
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        if (!fileName.endsWith(".mclang")) {
+            throw new RuntimeException("Import files must end with a .mclang extension");
+        }
+
+        MCLangLexer lexer = new MCLangLexer(CharStreams.fromString(content.toString()));
+        MCLangParser parser = new MCLangParser(new CommonTokenStream(lexer));
+        MCLangParser.ProgramContext program = parser.program();
+        List<Variable> allImportVariables = new ArrayList<>();
+        List<Variable> importVariables = new ArrayList<>();
+        variableScopes.push(allImportVariables);
+        visit(program);
+        variableScopes.pop();
+        for (String variableName : variableNames) {
+            Variable variable = getVariableFromList(allImportVariables, variableName);
+            if (variable != null) {
+                importVariables.add(variable);
+            } else {
+                throw new RuntimeException("Variable '" + variableName + "' is not defined in file '" + fileName + "'");
+            }
+        }
+
+        variableScopes.lastElement().addAll(importVariables);
+
+        return null;
+    }
+
+    @Override
     public Type visitBody(MCLangParser.BodyContext context) {
         for (MCLangParser.StatementContext context1 : context.statement()) {
             visitStatement(context1);

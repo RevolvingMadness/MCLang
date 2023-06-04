@@ -1,3 +1,3 @@
-import "programs/fibonacci" as fib;
+import fibonacci from "programs/fibonacci";
 
-res = fib.result;
+six_hundred_ten = fibonacci(15);

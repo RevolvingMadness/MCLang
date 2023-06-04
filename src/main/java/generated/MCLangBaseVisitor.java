@@ -424,6 +424,13 @@ public class MCLangBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitImportFromStatement(MCLangParser.ImportFromStatementContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitExprArgument(MCLangParser.ExprArgumentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

@@ -13,6 +13,7 @@ statement
     | propertyClassMemberAccess ';'
     | returnStatement ';'
     | importStatement ';'
+    | importFromStatement ';'
     | statement '//' .*?
     | '//' .*?
     ;
@@ -107,6 +108,8 @@ functionCall: propertyClassMemberAccess '(' exprArgument* ')';
 returnStatement: 'return ' expr;
 
 importStatement: 'import ' STRING 'as ' IDENTIFIER;
+
+importFromStatement: 'import ' (IDENTIFIER ','?)* ' from ' STRING;
 
 exprArgument: expr ','?;
 

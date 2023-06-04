@@ -713,6 +713,18 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterImportFromStatement(MCLangParser.ImportFromStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitImportFromStatement(MCLangParser.ImportFromStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExprArgument(MCLangParser.ExprArgumentContext ctx) { }
 	/**
 	 * {@inheritDoc}
