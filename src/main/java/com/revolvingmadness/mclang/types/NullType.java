@@ -7,6 +7,7 @@ public class NullType extends Type {
     
     public NullType() {
         this.value = null;
+        this.stringValue = "null";
         this.typeName = this.getClass().getSimpleName();
     }
 

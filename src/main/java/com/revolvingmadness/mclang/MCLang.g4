@@ -23,6 +23,7 @@ expr
     : NULL #nullExpression
     | STRING #stringExpression
     | BOOLEAN #booleanExpression
+    | NUMBER #numberExpression
     | propertyClassMemberAccess #identifierExpression
 
     // Arithmetic Expressions
@@ -60,7 +61,6 @@ expr
     | list #listExpression
     | dict #dictExpression
     | functionCall #functionCallExpression
-    | number #numberExpression
     | classInit #classInitExpression
     | variableFunctionDeclaration #functionDeclarationExpression
     ;
@@ -110,9 +110,15 @@ functionCall: propertyClassMemberAccess '(' exprArgument* ')';
 
 returnStatement: 'return ' expr;
 
-importStatement: 'import ' STRING 'as ' IDENTIFIER;
+importStatement
+    : 'import' STRING 'as ' IDENTIFIER #regularImportStatement
+    | 'import ' 'builtin' STRING 'as ' IDENTIFIER #builtinImportStatement
+    ;
 
-importFromStatement: 'import ' (IDENTIFIER ','?)* ' from ' STRING;
+importFromStatement
+    : 'import ' ((IDENTIFIER ','?)*|'*') ' from' STRING #regularImportFromStatement
+    | 'import ' ((IDENTIFIER ','?)*|'*') ' from ' 'builtin' STRING #builtinImportFromStatement
+    ;
 
 exprArgument: expr ','?;
 
@@ -122,9 +128,8 @@ list: '[' (expr ','?)* ']';
 
 dict: '{' (STRING ':' expr ','?)* '}';
 
-number: '-'? (INT | FLOAT);
-
 // Literals
+NUMBER: INT | FLOAT;
 NULL: 'null';
 BOOLEAN: 'true' | 'false';
 FLOAT: INT '.' INT;

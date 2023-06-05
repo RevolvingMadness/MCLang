@@ -3,17 +3,18 @@ package com.revolvingmadness.mclang.types;
 import java.util.Objects;
 
 public class FloatType extends NumberType {
-    public Double value;
+    public Float value;
     
     public FloatType(Number value) {
-        super(value.doubleValue());
-        this.value = value.doubleValue();
+        super(value.floatValue());
+        this.value = value.floatValue();
+        this.stringValue = Float.toString(this.value);
         this.typeName = this.getClass().getSimpleName();
     }
 
     @Override
     public String toString() {
-        return Double.toString(value);
+        return Float.toString(value);
     }
     @Override
     public boolean equals(Object other) {

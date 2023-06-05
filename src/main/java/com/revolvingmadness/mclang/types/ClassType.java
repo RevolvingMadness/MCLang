@@ -2,7 +2,6 @@ package com.revolvingmadness.mclang.types;
 
 import com.revolvingmadness.mclang.MCLangVisitor;
 import com.revolvingmadness.mclang.Variable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

@@ -3,17 +3,18 @@ package com.revolvingmadness.mclang.types;
 import java.util.Objects;
 
 public class IntegerType extends NumberType {
-    public Long value;
+    public Integer value;
     
     public IntegerType(Number value) {
-        super(value.longValue());
-        this.value = value.longValue();
+        super(value.intValue());
+        this.value = value.intValue();
+        this.stringValue = Integer.toString(this.value);
         this.typeName = this.getClass().getSimpleName();
     }
 
     @Override
     public String toString() {
-        return Long.toString(value);
+        return Integer.toString(value);
     }
     
     @Override

@@ -1,4 +1,4 @@
-// Generated from MCLang.g4 by ANTLR 4.13.0
+// Generated from .\MCLang.g4 by ANTLR 4.13.0
 package generated;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -690,25 +690,53 @@ public interface MCLangListener extends ParseTreeListener {
 	 */
 	void exitReturnStatement(MCLangParser.ReturnStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MCLangParser#importStatement}.
+	 * Enter a parse tree produced by the {@code regularImportStatement}
+	 * labeled alternative in {@link MCLangParser#importStatement}.
 	 * @param ctx the parse tree
 	 */
-	void enterImportStatement(MCLangParser.ImportStatementContext ctx);
+	void enterRegularImportStatement(MCLangParser.RegularImportStatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MCLangParser#importStatement}.
+	 * Exit a parse tree produced by the {@code regularImportStatement}
+	 * labeled alternative in {@link MCLangParser#importStatement}.
 	 * @param ctx the parse tree
 	 */
-	void exitImportStatement(MCLangParser.ImportStatementContext ctx);
+	void exitRegularImportStatement(MCLangParser.RegularImportStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MCLangParser#importFromStatement}.
+	 * Enter a parse tree produced by the {@code builtinImportStatement}
+	 * labeled alternative in {@link MCLangParser#importStatement}.
 	 * @param ctx the parse tree
 	 */
-	void enterImportFromStatement(MCLangParser.ImportFromStatementContext ctx);
+	void enterBuiltinImportStatement(MCLangParser.BuiltinImportStatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MCLangParser#importFromStatement}.
+	 * Exit a parse tree produced by the {@code builtinImportStatement}
+	 * labeled alternative in {@link MCLangParser#importStatement}.
 	 * @param ctx the parse tree
 	 */
-	void exitImportFromStatement(MCLangParser.ImportFromStatementContext ctx);
+	void exitBuiltinImportStatement(MCLangParser.BuiltinImportStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code regularImportFromStatement}
+	 * labeled alternative in {@link MCLangParser#importFromStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterRegularImportFromStatement(MCLangParser.RegularImportFromStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code regularImportFromStatement}
+	 * labeled alternative in {@link MCLangParser#importFromStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitRegularImportFromStatement(MCLangParser.RegularImportFromStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code builtinImportFromStatement}
+	 * labeled alternative in {@link MCLangParser#importFromStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuiltinImportFromStatement(MCLangParser.BuiltinImportFromStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code builtinImportFromStatement}
+	 * labeled alternative in {@link MCLangParser#importFromStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuiltinImportFromStatement(MCLangParser.BuiltinImportFromStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MCLangParser#exprArgument}.
 	 * @param ctx the parse tree
@@ -749,14 +777,4 @@ public interface MCLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDict(MCLangParser.DictContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MCLangParser#number}.
-	 * @param ctx the parse tree
-	 */
-	void enterNumber(MCLangParser.NumberContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MCLangParser#number}.
-	 * @param ctx the parse tree
-	 */
-	void exitNumber(MCLangParser.NumberContext ctx);
 }

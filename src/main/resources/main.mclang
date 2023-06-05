@@ -1,3 +1,5 @@
-import fibonacci from "programs/fibonacci";
+import * from builtin "stdio";
 
-a = fibonacci(15);
+username = input("Enter your username: ");
+
+print("Your username is " + username);

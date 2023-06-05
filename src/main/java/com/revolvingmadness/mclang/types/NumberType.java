@@ -1,6 +1,6 @@
 package com.revolvingmadness.mclang.types;
 
-public class NumberType extends Type {
+public abstract class NumberType extends Type {
 	public Number value;
 	
 	public NumberType(Number value) {
@@ -140,21 +140,27 @@ public class NumberType extends Type {
 	}
 	
 	public static NumberType parseNumber(String numberString) {
+		NumberType result;
 		try {
-			return new IntegerType(Integer.parseInt(numberString));
+			result = new IntegerType(Integer.parseInt(numberString));
 		} catch (NumberFormatException e1) {
 			try {
-				return new FloatType(Float.parseFloat(numberString));
+				result = new FloatType(Float.parseFloat(numberString));
 			} catch (NumberFormatException e2) {
 				throw new RuntimeException("Invalid number: " + numberString);
 			}
 		}
+		return of(result.value);
 	}
 	
 	public static NumberType of(Number number) {
-		if (number.toString().endsWith(".0"))
-			return new IntegerType(number);
+		if (number.toString().contains(".")) {
+			if (number.toString().endsWith(".0")) {
+				return new IntegerType(number);
+			}
+			return new FloatType(number);
+		}
 		
-		return new FloatType(number);
+		return new IntegerType(number);
 	}
 }

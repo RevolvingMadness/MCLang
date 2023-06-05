@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public abstract class Type {
 	public Object value;
+	public String stringValue;
 	public String typeName;
 	public Class<? extends Type> type;
 	

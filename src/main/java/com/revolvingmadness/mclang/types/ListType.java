@@ -9,6 +9,7 @@ public class ListType extends Type {
     public ListType(List<Type> value) {
         super(value);
         this.value = value;
+        this.stringValue = value.toString();
         this.typeName = this.getClass().getSimpleName();
     }
 

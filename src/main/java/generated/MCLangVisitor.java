@@ -1,4 +1,4 @@
-// Generated from MCLang.g4 by ANTLR 4.13.0
+// Generated from .\MCLang.g4 by ANTLR 4.13.0
 package generated;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -411,17 +411,33 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReturnStatement(MCLangParser.ReturnStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MCLangParser#importStatement}.
+	 * Visit a parse tree produced by the {@code regularImportStatement}
+	 * labeled alternative in {@link MCLangParser#importStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitImportStatement(MCLangParser.ImportStatementContext ctx);
+	T visitRegularImportStatement(MCLangParser.RegularImportStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MCLangParser#importFromStatement}.
+	 * Visit a parse tree produced by the {@code builtinImportStatement}
+	 * labeled alternative in {@link MCLangParser#importStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitImportFromStatement(MCLangParser.ImportFromStatementContext ctx);
+	T visitBuiltinImportStatement(MCLangParser.BuiltinImportStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code regularImportFromStatement}
+	 * labeled alternative in {@link MCLangParser#importFromStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRegularImportFromStatement(MCLangParser.RegularImportFromStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code builtinImportFromStatement}
+	 * labeled alternative in {@link MCLangParser#importFromStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBuiltinImportFromStatement(MCLangParser.BuiltinImportFromStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MCLangParser#exprArgument}.
 	 * @param ctx the parse tree
@@ -446,10 +462,4 @@ public interface MCLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDict(MCLangParser.DictContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MCLangParser#number}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNumber(MCLangParser.NumberContext ctx);
 }

@@ -9,12 +9,22 @@ public class DictType extends Type {
     public DictType(Map<StringType, Type> value) {
         super(value);
         this.value = value;
+        StringBuilder stringValue = new StringBuilder("{");
+        for (StringType key : value.keySet()) {
+            stringValue.append(key);
+            stringValue.append(": ");
+            stringValue.append(value.get(key));
+            stringValue.append(", ");
+        }
+        stringValue.delete(stringValue.length()-2, stringValue.length());
+        stringValue.append("}");
+        this.stringValue = stringValue.toString();
         this.typeName = this.getClass().getSimpleName();
     }
 
     @Override
     public String toString() {
-        return value.toString();
+        return stringValue;
     }
     
     @Override

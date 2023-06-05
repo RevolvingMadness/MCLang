@@ -1,4 +1,4 @@
-fibonacci = (n) {
+fibonacci = (int n) -> int {
     if (n == 0) {
         return 0;
     }
@@ -7,3 +7,5 @@ fibonacci = (n) {
     }
     return fibonacci(n - 1) + fibonacci(n - 2);
 };
+
+result = fibonacci(15);

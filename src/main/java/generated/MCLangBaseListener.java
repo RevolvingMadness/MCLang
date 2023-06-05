@@ -1,4 +1,4 @@
-// Generated from MCLang.g4 by ANTLR 4.13.0
+// Generated from .\MCLang.g4 by ANTLR 4.13.0
 package generated;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -725,25 +725,49 @@ public class MCLangBaseListener implements MCLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterImportStatement(MCLangParser.ImportStatementContext ctx) { }
+	@Override public void enterRegularImportStatement(MCLangParser.RegularImportStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitImportStatement(MCLangParser.ImportStatementContext ctx) { }
+	@Override public void exitRegularImportStatement(MCLangParser.RegularImportStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterImportFromStatement(MCLangParser.ImportFromStatementContext ctx) { }
+	@Override public void enterBuiltinImportStatement(MCLangParser.BuiltinImportStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitImportFromStatement(MCLangParser.ImportFromStatementContext ctx) { }
+	@Override public void exitBuiltinImportStatement(MCLangParser.BuiltinImportStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRegularImportFromStatement(MCLangParser.RegularImportFromStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRegularImportFromStatement(MCLangParser.RegularImportFromStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBuiltinImportFromStatement(MCLangParser.BuiltinImportFromStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBuiltinImportFromStatement(MCLangParser.BuiltinImportFromStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -792,18 +816,6 @@ public class MCLangBaseListener implements MCLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDict(MCLangParser.DictContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterNumber(MCLangParser.NumberContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitNumber(MCLangParser.NumberContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

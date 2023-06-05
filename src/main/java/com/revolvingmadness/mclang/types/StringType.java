@@ -9,15 +9,17 @@ public class StringType extends Type {
 	public StringType(String value) {
 		super(value);
 		this.value = value;
+		this.stringValue = value;
 		this.typeName = this.getClass().getSimpleName();
 	}
 	
 	@Override
 	public Type add(Type other) {
-		if (!(other instanceof StringType))
+		if (other.stringValue == null) {
 			super.add(other);
+		}
 		
-		return new StringType(value.concat(((StringType) other).value));
+		return new StringType(value.concat(other.stringValue));
 	}
 	
 	@Override
@@ -34,9 +36,9 @@ public class StringType extends Type {
 	
 	public static StringType multiply(Type left, Type right) {
 		if (left instanceof StringType && right instanceof IntegerType)
-			return new StringType(((StringType) left).value.repeat(((IntegerType) right).value.intValue()));
+			return new StringType(((StringType) left).value.repeat(((IntegerType) right).value));
 		if (left instanceof IntegerType && right instanceof StringType)
-			return new StringType(((StringType) right).value.repeat(((IntegerType) left).value.intValue()));
+			return new StringType(((StringType) right).value.repeat(((IntegerType) left).value));
 		
 		if (!(left instanceof StringType) && right instanceof IntegerType)
 			throw new RuntimeException("Cannot multiply string with type '" + left.typeName + "'.");

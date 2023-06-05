@@ -8,6 +8,7 @@ public class BooleanType extends Type {
     public BooleanType(boolean value) {
         super(value);
         this.value = value;
+        this.stringValue = Boolean.toString(value);
         this.typeName = this.getClass().getSimpleName();
     }
 
@@ -68,10 +69,10 @@ public class BooleanType extends Type {
             return new BooleanType(!Objects.equals(((StringType) input).value, ""));
 
         if (input instanceof IntegerType)
-            return new BooleanType(((IntegerType) input).value.intValue() != 0);
+            return new BooleanType(((IntegerType) input).value != 0);
 
         if (input instanceof FloatType)
-            return new BooleanType(((FloatType) input).value.floatValue() != (float) 0.0);
+            return new BooleanType(((FloatType) input).value != (float) 0.0);
 
         throw new RuntimeException("Invalid boolean type '" + input.typeName + "'");
     }
